@@ -40,9 +40,7 @@ namespace Q3Movement
         [SerializeField] private MovementSettings m_StrafeSettings = new MovementSettings(1, 50, 50);
 
         [Header("SlopeSettings")]
-        [SerializeField] private float slopeCheckDistance = 0.6f; // The distance to check for slopes
-        [SerializeField] private float slopeThreshold = 45.0f; // The maximum slope angle the character can walk on
-        [SerializeField] private LayerMask slopeMask;
+        [SerializeField] private LayerMask m_GroundMask;
 
         /// <summary>
         /// Returns player's current speed.
@@ -101,26 +99,40 @@ namespace Q3Movement
 
             // Move the character.
             m_Character.Move(m_PlayerVelocity * Time.deltaTime);
+
+            print(m_PlayerVelocity.y);
+
         }
 
-        
+
         #region slope
 
         private void AdjustSlopeVelocity()
         {
+            Vector3 vec = m_PlayerVelocity;
             Ray ray = new Ray(m_Tran.position, Vector3.down);
-            slopeCheckDistance = .3f + (m_Character.height * .5f);
+            var slopeCheckDistance = .3f + (m_Character.height * .5f);
 
-            if (Physics.Raycast(ray, out RaycastHit hit, slopeCheckDistance, slopeMask))
+            if (Physics.Raycast(ray, out RaycastHit hit, slopeCheckDistance, m_GroundMask))
             {
-                var slopeRotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
-                var adjustedVelocity = slopeRotation * m_PlayerVelocity;
+                Quaternion slopeRotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+                Vector3 adjustedVelocity = slopeRotation * vec;
 
+
+                //todo zerg ervoor dat de y velocity zich reset als hij van een edge valt naar benenden
                 if(adjustedVelocity.y < 0)
                 {
-                    m_PlayerVelocity = adjustedVelocity;
+                    vec.y += -m_Gravity * Time.deltaTime;
+                    vec = adjustedVelocity;
                 }
+                else
+                {
+                    vec.y = -m_Gravity * Time.deltaTime;
+                }
+               
             }
+
+            m_PlayerVelocity = vec;
         }
 
       
@@ -258,7 +270,8 @@ namespace Q3Movement
             Accelerate(wishdir, wishspeed, m_GroundSettings.Acceleration);
 
             // Reset the gravity velocity
-            m_PlayerVelocity.y += -m_Gravity * Time.deltaTime;
+            //m_PlayerVelocity.y = -m_Gravity * Time.deltaTime;
+
 
             if (m_JumpQueued)
             {

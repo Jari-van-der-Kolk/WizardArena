@@ -2540,9 +2540,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1441166912}
+  - component: {fileID: 1441166913}
   - component: {fileID: 1441166908}
   - component: {fileID: 1441166906}
-  - component: {fileID: 1441166913}
   m_Layer: 3
   m_Name: Q3Player
   m_TagString: Untagged
@@ -2602,9 +2602,7 @@ MonoBehaviour:
     MaxSpeed: 1
     Acceleration: 50
     Deceleration: 50
-  slopeCheckDistance: 0.2
-  slopeThreshold: 10
-  slopeMask:
+  m_GroundMask:
     serializedVersion: 2
     m_Bits: 0
 --- !u!4 &1441166912
