@@ -8,6 +8,8 @@ namespace Q3Movement
     [RequireComponent(typeof(Q3PlayerController))]
     public class Q3PlayerDebug : MonoBehaviour
     {
+        [SerializeField] private Vector2 boxSize = new Vector2(160, 100);
+
         [Tooltip("How many times per second to update stats")]
         [SerializeField] private float m_RefreshRate = 4;
 
@@ -43,10 +45,11 @@ namespace Q3Movement
 
         private void OnGUI()
         {
-            GUI.Box(new Rect(0, 0, 130, 60),
+            GUI.Box(new Rect(0, 0, boxSize.x, boxSize.y),
                 "FPS: " + m_FPS + "\n" +
                 "Speed: " + Mathf.Round(m_Player.Speed * 100) / 100 + " (ups)\n" +
-                "Top: " + Mathf.Round(m_TopSpeed * 100) / 100 + " (ups)");
+                "Top: " + Mathf.Round(m_TopSpeed * 100) / 100 + " (ups)\n" +
+                "Velocity: " + m_Player.axisVelocity);
         }
     }
 }

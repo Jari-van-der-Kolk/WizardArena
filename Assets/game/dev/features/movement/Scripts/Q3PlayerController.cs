@@ -46,6 +46,7 @@ namespace Q3Movement
         /// Returns player's current speed.
         /// </summary>
         public float Speed { get { return m_Character.velocity.magnitude; } }
+        public Vector3 axisVelocity { get { return m_PlayerVelocity; } }
 
         private CharacterController m_Character;
         private Vector3 m_MoveDirectionNorm = Vector3.zero;
@@ -59,9 +60,7 @@ namespace Q3Movement
 
         private Vector3 m_MoveInput;
         private Transform m_Tran;
-        private Transform m_CamTran;        
-
-       
+        private Transform m_CamTran;
 
 
         private void Start()
@@ -80,62 +79,54 @@ namespace Q3Movement
         {
             m_MoveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
             m_MouseLook.UpdateCursorLock();
-           
+
             QueueJump();
 
-            // Set movement state.
+            // Check if the player is grounded before movement.
             if (m_Character.isGrounded)
             {
                 GroundMove();
-                AdjustSlopeVelocity();
+
+                if (OnSlopeCheck())
+                {
+                    m_PlayerVelocity.y = -m_Gravity;                    
+                }
+
+                Jump();
             }
             else
             {
+                // Player is not grounded, so handle air movement.
                 AirMove();
             }
-          
+
             // Rotate the character and camera.
             m_MouseLook.LookRotation(m_Tran, m_CamTran);
 
             // Move the character.
             m_Character.Move(m_PlayerVelocity * Time.deltaTime);
 
-            print(m_PlayerVelocity.y);
 
         }
 
 
         #region slope
 
-        private void AdjustSlopeVelocity()
+        private bool OnSlopeCheck()
         {
-            Vector3 vec = m_PlayerVelocity;
             Ray ray = new Ray(m_Tran.position, Vector3.down);
-            var slopeCheckDistance = .3f + (m_Character.height * .5f);
-
+            var slopeCheckDistance = .4f + (m_Character.height * .5f);
             if (Physics.Raycast(ray, out RaycastHit hit, slopeCheckDistance, m_GroundMask))
             {
-                Quaternion slopeRotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
-                Vector3 adjustedVelocity = slopeRotation * vec;
-
-
-                //todo zerg ervoor dat de y velocity zich reset als hij van een edge valt naar benenden
-                if(adjustedVelocity.y < 0)
+                float angle = Vector3.Angle(Vector3.up, hit.normal);
+                if (angle > 0)
                 {
-                    vec.y += -m_Gravity * Time.deltaTime;
-                    vec = adjustedVelocity;
+                    return true;
                 }
-                else
-                {
-                    vec.y = -m_Gravity * Time.deltaTime;
-                }
-               
             }
-
-            m_PlayerVelocity = vec;
+            return false;
         }
-
-      
+        
         #endregion
 
         #region Air
@@ -270,9 +261,14 @@ namespace Q3Movement
             Accelerate(wishdir, wishspeed, m_GroundSettings.Acceleration);
 
             // Reset the gravity velocity
-            //m_PlayerVelocity.y = -m_Gravity * Time.deltaTime;
+            m_PlayerVelocity.y = -m_Gravity * Time.deltaTime;
 
 
+           
+        }
+
+        private void Jump()
+        {
             if (m_JumpQueued)
             {
                 m_PlayerVelocity.y = m_JumpForce;
@@ -334,4 +330,83 @@ namespace Q3Movement
             m_PlayerVelocity.z += accelspeed * targetDir.z;
         }
     }
+    /* private void foo(RaycastHit ground)
+       {
+
+           Vector3 groundNormal = ground.normal;
+
+           // Calculate the movement direction based on input and ground normal
+           Vector3 wishdir = Vector3.ProjectOnPlane(new Vector3(m_MoveInput.x, 0, m_MoveInput.z), groundNormal).normalized;
+           m_MoveDirectionNorm = wishdir;
+
+           // Calculate wishspeed based on the ground's slope
+           var wishspeed = wishdir.magnitude;
+           wishspeed *= m_GroundSettings.MaxSpeed;
+
+           // Apply friction
+           ApplyFriction(1.0f);
+
+           // Apply acceleration
+           Accelerate(wishdir, wishspeed, m_GroundSettings.Acceleration);
+
+           // Reset the gravity velocity
+           m_PlayerVelocity.y = -m_Gravity * .5f;
+
+
+       }
+*/
+
+    /*    private void AdjustSlopeVelocity()
+        {
+            Vector3 vec = m_PlayerVelocity;
+            Ray ray = new Ray(m_Tran.position, Vector3.down);
+            var slopeCheckDistance = .4f + (m_Character.height * .5f);
+
+            Debug.DrawLine(transform.position, transform.position + (Vector3.down * slopeCheckDistance));
+
+            if (Physics.Raycast(ray, out RaycastHit hit, slopeCheckDistance, m_GroundMask))
+            {
+                float angle = Vector3.Angle(Vector3.up, hit.normal);
+                if (angle > 0)
+                {
+                    Vector3 adjustedVelocity = Vector3.ProjectOnPlane(vec, hit.normal).normalized;
+                    Debug.DrawLine(transform.position, transform.position + (adjustedVelocity.normalized * 5f));
+                    
+                    
+                    vec = adjustedVelocity;
+                    vec.Normalize();
+                    //vec.y = -m_Gravity;
+                }
+            }
+
+            m_PlayerVelocity += vec;
+        }
+*/
+
+    /* private void AdjustSlopeVelocity()
+      {
+          Vector3 vec = m_PlayerVelocity;
+          Ray ray = new Ray(m_Tran.position, Vector3.down);
+          var slopeCheckDistance = .4f + (m_Character.height * .5f);
+
+          Debug.DrawLine(transform.position, transform.position + (Vector3.down * slopeCheckDistance));
+
+          if (Physics.Raycast(ray, out RaycastHit hit, slopeCheckDistance, m_GroundMask))
+          {
+              float angle = Vector3.Angle(Vector3.up, hit.normal);
+              if (angle > 0)
+              {
+                  Vector3 adjustedVelocity = Vector3.ProjectOnPlane(vec, hit.normal).normalized;
+                  Debug.DrawLine(transform.position, transform.position + (adjustedVelocity.normalized * 5f));
+
+
+                  vec = adjustedVelocity;
+                  vec.Normalize();
+                  //vec.y = -m_Gravity;
+              }
+          }
+
+          m_PlayerVelocity += vec;
+      }*/
+
 }
