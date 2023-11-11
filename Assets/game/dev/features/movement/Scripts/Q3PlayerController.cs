@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
+using UnityEngine.Rendering;
 
-namespace Q3Movement
+namespace Movement
 {
     /// <summary>
     /// This script handles Quake III CPM(A) mod style player movement logic.
@@ -41,6 +42,7 @@ namespace Q3Movement
 
         [Header("SlopeSettings")]
         [SerializeField] private LayerMask m_GroundMask;
+        [SerializeField] private LayerMask m_MovingPlatformMask;
 
         /// <summary>
         /// Returns player's current speed.
@@ -62,6 +64,8 @@ namespace Q3Movement
         private Transform m_Tran;
         private Transform m_CamTran;
 
+        private Vector3 lastPlatformPosition;
+
 
         private void Start()
         {
@@ -82,47 +86,67 @@ namespace Q3Movement
 
             QueueJump();
 
+
             // Check if the player is grounded before movement.
             if (m_Character.isGrounded)
             {
+                var slopeHit = RayGroundCheck(out var slopeResult, m_GroundMask);
+
                 GroundMove();
 
-                if (OnSlopeCheck())
+               
+                if (OnSlopeCheck(slopeResult) || slopeHit)
                 {
-                    m_PlayerVelocity.y = -m_Gravity;                    
+                    m_PlayerVelocity.y = -m_Gravity;                                  
                 }
 
                 Jump();
             }
             else
             {
+
                 // Player is not grounded, so handle air movement.
                 AirMove();
+            }
+
+            if (RayGroundCheck(out var hit, m_MovingPlatformMask))
+            {
+                MovingPlatform(hit);
             }
 
             // Rotate the character and camera.
             m_MouseLook.LookRotation(m_Tran, m_CamTran);
 
             // Move the character.
+            
+
             m_Character.Move(m_PlayerVelocity * Time.deltaTime);
-
-
         }
 
+        private void MovingPlatform(RaycastHit movingPlatform)
+        {
+            if (movingPlatform.transform != null)
+            {
+                // Calculate the platform's velocity based on its previous position
+                Vector3 platformVelocity = (movingPlatform.transform.position - lastPlatformPosition) / Time.deltaTime;
+
+                // Add the moving platform's velocity to the player's position
+                m_Character.Move(platformVelocity * Time.deltaTime);
+
+                // Update the last platform position for the next frame
+                lastPlatformPosition = movingPlatform.transform.position;
+            }
+        }
 
         #region slope
 
-        private bool OnSlopeCheck()
+       
+        private bool OnSlopeCheck(RaycastHit hit)
         {
-            Ray ray = new Ray(m_Tran.position, Vector3.down);
-            var slopeCheckDistance = .4f + (m_Character.height * .5f);
-            if (Physics.Raycast(ray, out RaycastHit hit, slopeCheckDistance, m_GroundMask))
+            float angle = Vector3.Angle(Vector3.up, hit.normal);
+            if (angle > 0)
             {
-                float angle = Vector3.Angle(Vector3.up, hit.normal);
-                if (angle > 0)
-                {
-                    return true;
-                }
+                return true;
             }
             return false;
         }
@@ -149,6 +173,8 @@ namespace Q3Movement
                 m_JumpQueued = false;
             }
         }
+
+       
 
 
         // Handle air movement.
@@ -258,6 +284,7 @@ namespace Q3Movement
             var wishspeed = wishdir.magnitude;
             wishspeed *= m_GroundSettings.MaxSpeed;
 
+            
             Accelerate(wishdir, wishspeed, m_GroundSettings.Acceleration);
 
             // Reset the gravity velocity
@@ -329,6 +356,31 @@ namespace Q3Movement
             m_PlayerVelocity.x += accelspeed * targetDir.x;
             m_PlayerVelocity.z += accelspeed * targetDir.z;
         }
+
+        private bool RayGroundCheck(out RaycastHit result, LayerMask layerMask)
+        {
+            Ray ray = new Ray(m_Tran.position, Vector3.down);
+            var groundCheckDistance = .4f + (m_Character.height * .5f);
+            if (Physics.Raycast(ray, out RaycastHit hit, groundCheckDistance, layerMask))
+            {
+                result = hit;
+                return true;
+            }
+            result = new RaycastHit();
+            return false;
+        }
+
+        private bool RayCheck(LayerMask layerMask)
+        {
+            Ray ray = new Ray(m_Tran.position, Vector3.down);
+            var groundCheckDistance = .4f + (m_Character.height * .5f);
+            if (Physics.Raycast(ray, out RaycastHit hit, groundCheckDistance, layerMask))
+            {
+                return true;
+            }
+            return false;
+        }
+
     }
     /* private void foo(RaycastHit ground)
        {
@@ -408,5 +460,16 @@ namespace Q3Movement
 
           m_PlayerVelocity += vec;
       }*/
+
+    /*var slopeDir = Vector3.ProjectOnPlane(m_MoveInput, hit.normal).normalized;
+                        var newMag = slopeDir * m_GroundSettings.MaxSpeed;
+
+                        float slopeSpeed = newMag.magnitude;
+
+                        if(slopeSpeed > m_GroundSettings.MaxSpeed)
+                        {
+                            print("fpp");
+                            m_PlayerVelocity = m_PlayerVelocity.normalized * m_GroundSettings.MaxSpeed;
+                        }*/
 
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Q3Movement
+namespace Movement
 {
     /// <summary>
     /// Custom script based on the version from the Standard Assets.

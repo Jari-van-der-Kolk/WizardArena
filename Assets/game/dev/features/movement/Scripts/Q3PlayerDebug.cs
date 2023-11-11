@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Q3Movement
+namespace Movement
 {
     /// <summary>
     /// This script is used to display real-time statistics to help with tweaking and debugging.
