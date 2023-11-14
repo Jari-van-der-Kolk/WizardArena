@@ -94,8 +94,14 @@ namespace Movement
 
                 GroundMove();
 
+                if(OnSlopeCheck(m_Character.slopeLimit, slopeResult))
+                {
+                    print("t");
+                    m_PlayerVelocity.y = -m_Gravity;
+                    m_JumpQueued = false;
+                }
                
-                if (OnSlopeCheck(slopeResult) || slopeHit)
+                if (OnSlopeCheck(1,slopeResult) || slopeHit)
                 {
                     m_PlayerVelocity.y = -m_Gravity;                                  
                 }
@@ -141,15 +147,16 @@ namespace Movement
         #region slope
 
        
-        private bool OnSlopeCheck(RaycastHit hit)
+        private bool OnSlopeCheck(float maxAngle,RaycastHit hit)
         {
             float angle = Vector3.Angle(Vector3.up, hit.normal);
-            if (angle > 0)
+            if (angle > maxAngle)
             {
                 return true;
             }
             return false;
         }
+
         
         #endregion
 
@@ -360,7 +367,8 @@ namespace Movement
         private bool RayGroundCheck(out RaycastHit result, LayerMask layerMask)
         {
             Ray ray = new Ray(m_Tran.position, Vector3.down);
-            var groundCheckDistance = .4f + (m_Character.height * .5f);
+            var groundCheckDistance = 1f + (m_Character.height * .5f);
+            Debug.DrawLine(transform.position, transform.position + (Vector3.down * groundCheckDistance));
             if (Physics.Raycast(ray, out RaycastHit hit, groundCheckDistance, layerMask))
             {
                 result = hit;
