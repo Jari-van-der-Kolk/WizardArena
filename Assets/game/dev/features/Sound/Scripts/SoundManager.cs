@@ -89,7 +89,7 @@ public class SoundManager : MonoBehaviour
         NotifyVolumeChanged(slider.value);
     }
 
-    public void LoadSlider(Slider slider)
+    public void SetSlider(Slider slider)
     {
         slider.value = PlayerPrefs.GetFloat("Volume", .25f);
         SetVolume(slider);
