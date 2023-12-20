@@ -25,16 +25,15 @@ namespace Saxon.BT
                 var child = children[index].Update();
 
                 if (child == State.Running) {
-                    return State.Running;
+                    return child;
                 }
                 else if (child == State.Failure) {
                     index++;
                 }
                 else if (child == State.Success) {
                     index = 0;
-                    return State.Running;
+                    return child;
                 }
-
             }
 
             index = 0;

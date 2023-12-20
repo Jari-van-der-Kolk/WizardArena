@@ -14,12 +14,7 @@ namespace Saxon.BT
         {
             this.children = children;     
         } 
-        public FallbackStarNode(List<Node> children, bool debug)
-        {
-            this.children = children;   
-            this.debug = debug;
-        }
-
+       
         protected override void OnStart()
         {
             index = 0;
