@@ -3,43 +3,56 @@ using UnityEngine;
 
 namespace Saxon.BT
 {
-    public class FallbackNode : CompositeNode
+    public class FallbackNode : CompositeNode, INodeDebugger
     {
+
 
         public FallbackNode(List<Node> children)
         {
             this.children = children;
         }
 
-        protected override void OnStart() 
+        public FallbackNode(string name, List<Node> children)
         {
-            index = 0;
+            this.name = name;
+            this.debugger = this;
+            this.children = children;
         }
 
-        internal override void OnStop() { }
-
-        protected override State OnUpdate()
+        protected override void OnStart() 
         {
-            while (index < children.Count)
+
+        }
+
+        internal override void OnStop() 
+        {
+
+        }
+
+        protected override NodeState OnUpdate()
+        {
+            
+            foreach (Node node in children)
             {
-                var child = children[index].Update();
+                var childStatus = node.Update();
+                if (childStatus == NodeState.Success || childStatus == NodeState.Running)
+                {
+                    return childStatus;
+                }
 
-                if (child == State.Running) {
-                    return child;
-                }
-                else if (child == State.Failure) {
-                    index++;
-                }
-                else if (child == State.Success) {
-                    index = 0;
-                    return child;
-                }
             }
+            return NodeState.Failure;
 
-            index = 0;
-            return State.Failure;
+        }
 
-            /*foreach (Node node in children)
+        public void Debugger<T>(T debug)
+        {
+            Debug.Log(name + " " + state);
+        }
+    }
+}
+
+/*foreach (Node node in children)
             {
                 switch (node.Update())
                 {
@@ -54,10 +67,6 @@ namespace Saxon.BT
                 }
             }
             return State.Failure;*/
-        }
-    }
-}
-
 /*public override NodeStates Evaluate() {
     foreach (Node node in m_nodes) {
         switch (node.Evaluate()) {

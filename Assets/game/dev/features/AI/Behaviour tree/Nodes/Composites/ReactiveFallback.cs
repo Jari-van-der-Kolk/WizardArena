@@ -23,7 +23,7 @@ namespace Saxon.BT
 
         }
 
-        protected override State OnUpdate()
+        protected override NodeState OnUpdate()
         {
             for (int i = 0; i < children.Count; i++)
             {
@@ -31,18 +31,18 @@ namespace Saxon.BT
 
                 switch (child.Update())
                 {
-                    case State.Running:
-                        return State.Running;
-                    case State.Failure:
+                    case NodeState.Running:
+                        return NodeState.Running;
+                    case NodeState.Failure:
                         continue;
-                    case State.Success:
-                        return State.Running;
+                    case NodeState.Success:
+                        return NodeState.Running;
                     default:
                         break;
                 }
             }
 
-            return State.Failure;
+            return NodeState.Failure;
         }
 
     }

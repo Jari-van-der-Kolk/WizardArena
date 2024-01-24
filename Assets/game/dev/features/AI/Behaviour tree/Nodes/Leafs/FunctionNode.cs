@@ -5,7 +5,7 @@ namespace Saxon.BT
 {
     public class FunctionNode : LeafNode
     {
-        public delegate Node.State ActionNodeDelegate();
+        public delegate Node.NodeState ActionNodeDelegate();
         private ActionNodeDelegate m_action;
 
 
@@ -18,21 +18,21 @@ namespace Saxon.BT
 
         internal override void OnStop() { }
 
-        protected override State OnUpdate()
+        protected override NodeState OnUpdate()
         {
             switch (m_action()) 
             {
-                case State.Success:
-                    state = State.Success;
+                case NodeState.Success:
+                    state = NodeState.Success;
                     return state;
-                case State.Failure:
-                    state = State.Failure;
+                case NodeState.Failure:
+                    state = NodeState.Failure;
                     return state;
-                case State.Running:
-                    state = State.Running;
+                case NodeState.Running:
+                    state = NodeState.Running;
                     return state;
                 default:
-                    state = State.Failure;
+                    state = NodeState.Failure;
                     return state;
             }
         } 

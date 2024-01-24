@@ -3,19 +3,24 @@ using UnityEngine.AI;
 
 namespace Saxon.BT
 {
+    //Debug.Log(this.ToString() + " stopped " + state.ToString());
+
     public abstract class Node
     {
-        public enum State
+        public string name;
+        public INodeDebugger debugger;
+
+        public enum NodeState
         {
             Running,
             Failure,
             Success
         }
 
-        public State state = State.Running;
+        public NodeState state = NodeState.Running;
         public bool started = false;
 
-        public State Update()
+        public NodeState Update()
         {
             if (!started)
             {
@@ -25,10 +30,11 @@ namespace Saxon.BT
 
             state = OnUpdate();
 
-            if (state == State.Failure || state == State.Success)    
+            if (state == NodeState.Failure || state == NodeState.Success)    
             {
                 OnStop();
                 started = false;
+                debugger?.Debugger(this);
             }
 
             return state;
@@ -36,7 +42,7 @@ namespace Saxon.BT
 
         protected abstract void OnStart();
         internal abstract void OnStop();
-        protected abstract State OnUpdate();
+        protected abstract NodeState OnUpdate();
 
     }
 }

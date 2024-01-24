@@ -9,7 +9,6 @@ namespace Saxon.BT
     public class FallbackStarNode : CompositeNode
     {
 
-        bool debug;
         public FallbackStarNode(List<Node> children)
         {
             this.children = children;     
@@ -22,22 +21,22 @@ namespace Saxon.BT
 
         internal override void OnStop() {}
 
-        protected override State OnUpdate()
+        protected override NodeState OnUpdate()
         {
             var child = children[index].Update();
             switch (child)
             {
-                case State.Running:
-                    return State.Running;
-                case State.Failure:
+                case NodeState.Running:
+                    return NodeState.Running;
+                case NodeState.Failure:
                     index++;
                     break;
-                case State.Success:
-                    return State.Running;
+                case NodeState.Success:
+                    return NodeState.Running;
                 default:
                     break;
             }
-            return index >= children.Count ? State.Success : State.Running;
+            return index >= children.Count ? NodeState.Success : NodeState.Running;
         }
     }
 }

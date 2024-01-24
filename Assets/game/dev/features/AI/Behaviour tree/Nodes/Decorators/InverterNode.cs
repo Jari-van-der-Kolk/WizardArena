@@ -18,20 +18,20 @@ namespace Saxon.BT
 
         internal override void OnStop() { }
 
-        protected override State OnUpdate()
+        protected override NodeState OnUpdate()
         {
             switch (child.Update())
             {
-                case State.Running:
-                    return State.Running;
-                case State.Failure:
-                    return State.Success;
-                case State.Success:
-                    return State.Failure;
+                case NodeState.Running:
+                    return NodeState.Running;
+                case NodeState.Failure:
+                    return NodeState.Success;
+                case NodeState.Success:
+                    return NodeState.Failure;
                 default:
                     break;
             }
-            return State.Success;
+            return NodeState.Success;
         }
 
       

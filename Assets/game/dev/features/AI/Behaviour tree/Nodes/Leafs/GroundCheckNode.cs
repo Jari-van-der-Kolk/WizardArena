@@ -19,14 +19,14 @@ namespace Saxon.BT
 
         internal override void OnStop() { }
 
-        protected override State OnUpdate()
+        protected override NodeState OnUpdate()
         {
             if (groundCheckCollider.IsTouchingLayers(mask))
             {
-                return State.Success;
+                return NodeState.Success;
             }
 
-            return State.Running;
+            return NodeState.Running;
         }
     }
 }

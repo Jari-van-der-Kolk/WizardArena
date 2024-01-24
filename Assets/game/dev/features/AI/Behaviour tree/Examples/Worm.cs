@@ -10,7 +10,7 @@ public class Worm : Actor
     [SerializeField] private float radius;
     [SerializeField] private float losePlayerTime = 4f;
 
-    private RootNode tree;
+    private BehaviourTree tree;
     private SequenceNode lostPlayer;
     private FallbackStarNode root;
     private ReactiveSequenceNode followPlayer;
@@ -25,7 +25,7 @@ public class Worm : Actor
     private RandomDelayNode waitOnPosition;
     private InverterNode invertInSight;
     private InverterNode reachedLocation;
-    private RepeatChildNode followPlayerTime;
+    private TimedRepeatNode followPlayerTime;
 
 
     private void Start()
@@ -65,7 +65,7 @@ public class Worm : Actor
         });
 
         reachedLocation = new InverterNode(goToLocation);
-        followPlayerTime = new RepeatChildNode(targetPlayer, losePlayerTime);
+        followPlayerTime = new TimedRepeatNode(targetPlayer, losePlayerTime);
 
         lostPlayer = new SequenceNode(new List<Node>
         {

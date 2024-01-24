@@ -2,7 +2,7 @@
 
 namespace Saxon.BT
 {
-    public class WaitNode : LeafNode
+    public class WaitNode : LeafNode, INodeDebugger
     {
         public float duraction = 1;
         private float startTime;
@@ -19,14 +19,19 @@ namespace Saxon.BT
 
         internal override void OnStop() { }
 
-        protected override State OnUpdate()
+        protected override NodeState OnUpdate()
         {
             if (Time.time - startTime > duraction)
             {
-                return State.Success;
+                return NodeState.Success;
             }
 
-            return State.Running;
+            return NodeState.Running;
+        }
+
+        public void Debugger<T>(T debug)
+        {
+            
         }
     }
 }

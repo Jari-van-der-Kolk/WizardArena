@@ -4,41 +4,47 @@
     {
         private int index;
         private int repeatCount;
-        bool keepRepeating;
 
         public RepeatNode(Node child)
         {
             this.child = child;
-            keepRepeating = true;
         }
 
         public RepeatNode(Node child, int repeatCount)
         {
             this.child = child;
             this.repeatCount = repeatCount;
-            keepRepeating = false;
         }
         
         protected override void OnStart() 
         {
             index = 0;
         }
-        internal override void OnStop() { }
-        protected override State OnUpdate()
+        protected override NodeState OnUpdate()
         {
             child.Update();
 
-
-            switch (keepRepeating)
+            if(child.state == NodeState.Success)
             {
-                case true:
-                    return State.Running;
-                case false:
-                    index++;
-                    break;
+                index++;
+                if (index > repeatCount)
+                {
+                    return NodeState.Success;
+                }
             }
+            else if(child.state == NodeState.Failure)
+            {
+                return NodeState.Failure;
+            }
+                
 
-            return index >= repeatCount ? State.Success : State.Running;
+            return NodeState.Running;
+           
+            
         }
+
+        internal override void OnStop() { }
+
     }
 }
+            //return index >= repeatCount ? State.Success : State.Running;

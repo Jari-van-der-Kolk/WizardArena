@@ -14,27 +14,31 @@ namespace Saxon.BT
 
         internal override void OnStop() { }
 
-        protected override State OnUpdate()
+        protected override NodeState OnUpdate()
         {
-            bool anyChildRunning = false;
-            
-            foreach (Node node in children)
+
+            while (index < children.Count)
             {
-                switch (node.Update())
+                var child = children[index].Update();
+
+                if (child == NodeState.Success)
                 {
-                    case State.Running:
-                        anyChildRunning = true;
-                        continue;
-                    case State.Failure:
-                        HaltChildren();
-                        return State.Failure;
-                    case State.Success:
-                        continue;
-                    default:
-                        return State.Success;
+                    index++;
+                }
+                else if (child == NodeState.Running)
+                {
+                    return child;
+                }
+                else if (child == NodeState.Failure)
+                {
+                    index = 0;
+                    return child;
                 }
             }
-            return anyChildRunning ? State.Running : State.Success; 
+
+            index = 0;
+            return NodeState.Success;
+
         }
     }
 }

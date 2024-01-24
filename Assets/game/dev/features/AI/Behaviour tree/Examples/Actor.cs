@@ -29,19 +29,19 @@ namespace Saxon.Examples
             navMeshPath = new NavMeshPath();
         }
     
-        public Node.State GoToLocation()
+        public Node.NodeState GoToLocation()
         {
             if (Vector2.Distance(transform.position, agent.destination) < reachedDestination)
             {
-                return Node.State.Success;
+                return Node.NodeState.Success;
             }
-            return Node.State.Running;
+            return Node.NodeState.Running;
         }
     
-        public Node.State GoToPlayer()
+        public Node.NodeState GoToPlayer()
         {
             agent.SetDestination(playerLocation.position);
-            return Node.State.Success;
+            return Node.NodeState.Success;
         }
     
         public bool HasObjectInSight(Transform location)
@@ -58,31 +58,31 @@ namespace Saxon.Examples
             return false;
         }
     
-        public Node.State HasPlayerInSight()
+        public Node.NodeState HasPlayerInSight()
         {
             if (!HasObjectInSight(playerLocation))
-                return Node.State.Success;
+                return Node.NodeState.Success;
     
-            return Node.State.Failure;
+            return Node.NodeState.Failure;
         }
     
-        public Node.State TargetPlayer()
+        public Node.NodeState TargetPlayer()
         {
             agent.destination = playerLocation.position;
-            return Node.State.Success;
+            return Node.NodeState.Success;
         }
     
-        public Node.State HasReachedLocation()
+        public Node.NodeState HasReachedLocation()
         {
             if(Vector2.Distance(transform.position, agent.destination) < reachedDestination)
             {
-                return Node.State.Success;
+                return Node.NodeState.Success;
             }
     
-            return Node.State.Running;
+            return Node.NodeState.Running;
         }
     
-        public Node.State SearchForRandomLocation()
+        public Node.NodeState SearchForRandomLocation()
         {
             Vector3 randomDirection = transform.position + UnityEngine.Random.insideUnitSphere * searchRandomLocationRadius;
             if (NavMesh.SamplePosition(randomDirection,out var hit, searchRandomLocationRadius, 1))  {
@@ -92,10 +92,10 @@ namespace Saxon.Examples
             if (!CheckPath())
             {
                 SearchForRandomLocation();
-                return Node.State.Running;
+                return Node.NodeState.Running;
             }
     
-            return Node.State.Success;
+            return Node.NodeState.Success;
         }
     
         internal bool CheckPath()

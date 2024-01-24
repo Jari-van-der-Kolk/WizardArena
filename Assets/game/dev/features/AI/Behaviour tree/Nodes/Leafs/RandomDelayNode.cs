@@ -26,14 +26,14 @@ namespace Saxon.BT
 
         internal override void OnStop() { }
 
-        protected override State OnUpdate()
+        protected override NodeState OnUpdate()
         {
             if (Time.time - startTime > duraction)
             {
-                return State.Success;
+                return NodeState.Success;
             }
 
-            return State.Running;
+            return NodeState.Running;
         }
     }
 

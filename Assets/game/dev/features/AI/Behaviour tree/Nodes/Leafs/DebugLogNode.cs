@@ -1,31 +1,32 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Saxon.BT
 {
-    public class DebugLogNode : LeafNode
+    public class DebugLogNode<T> : LeafNode
     {
 
-        private string message;
+        private T message;
 
-        public DebugLogNode(string message)
+        public DebugLogNode(T message)
         {
             this.message = message;
         }
         
         protected override void OnStart()
         {
-            Debug.Log($"OnStart {message}");
+            Debug.Log($"OnStart: {message}");
         }
 
         internal override void OnStop()
         {
-            Debug.Log($"OnStop {message}");
+            Debug.Log($"OnStop: {message}");
         }
 
-        protected override State OnUpdate()
+        protected override NodeState OnUpdate()
         {
-            Debug.Log($"OnUpdate {message}");
-            return State.Success;
+            Debug.Log($"OnUpdate: {message}");
+            return NodeState.Success;
         }
     }
 }

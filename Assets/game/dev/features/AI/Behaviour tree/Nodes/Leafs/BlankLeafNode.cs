@@ -14,7 +14,7 @@ namespace Saxon.BT
             throw new NotImplementedException();
         }
 
-        protected override State OnUpdate()
+        protected override NodeState OnUpdate()
         {
             throw new NotImplementedException();
         }

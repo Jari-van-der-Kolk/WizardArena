@@ -6,23 +6,23 @@ using Saxon.Examples;
 
 public class BTTesting : Actor
 {
-    private RootNode root;
+    private BehaviourTree root;
     private FallbackStarNode fallbackNode;
-    private DebugLogNode debugLogNode1;
-    private DebugLogNode debugLogNode2;
-    private DebugLogNode debugLogNode3;
+    private DebugLogNode<string> debugLogNode1;
+    private DebugLogNode<string> debugLogNode2;
+    private DebugLogNode<string> debugLogNode3;
     private FunctionNode functionNode;
 
     bool foo;
 
     void Start()
     {
-        debugLogNode1 = new DebugLogNode(" 1"); 
-        debugLogNode2 = new DebugLogNode(" 2");
-        debugLogNode3 = new DebugLogNode(" ffffffffffff");
+        debugLogNode1 = new DebugLogNode<string>(" 1"); 
+        debugLogNode2 = new DebugLogNode<string>(" 2");
+        debugLogNode3 = new DebugLogNode<string>(" ffffffffffff");
         functionNode = new FunctionNode(ReturnFailure);
         WaitNode panda = new WaitNode(.5f);
-        RepeatChildNode repeatNode = new RepeatChildNode(debugLogNode1, 5f);
+        TimedRepeatNode repeatNode = new TimedRepeatNode(debugLogNode1, 5f);
         InverterNode inverterNode = new InverterNode(repeatNode);
 
 
@@ -45,13 +45,13 @@ public class BTTesting : Actor
         root.TimeStepUpdate(.5f);
     }
 
-    private Node.State ReturnFailure()
+    private Node.NodeState ReturnFailure()
     {
         Debug.Log("f");
         if(foo)
         {
-            return Node.State.Success;
+            return Node.NodeState.Success;
         }
-        return Node.State.Failure;
+        return Node.NodeState.Failure;
     }
 }
