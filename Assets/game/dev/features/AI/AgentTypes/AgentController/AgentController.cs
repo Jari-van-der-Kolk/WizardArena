@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using Saxon.Sensor;
+using System.Linq;
 
 namespace Saxon.BT.AI
 {
@@ -11,41 +12,63 @@ namespace Saxon.BT.AI
         MidRangeWizard,
         LongRangeWizard,
         Necromancer,
+        NecroServant,
         Spider,
     };
 }
 
 namespace Saxon.BT.AI.Controller
 {
+    //TODO DEBUG//
+    //TODO de necrospell zijn delay decorator WaitConditionNode geeft geen delay
 
-    //TODO zorg ervoor dat er in de ObjectDetection class de bool genaamt lostTarget komt 
+    //TODO//
+    //TODO zorg ervoor dat er een priority system komt voor het uitkiezen van targets
+    
+    //TODO maak een notification system dat in de gaten houd welke actie die moet uivoeren als er iets in de buurt word gedaan of gebeurd,
+    //  bijv geluid/kabaal,- beschoten worden,- ect
+
+    //TODO zorg ervoor dat de necroservant een random plaats rondom de necromancer vind met behulp van de spacial hash grid
+
+
+    
 
     [RequireComponent(typeof(NavMeshAgent))]
     public class AgentController : MonoBehaviour
     {
-        [SerializeField] private AgentTypes _enemyType;
+        [SerializeField] private AgentTypes _agentType;
         [SerializeField] private ObjectDetectionData _detectionData;
         [Tooltip("The speed at which the behaviour tree updates")]
         [SerializeField] private float _BTUpdateStep = 0.5f;
         [Tooltip("The speed at which the object detection updates")]
         [SerializeField] private float _detectionUpdateStep = 0.5f;
 
+        public Vector3 destination { get; private set; }
+        public Vector3 origin { get; private set; }
+        public List<Transform> waypoints;
+        public ObjectDetection objectDetection;
+        public bool alive = true;
+        public CommandInvoker commandInvoker { get; private set; }
+
         internal NavMeshAgent navMesh;
     
-        public ObjectDetection objectDetection;
-        public List<Transform> waypoints;
-    
-        BehaviourTree behaviourTree;
         Agent currentAgent;
+        BehaviourTree behaviourTree;
+        Rigidbody rb;
+        Collider col;
 
-        bool alive;
 
-#if UNITY_EDITOR
+        
+
         #region debug
+#if UNITY_EDITOR
 
+        [Space]
         [SerializeField] private bool hasTargetInSight;
         [SerializeField] private bool isTargetRecentlyLost;
+        [SerializeField] private Transform target;
         [SerializeField] private bool debug;
+        [SerializeField] private bool debugAttackRanges;
 
         private void OnValidate()
         {
@@ -58,58 +81,88 @@ namespace Saxon.BT.AI.Controller
             if (debug)
             {
                 objectDetection.DrawGizmo();
+                if(debugAttackRanges)
+                {
+                    objectDetection.DrawAttackRanges();
+                }
+
             }
         }
+
+
 
         private void DebugVariables()
         {
             hasTargetInSight = objectDetection.hasTargetInSight;
             isTargetRecentlyLost = objectDetection.targetRecentlyLost;
+            target = objectDetection.target;
         }
 
 
-        #endregion
-#endif
+    #endif
+#endregion
         void Awake()
         {
             navMesh = GetComponent<NavMeshAgent>();
+            rb = GetComponent<Rigidbody>();
+            col = GetComponent<Collider>();
+            commandInvoker = GetComponent<CommandInvoker>();
         }
     
         void Start()
         {
-            alive = true;
+
+            var foo = FindObjectsOfType<GameObject>().Where(obj => obj.gameObject.layer == objectDetection.data.VieldOfViewLayers).ToList();
+            SetAgentActivity(alive);
 
             //dont change the order of currentAgent and behaviourTree otherwise the debugger will start bitching 
             objectDetection = new ObjectDetection(transform, _detectionData);
-
-#if UNITY_EDITOR
+            SetAgentType(_agentType);
+            SetDestination(transform.position);
+#region Editor
+    #if UNITY_EDITOR
             objectDetection.Validate();
 #endif
-
-            currentAgent = AgentFactory(_enemyType);
-            behaviourTree = currentAgent.CreateTree();
+            #endregion
         }
     
         void Update()
         {
-            if (alive)
+            if (SetAgentActivity(alive))
             {
                 objectDetection.TimeStepUpdate(_detectionUpdateStep); 
                 behaviourTree.TimeStepUpdate(_BTUpdateStep);
             }
+            else
+            {
+                SetDestination(destination);
+            }
 
-#if UNITY_EDITOR
+            
             DebugVariables();
-#endif
+
+        }
+        public void SetAgentType(AgentTypes agentType)
+        {
+            currentAgent = AgentFactory(agentType);
+            behaviourTree = currentAgent.CreateTree();
+            _agentType = agentType;
+        }
+
+        public void SetDestination(Vector3 destination)
+        {
+            this.destination = destination;
         }
 
         //TODO make sure the agent can die and come alive again
-        public void SetAgentStatus(bool agentStatus)
+        public bool SetAgentActivity(bool agentStatus)
         {
             alive = agentStatus;
-            enabled = agentStatus;
             navMesh.enabled = agentStatus;
-            
+            rb.useGravity = !agentStatus;
+            col.isTrigger = agentStatus;
+
+            return agentStatus;
         }
 
         Agent AgentFactory(AgentTypes agentType)
@@ -129,6 +182,9 @@ namespace Saxon.BT.AI.Controller
                     break;
                 case AgentTypes.Necromancer:
                     agent = new Necromancer(this);
+                    break;
+                case AgentTypes.NecroServant:
+                    agent = new NecroServant(this);
                     break;
                 case AgentTypes.Spider:
                     agent = new Spider(this);

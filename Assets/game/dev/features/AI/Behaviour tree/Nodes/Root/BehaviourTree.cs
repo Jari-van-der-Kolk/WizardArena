@@ -13,7 +13,6 @@ namespace Saxon.BT
         private float startTime;
 
         public Node rootNode;
-        public Node.NodeState treeState = Node.NodeState.Running;
         public AgentController agentController;
 
         public BehaviourTree(Node rootNode)
@@ -27,11 +26,10 @@ namespace Saxon.BT
             float time = Time.time;
             if (time - startTime > timestep)
             {
-                treeState = rootNode.Update();
+                rootNode.Update();
                 startTime = time;
             }
         }
     }
 
 }
-            //if(treeState == Node.State.Running)

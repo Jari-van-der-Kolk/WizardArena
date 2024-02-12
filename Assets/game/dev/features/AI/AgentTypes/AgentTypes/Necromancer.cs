@@ -7,6 +7,7 @@ using Saxon.BT.AI.Controller;
 using Saxon.NodePositioning;
 using UnityEngine.UIElements;
 using Saxon.BT;
+using System;
 
 namespace Saxon.BT.AI
 {
@@ -18,72 +19,104 @@ namespace Saxon.BT.AI
 
         public override BehaviourTree CreateTree()
         {
-            Saxon.GetPlayerObject(out var playerObject);
-            SetDestinationNode followPlayer = new SetDestinationNode(this, 5f, playerObject.transform);
-            InverterNode invertFollowPlayer = new InverterNode(followPlayer);
-
-
-
-            ConditionNode hasLostVisuals = new ConditionNode("lost target",() => detection.targetRecentlyLost);
-            SequenceNode lostTarget = new SequenceNode(new List<Node>
+            MoveToDestinationCommand standStillCommand = new MoveToDestinationCommand(navMesh, detection );
+            ExecuteCommandNode standStill = new ExecuteCommandNode(this, standStillCommand);
+            int amountOfDeadNearby = 3;
+            float necroReviveRadius = 5f;
+            ConditionNode enoughDeadAgents = new ConditionNode(() => CountDeadAgentsInVicinity(necroReviveRadius) > amountOfDeadNearby);
+            NecroSpell necroSpell = new NecroSpell(this, necroReviveRadius);
+            WaitNode cast = new WaitNode(3f);
+            SequenceNode castNecroSpell = new SequenceNode("spell", new List<Node>
             {
-                hasLostVisuals, invertFollowPlayer
-            });
-
-            ConditionNode hasVisuals = new ConditionNode(() => detection.hasTargetInSight);
-            SequenceNode foundTarget = new SequenceNode("found target" ,new List<Node> 
-            {
-                hasVisuals, followPlayer, //TODO add here the functionality to attack the target
+                enoughDeadAgents, standStill, cast, necroSpell
             });
 
             float findNewLocationRadius = 10f;
             float pickLocationRadius = 3f;
-
-            RandomPatrolNode patrol = new RandomPatrolNode(this, findNewLocationRadius, pickLocationRadius);
-            FallbackNode fallback = new FallbackNode(new List<Node> 
-            {
-                lostTarget, foundTarget ,patrol
-            });
-
-            RootNode rootNode = new RootNode(fallback);
+            RandomPatrolNode patrol = new RandomPatrolNode("patrol", this, findNewLocationRadius, pickLocationRadius);
 
 
+            RootNode rootNode = new RootNode(new SequenceNode(new List<Node>
+            { 
+                ChasePlayer(4f) 
+            }));
 
             return new BehaviourTree(rootNode);
         }
+        public int CountDeadAgentsInVicinity(float searchRadius)
+        {
+            int count = 0;
+            var agentsInVicinity = detection.GetComponentsInArea<AgentController>(searchRadius);                  
+                 
+            if( agentsInVicinity != null )
+            {
+                for (int i = 0; i < agentsInVicinity.Count; i++)
+                {
+                    if (!agentsInVicinity[i].alive && agentsInVicinity[i].transform != agentController.transform)
+                    {
+                        count++;
+                    }
+                }
+            }
+            else
+            {
+                Debug.Log("you're trying to get a object that does not contain the correct Component, switch layer or add the component");
+                return 0;
+            }
+          
+
+            return count;
+        }
+
+
+        public int CountDeadAgentsInVicinity(float searchRadius, out List<AgentController> agents)
+        {
+            int count = 0;
+            agents = new List<AgentController>();
+            var agentsInVicinity = detection.GetComponentsInArea<AgentController>(searchRadius);
+            for (int i = 0; i < agentsInVicinity.Count; i++)
+            {
+                if (!agentsInVicinity[i].alive && agentsInVicinity[i].transform != agentController.transform)
+                {
+                    agents.Add(agentsInVicinity[i]);    
+                    count++;
+                }
+            }
+
+            return count;
+        }
     }
 }
-/* RandomPatrolNode randomPatrol = new RandomPatrolNode(this, 5f, 3f, spatialHashGrid);
-            SetDestinationNode followPlayer = new SetDestinationNode(this, playerObject.transform);
-            TargetInSightNode targetInSight = new TargetInSightNode(agentController.objectDetection);
-            InverterNode inverter = new InverterNode(targetInSight);
+    /* Saxon.GetPlayerObject(out var playerObject);
+            RotateTowardsCommand rotationCommand = new RotateTowardsCommand(transform, detection, 2f);
+            FollowTargetNode followTarget = new FollowTargetNode(this, 5f, rotationCommand);
+            SetDestinationNode targetPlayer = new SetDestinationNode(this, 5f, playerObject.transform);
 
-            DebugLogNode<Node.State> debugLogNode = new DebugLogNode<Node.State>(inverter.state);
-            DebugLogNode<string> logNode = new DebugLogNode<string>("f");
 
-            
-
-            ReactiveSequenceNode patrol = new ReactiveSequenceNode(new List<Node>
-            {
-                inverter, logNode
+            ConditionNode targetSightCondition = new ConditionNode(() => detection.targetRecentlyLost || detection.hasTargetInSight);
+            ReturnStateNode pauseNode = new ReturnStateNode(Node.NodeState.Success);
+            SequenceNode chaseTarget = new SequenceNode("chase",new List<Node>                                      
+            {                                                    
+                targetSightCondition, followTarget
             });
 
-            DebugLogNode<Node.State> state = new DebugLogNode<Node.State>(patrol.state);*/
-/* RandomPatrolNode randomPatrol = new RandomPatrolNode(this, 5f, 3f, spatialHashGrid);
-            ControlNode targetInSight = new ControlNode(hasTargetInSight);
-            FallbackStarNode isPatroling = new FallbackStarNode(new List<Node>
+           
+           
+          
+           
+
+       */
+
+    /*  ConditionNode lostTargetCondition = new ConditionNode(() => detection.targetRecentlyLost);
+            SequenceNode lostTarget = new SequenceNode(new List<Node>
             {
-                targetInSight, randomPatrol       
-            }); 
-
-            SetDestinationNode followPlayer = new SetDestinationNode(this ,playerObject.transform);
-            NodeControl isPursuing = new NodeControl(followPlayer, false);
-            
-
-
-            FallbackNode fallbackNode = new FallbackNode(new List<Node>
-            {
-                isPatroling, isPursuing
+                lostTargetCondition, followTarget
             });
 
-*/
+
+            ConditionNode foundTargetCondition = new ConditionNode(() => detection.hasTargetInSight);
+
+            SequenceNode foundTarget = new SequenceNode(new List<Node> 
+            {
+                foundTargetCondition, followTarget, pauseNode
+            });*/

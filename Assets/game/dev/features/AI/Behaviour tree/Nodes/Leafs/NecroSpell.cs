@@ -1,28 +1,39 @@
-﻿using System;
+﻿using Saxon.BT.AI;
+using Saxon.BT.AI.Controller;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Saxon.BT
 {
-    public class NecroSpell : LeafNode
+    public class NecroSpell : LeafNode, INodeDebugger
     {
-        Collider[] colliders = new Collider[50];
-        Agent agent;
+        new Necromancer agent;
         float radiusEffect;
-
-        public NecroSpell( Agent agent, float radiusEffect)
+       
+        public NecroSpell(Necromancer agent, float radius)
         {
             this.agent = agent;
-            this.radiusEffect = radiusEffect;
+            this.radiusEffect = radius;
         }
 
+        public NecroSpell(string name, Necromancer agent, float radius)
+        {
+            debugger = this;
+            this.debug = name;
+            this.agent = agent;
+            this.radiusEffect = radius;
+        }
+       
         protected override void OnStart()
         {
-            List<GameObject> revivableObjects = agent.detection.GetObjectsInVicinity();   
-            for (int i = 0; i < revivableObjects.Count; i++)
+            agent.CountDeadAgentsInVicinity(radiusEffect ,out var deadAgents);
+            for (int i = 0; i < deadAgents.Count; i++)
             {
-
+                deadAgents[i].SetAgentActivity(true);
+                deadAgents[i].SetAgentType(AI.AgentTypes.NecroServant);
             }
+
         }
 
         protected override NodeState OnUpdate()
@@ -34,5 +45,11 @@ namespace Saxon.BT
         {
             
         }
+        public void Debugger<T>(T debug)
+        {
+            Debug.Log(base.debug + " " + state);
+        }
+
+
     }
 }

@@ -3,25 +3,27 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Undefined
+  - Agent
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Player
+  - Terrain
   - Water
   - UI
-  - Terrain
-  - Slope
-  - Stairs
-  - MovingPlatform
+  - Player
+  - Agent
+  - Reflection_Probes
+  - Lighting
+  - Props
+  - ReflectedInWater
+  - Ground
+  - AccessibleVolume
+  - PostProcessing
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - MainGround
   - 
   - 
   - 

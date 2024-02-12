@@ -8,7 +8,6 @@ namespace Saxon.BT
     public class WaypointPatrolNode : LeafNode
     {
 
-        Agent agent;
         Vector3 destination;
         int index;
         public WaypointPatrolNode(Agent agent)

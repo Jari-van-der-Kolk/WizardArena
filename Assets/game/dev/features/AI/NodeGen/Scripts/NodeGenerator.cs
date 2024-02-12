@@ -22,8 +22,8 @@ namespace Saxon.NodePositioning
 
         public LayerMask groundMask;
         [Range(1, 20)]public int hashGridSize = 5;
-        public float nodeSize = 1f;
-
+        [SerializeField] float nodeSize = 1f;
+        [SerializeField] float nodeGroundSeperation = 0.75f;
 
         private GameObject nodesHolder;
         public List<HashNode> hashNodes = new List<HashNode>();
@@ -33,24 +33,26 @@ namespace Saxon.NodePositioning
 
     #if UNITY_EDITOR
         //put this variable here since its on the bottom anyway
-        [Space] public bool debug = false;
+        [Space] public bool debugPoints = false;
+         public bool debugHashgrid = false;
 
         void OnDrawGizmos()
         {
-           
-            if (debug) {
+            if (debugPoints) {
 
                 if (hashNodes == null)
                     return;
 
                 DebugNodes();
+            }
 
+            if(debugHashgrid)
+            {
                 if (hashGrid == null)
                     return;
 
                 hashGrid.Debug();
             }
-
             
         }
 
@@ -59,15 +61,30 @@ namespace Saxon.NodePositioning
             for (int i = 0; i < hashNodes.Count; i++)
             {
                 Gizmos.DrawCube(hashNodes[i].transform.position, Vector3.one * .2f);
-                Gizmos.DrawLine(hashNodes[i].transform.position, hashNodes[i].transform.position + Vector3.down);
+                //Gizmos.DrawLine(hashNodes[i].transform.position, hashNodes[i].transform.position + Vector3.down);
 
             }
         }
 
-    #endif
+#endif
 
         #endregion
 
+
+        private void OnValidate()
+        {
+            if(hashNodes != null && hashNodes.Count > 0)
+            {
+                hashGrid = new SpatialHashGrid<HashNode>(hashNodes, hashGridSize);
+            }
+        }
+        private void Start()
+        {
+            if (hashNodes != null && hashNodes.Count > 0)
+            {
+                hashGrid = new SpatialHashGrid<HashNode>(hashNodes, hashGridSize);
+            }
+        }
 
         //this method is used as a button for giving the output data it creates for the hashNodes list
         //when the button is pressed NodeGeneratorEditor calls this method and executes it
@@ -79,17 +96,14 @@ namespace Saxon.NodePositioning
 
         private static NodeGenerator instance;
 
-        // Public property to access the singleton instance
         public static NodeGenerator Instance
         {
             get
             {
-                // If the instance is null, try to find it in the scene
                 if (instance == null)
                 {
                     instance = FindObjectOfType<NodeGenerator>();
 
-                    // If no instance is found, create a new GameObject and add the script to it
                     if (instance == null)
                     {
                         GameObject singletonObject = new GameObject("NodeGeneratorSingleton");
@@ -102,10 +116,7 @@ namespace Saxon.NodePositioning
         }
 
 
-        private void Start()
-        {
-            hashGrid = new SpatialHashGrid<HashNode>(hashNodes, hashGridSize);
-        }
+        
 
         List<HashNode> GenerateGridNodes()
         {
@@ -130,7 +141,7 @@ namespace Saxon.NodePositioning
                         Vector3 pos = point + (Vector3.up * 1f);
 
                         // Make sure the point is on the NavMesh
-                        if (IsPointOnNavMesh(point, navMeshData) && Saxon.IsGrounded(point, .75f, groundMask))
+                        if (Saxon.IsGrounded(point, nodeGroundSeperation, groundMask) && IsPointOnNavMesh(point, navMeshData))
                         {
                             // Instantiate a cube or any other object at the generated point
                             //:p

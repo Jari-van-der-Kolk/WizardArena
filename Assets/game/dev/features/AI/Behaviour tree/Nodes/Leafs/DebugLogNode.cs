@@ -3,12 +3,12 @@ using UnityEngine;
 
 namespace Saxon.BT
 {
-    public class DebugLogNode<T> : LeafNode
+    public class DebugLogNode : LeafNode
     {
 
-        private T message;
+        private object message;
 
-        public DebugLogNode(T message)
+        public DebugLogNode(object message)
         {
             this.message = message;
         }

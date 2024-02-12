@@ -6,7 +6,6 @@ namespace Saxon.BT
     public class SetTargetNode : LeafNode
     {
         Transform destinationTransform;
-        Agent agent;
         GameObject player;
 
         public SetTargetNode(Agent agent,Transform destinationTransform)

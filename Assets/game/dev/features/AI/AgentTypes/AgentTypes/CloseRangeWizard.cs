@@ -19,7 +19,6 @@ namespace Saxon.BT.AI
         public override BehaviourTree CreateTree()
         {
             Saxon.GetPlayerObject(out var playerObject);
-            Debug.Log(playerObject);
 
             SetDestinationNode destinationNode = new SetDestinationNode(this, 3f,playerObject.transform);
 

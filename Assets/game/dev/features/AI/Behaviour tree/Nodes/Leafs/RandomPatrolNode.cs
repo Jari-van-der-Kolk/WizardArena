@@ -8,7 +8,6 @@ namespace Saxon.BT
 {
     public class RandomPatrolNode : LeafNode, INodeDebugger
     {
-        Agent agent;
         Vector3[] directions = { Vector3.forward, Vector3.back, Vector3.left, Vector3.right };
         Vector3 destination;
 
@@ -28,7 +27,7 @@ namespace Saxon.BT
         public RandomPatrolNode(string name, Agent agent, float searchStartLength, float searchRadius)
         {
             debugger = this; 
-            this.name = name;
+            this.debug = name;
             this.agent = agent;
             this.searchRadius = searchRadius;
             this.searchStartLength = searchStartLength;
@@ -36,18 +35,20 @@ namespace Saxon.BT
 
         protected override void OnStart()
         {
+            agent.navMesh.updateRotation = true;
             SetNewDestination();
             startTime = Time.time; // Record the start time
+            agent.agentController.commandInvoker.queueCommands.ClearQueueCommands();
         }
 
         protected override NodeState OnUpdate()
         {
-            if (!(agent.navMesh.destination == destination))
+            if(agent.agentController.destination != destination)
             {
-                return NodeState.Failure;
+                SetNewDestination();
             }
 
-            if (Saxon.IsInDistance(agent.navMesh.transform.position, destination, 2f))
+            if (Saxon.IsInDistance(agent.navMesh.transform.position, destination, 2.5f))
             {
                 // Check if the required delay has passed
                 if (Time.time - startTime >= successDelay)
@@ -74,12 +75,31 @@ namespace Saxon.BT
         private void SetNewDestination()
         {
             destination = GetLocation();
-            agent.navMesh.SetDestination(destination);
-            destination = agent.navMesh.destination;
+            agent.SetDestination(destination);
+            if (!IsPathReachable(destination))
+            {
+                SetNewDestination();
+            }
+        }
+        bool IsPathReachable(Vector3 targetPosition)
+        {
+            NavMeshPath path = new NavMeshPath();
+
+            // Calculate the path
+            if (NavMesh.CalculatePath(agent.position, targetPosition, NavMesh.AllAreas, path))
+            {
+                // Check if the path status is not PathInvalid
+                if (path.status != NavMeshPathStatus.PathInvalid)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
 
-       
+
         public Vector3 GetLocation()
         {
             Vector3 loc = Vector3.zero;
@@ -141,7 +161,7 @@ namespace Saxon.BT
 
         public void Debugger<T>(T debug)
         {
-            Debug.Log(name + " " + state);
+            Debug.Log(base.debug + " " + state);
         }
     }
 }

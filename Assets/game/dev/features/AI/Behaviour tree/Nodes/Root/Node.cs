@@ -7,8 +7,9 @@ namespace Saxon.BT
 
     public abstract class Node
     {
-        public string name;
+        public string debug;
         public INodeDebugger debugger;
+        public Agent agent;
 
         public enum NodeState
         {
@@ -40,9 +41,14 @@ namespace Saxon.BT
             return state;
         }
 
-        protected abstract void OnStart();
-        internal abstract void OnStop();
+        protected virtual void OnStart() { }
+        internal virtual void OnStop() { }
         protected abstract NodeState OnUpdate();
+
+        public void Print(object message)
+        {
+            Debug.Log(message);
+        }
 
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 namespace Saxon.Sensor
@@ -9,9 +10,11 @@ namespace Saxon.Sensor
 
     public class ObjectDetection 
     {
-        ObjectDetectionData data;
+        public ObjectDetectionData data { get; private set; }
         Transform _Tran;
-        Collider[] _colliders = new Collider[50];
+        Collider[] _vieldOfViewColliders = new Collider[50];
+        Collider[] _vicinityColliders = new Collider[50];
+        Collider[] _targetColliders = new Collider[50];
         Mesh _mesh;
         int _count;
         float _scanTimer;
@@ -19,14 +22,20 @@ namespace Saxon.Sensor
 
         internal Transform target { get; private set; }
         internal List<GameObject> detectedTargets {  get; private set; }
+        internal List<GameObject> vicinityTargets {  get; private set; }
         public bool hasTargetInSight {  get; private set; }
         public bool noVisualsOnTarget { get; private set; }
         public bool targetRecentlyLost { get; private set; }
+        public bool lostTarget {  get; private set; }
+
 
         public ObjectDetection(Transform transform, ObjectDetectionData data)
         {
+            target = transform;
             this._Tran = transform;
             this.data = data;
+            vicinityTargets = new List<GameObject>();
+            lostTarget = true;
         }
 
         #region Debug
@@ -42,7 +51,7 @@ namespace Saxon.Sensor
             int[] triangles = new int[numVertices];
 
             Vector3 bottomCenter = Vector3.zero;
-            Vector3 bottomLeft = Quaternion.Euler(0, -data.angle, 0) * Vector3.forward * data.distance;
+            Vector3 bottomLeft = Quaternion.Euler(0, -data.angle, 0) * Vector3.forward * data.distance; 
             Vector3 bottomRight = Quaternion.Euler(0, data.angle, 0) * Vector3.forward * data.distance;
 
             Vector3 topCenter = bottomCenter + Vector3.up * data.height;
@@ -127,6 +136,7 @@ namespace Saxon.Sensor
         {
             if (data == null)
             {
+                Debug.LogError("ObjectDetection does not contain ObjectDetectionData " + _Tran.name);
                 return;
             }
 
@@ -140,9 +150,28 @@ namespace Saxon.Sensor
             Gizmos.DrawWireSphere(_Tran.position, data.distance);
             for (int i = 0; i < _count; i++)
             {
-                Gizmos.DrawSphere(_colliders[i].transform.position, 0.2f);
+                Gizmos.DrawSphere(_vieldOfViewColliders[i].transform.position, 0.2f);
             }
+
+
+
         }
+
+#if UNITY_EDITOR
+        public void DrawAttackRanges()
+        {
+            Handles.color = Color.blue;
+            Handles.DrawWireDisc(_Tran.position, Vector3.up, data.closeRangeAttackDistance);
+
+            Handles.color = Color.green;
+            Handles.DrawWireDisc(_Tran.position, Vector3.up, data.midRangeAttackDistance);
+
+            Handles.color = Color.yellow;
+            Handles.DrawWireDisc(_Tran.position, Vector3.up, data.longRangeAttackDistance);
+
+            Gizmos.DrawLine(_Tran.position + Vector3.down * data.distance, _Tran.position + Vector3.up * data.distance);
+        }
+#endif
         #endregion
 
         public void TimeStepUpdate(float timestep)
@@ -151,7 +180,9 @@ namespace Saxon.Sensor
 
             if (time - _scanTimer > timestep)
             {
-                detectedTargets = Scan(_Tran.forward);
+                detectedTargets = Scan(_Tran.forward, out var inVicinity);
+                vicinityTargets = inVicinity;
+
 
                 var previousVisualState = hasTargetInSight;
                 hasTargetInSight = detectedTargets.Count > 0;
@@ -161,6 +192,7 @@ namespace Saxon.Sensor
                 if (!hasTargetInSight && previousVisualState)
                 {
                     targetRecentlyLost = true;
+                    lostTarget = true;
                 }
 
                 if (hasTargetInSight)
@@ -168,6 +200,7 @@ namespace Saxon.Sensor
                     //make a priority target system in the future for this line of code 
                     target = detectedTargets[0].transform;
                     targetRecentlyLost = false;
+                    lostTarget = false;
                     _lostTimer = time;
                 }
 
@@ -183,55 +216,63 @@ namespace Saxon.Sensor
         }
 
 
-        public static List<GameObject> GetObjectsInVicinityNonAlloc(Transform _Tran, Collider[] _colliders, float distance, LayerMask detectionLayers)
+        public List<T> GetComponentsInArea<T>(float areaRadius) where T : Component
         {
-            List<GameObject> detectedObjects = new List<GameObject>();
-            int count = Physics.OverlapSphereNonAlloc(_Tran.position, distance, _colliders, detectionLayers, QueryTriggerInteraction.Collide);
+            List<T> detectedObjects = new List<T>();
+            int count = Physics.OverlapSphereNonAlloc(_Tran.position, areaRadius, _targetColliders, data.targetLayers, QueryTriggerInteraction.Collide);
 
             for (int i = 0; i < count; i++)
             {
-                GameObject obj = _colliders[i].gameObject;
+                T obj = _targetColliders[i].GetComponent<T>();
                 detectedObjects.Add(obj);
             }
 
             return detectedObjects;
         }
 
-
-
-        public List<GameObject> GetObjectsInVicinity()
+        public bool HasOcclusionWithTarget()
         {
-            List<GameObject> detectedObjects = new List<GameObject>();
-            int count = Physics.OverlapSphereNonAlloc(_Tran.position, data.distance, _colliders, data.detectionLayers, QueryTriggerInteraction.Collide);
-
-            for (int i = 0; i < count; i++)
+            if (target == null)
             {
-                GameObject obj = _colliders[i].gameObject;
-                detectedObjects.Add(obj);
+                return true;   
             }
 
-            return detectedObjects;
+            if (Physics.Linecast(_Tran.position, target.position, data.occlusionLayers))
+            {
+                // The target is occluded
+                return false;
+            }
+            return true;
         }
-
-
+      
 
         public bool HasObjectInSight(GameObject target)
         {
             return detectedTargets.Contains(target);
         }
 
-        public List<GameObject> Scan(Vector3 scanDirection)
+        private List<GameObject> Scan(Vector3 scanDirection, out List<GameObject> gameObjects)
         {
+            gameObjects = new List<GameObject>();
             List<GameObject> detectedObjects = new List<GameObject>();
-            int count = Physics.OverlapSphereNonAlloc(_Tran.position, data.distance, _colliders, data.detectionLayers, QueryTriggerInteraction.Collide);
 
-            for (int i = 0; i < count; i++)
+            int targetCount = Physics.OverlapSphereNonAlloc(_Tran.position, data.distance, _vieldOfViewColliders, data.VieldOfViewLayers, QueryTriggerInteraction.Collide);
+            int vicinityCount = Physics.OverlapSphereNonAlloc(_Tran.position, data.distance, _vicinityColliders, data.targetLayers, QueryTriggerInteraction.Collide);
+
+            for (int i = 0; i < targetCount; i++)
             {
-                GameObject obj = _colliders[i].gameObject;
+                GameObject obj = _vieldOfViewColliders[i].gameObject;
                 if (IsObjectInSight(data, _Tran.position, scanDirection, obj))
                 {
                     detectedObjects.Add(obj);
                 }
+            }
+
+            for (int i = 0; i < vicinityCount; i++)
+            {
+                GameObject obj = _vicinityColliders[i].gameObject;
+                gameObjects.Add(obj);
+
             }
 
             return detectedObjects;

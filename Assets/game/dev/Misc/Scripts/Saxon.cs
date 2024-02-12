@@ -1,4 +1,6 @@
 using Saxon.BT;
+using Saxon.BT.AI.Controller;
+using Saxon.Sensor;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,6 +21,11 @@ namespace Saxon
         public static bool IsInDistance(Vector3 origin, Vector3 target, float inDistanceLength) 
         {
             return Vector3.Distance(origin, target) < inDistanceLength;
+        }
+        public static bool IsInDistance(Vector3 origin, Transform target, float inDistanceLength)
+        {
+            if(target == null) return false;
+            return Vector3.Distance(origin, target.position) < inDistanceLength;
         }
 
 
@@ -43,6 +50,8 @@ namespace Saxon
         {
             throw new System.Exception();
         } 
+
+       
 
     }
 

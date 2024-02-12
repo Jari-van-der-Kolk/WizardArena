@@ -15,7 +15,7 @@
             this.child = child;
             this.repeatCount = repeatCount;
         }
-        
+
         protected override void OnStart() 
         {
             index = 0;

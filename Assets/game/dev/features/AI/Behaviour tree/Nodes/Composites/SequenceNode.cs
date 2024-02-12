@@ -7,7 +7,6 @@ namespace Saxon.BT
 {
     public class SequenceNode : CompositeNode, INodeDebugger
     {
-        bool debug;
         Action activeResponse;
 
         public SequenceNode(List<Node> children)
@@ -21,12 +20,11 @@ namespace Saxon.BT
         }
         public SequenceNode(string name, List<Node> children)
         {
-            this.name = name;
+            this.debug = name;
             this.debugger = this;
             this.children = children;
         }
 
-        
         protected override void OnStart()
         {
         }
@@ -62,7 +60,7 @@ namespace Saxon.BT
 
         public void Debugger<T>(T debug)
         {
-            Debug.Log(name + " " + state);
+            Debug.Log(base.debug + " " + state);
         }
     }
 }

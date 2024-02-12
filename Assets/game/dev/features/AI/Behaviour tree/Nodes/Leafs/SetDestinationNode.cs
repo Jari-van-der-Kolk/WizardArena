@@ -6,8 +6,8 @@ namespace Saxon.BT
     public class SetDestinationNode : LeafNode
     {
         Transform destinationTransform;
-        Agent agent;
         float reachedTargetDistance;
+        bool inDistance;
 
         public SetDestinationNode(Agent agent, float reachedTargetDistance, Transform destinationTransform)
         {
@@ -18,23 +18,24 @@ namespace Saxon.BT
 
         protected override void OnStart()
         {
-            if(!Saxon.IsInDistance(agent.position, destinationTransform.position, reachedTargetDistance))
-                agent.SetDestination(destinationTransform.position);  
+            inDistance = Saxon.IsInDistance(agent.position, destinationTransform.position, reachedTargetDistance);
+            if(!inDistance)
+            {
+                agent.SetDestination(destinationTransform.position);
+            }
+            else
+            {
+                agent.SetDestination(agent.position);
+            }
         }
 
         protected override NodeState OnUpdate()
         {
-            if (Saxon.IsInDistance(agent.position, destinationTransform.position, reachedTargetDistance))
-            {
-                return NodeState.Success;
-            }
-
-            return NodeState.Failure;
+            return NodeState.Success;
         }
 
         internal override void OnStop()
         {
-            agent.SetDestination(agent.position);
         }
     }
 }

@@ -6,15 +6,23 @@ namespace Saxon.BT
     public class FallbackNode : CompositeNode, INodeDebugger
     {
 
+        Command command;
 
         public FallbackNode(List<Node> children)
         {
             this.children = children;
         }
 
+        /*public FallbackNode(Agent agent ,Command command, List<Node> children)
+        {
+            this.agent = agent;
+            this.command  = command;
+            this.children = children;
+        }                                       
+*/
         public FallbackNode(string name, List<Node> children)
         {
-            this.name = name;
+            this.debug = name;
             this.debugger = this;
             this.children = children;
         }
@@ -35,7 +43,11 @@ namespace Saxon.BT
             foreach (Node node in children)
             {
                 var childStatus = node.Update();
-                if (childStatus == NodeState.Success || childStatus == NodeState.Running)
+                if (childStatus == NodeState.Success)
+                {
+                    return childStatus;
+                }
+                else if (childStatus == NodeState.Running)
                 {
                     return childStatus;
                 }
@@ -47,7 +59,7 @@ namespace Saxon.BT
 
         public void Debugger<T>(T debug)
         {
-            Debug.Log(name + " " + state);
+            Debug.Log(base.debug + " " + state);
         }
     }
 }

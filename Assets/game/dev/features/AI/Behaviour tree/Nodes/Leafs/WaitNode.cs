@@ -12,6 +12,13 @@ namespace Saxon.BT
             this.duraction = duraction;
         }
 
+        public WaitNode(string name, float duraction)
+        {
+            debugger = this;
+            this.debug = name;
+            this.duraction = duraction;
+        }
+
         protected override void OnStart()
         {
             startTime = Time.time;
@@ -31,7 +38,7 @@ namespace Saxon.BT
 
         public void Debugger<T>(T debug)
         {
-            
+            Debug.Log(base.debug + " " + state);
         }
     }
 }

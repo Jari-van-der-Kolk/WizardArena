@@ -23,7 +23,7 @@ namespace Saxon.BT
             //gets handles in the Node class
             debugger = this;
             conditionFunction = condition;
-            this.name = name;
+            this.debug = name;
         }
 
         protected override void OnStart() 
@@ -51,7 +51,7 @@ namespace Saxon.BT
 
         public void Debugger<T>(T debug)
         {
-            Debug.Log(name + " " + state);    
+            Debug.Log(base.debug + " " + state + " " + conditionFunction());    
         }
     }
 
