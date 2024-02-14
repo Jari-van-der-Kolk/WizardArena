@@ -119,7 +119,7 @@ namespace Saxon.BT
 
         public Node RotateTowardsTarget()
         {
-            RotateTowardsCommand rotateTowardsTargetCommand = new RotateTowardsCommand(transform, this);
+            RotateTowardsTargetCommand rotateTowardsTargetCommand = new RotateTowardsTargetCommand(transform, this);
             ExecuteCommandNode rotateTowardsTarget = new ExecuteCommandNode(this, rotateTowardsTargetCommand, false);
 
             return new SequenceNode(new List<Node>
@@ -130,44 +130,18 @@ namespace Saxon.BT
 
         public Node ChasePlayer(float reachedTargetDistance)
         {
-            MoveToDestinationCommand standStillCommand = new MoveToDestinationCommand(navMesh, detection);
-            ExecuteCommandNode standStill = new ExecuteCommandNode(this, standStillCommand);
-
-            RotateTowardsCommand rotateTowardsTargetCommand = new RotateTowardsCommand(transform, this);
+            RotateTowardsTargetCommand rotateTowardsTargetCommand = new RotateTowardsTargetCommand(transform, this);
             ExecuteCommandNode rotateTowardsTarget = new ExecuteCommandNode(this, rotateTowardsTargetCommand, false);
 
-            MoveToDestinationCommand moveTowardsTargetCommand = new MoveToDestinationCommand(navMesh, detection);
-            MoveToDestinationCommand goToTowardsTargetCommand = new MoveToDestinationCommand(navMesh, detection);
+            MoveToTargetCommand moveTowardsTargetCommand = new MoveToTargetCommand(navMesh, detection, reachedTargetDistance);
             ExecuteCommandNode moveTowardsTarget = new ExecuteCommandNode(this, moveTowardsTargetCommand);
-            ExecuteCommandNode goToTarget = new ExecuteCommandNode(this, goToTowardsTargetCommand);
 
-
-            SequenceNode moveToTarget = new SequenceNode("move", new List<Node>
+            SequenceNode moveToTarget = new SequenceNode( new List<Node>
             {
-                RecentlyLostTarget(), moveTowardsTarget        
+                RecentlyLostTarget(), moveTowardsTarget, InRangeOfTarget(detection.data.longRangeAttackDistance), rotateTowardsTarget
             });
-
-
-            SequenceNode rotate = new SequenceNode("rotate",new List<Node>
-            {
-                HasNoOcclusion(), RecentlyLostTarget(), InRangeOfTarget(detection.data.longRangeAttackDistance), rotateTowardsTarget
-            });
-
-
-            SequenceNode engage = new SequenceNode(new List<Node>
-            {
-                HasOcclusion(), goToTarget
-            });
-
-
-            ReturnStateNode pause = new ReturnStateNode(Node.NodeState.Failure);
-            FallbackNode chasePlayer = new FallbackNode(new List<Node>
-            {
-                rotate, engage, moveToTarget, pause
-            });
-
-
-            RootNode rootNode = new RootNode(chasePlayer);
+          
+            RootNode rootNode = new RootNode(moveToTarget);
 
             return rootNode;
         }

@@ -19,7 +19,7 @@ namespace Saxon.BT.AI
 
         public override BehaviourTree CreateTree()
         {
-            MoveToDestinationCommand standStillCommand = new MoveToDestinationCommand(navMesh, detection );
+            MoveToTargetCommand standStillCommand = new MoveToTargetCommand(navMesh, detection );
             ExecuteCommandNode standStill = new ExecuteCommandNode(this, standStillCommand);
             int amountOfDeadNearby = 3;
             float necroReviveRadius = 5f;
