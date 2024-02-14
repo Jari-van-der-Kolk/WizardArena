@@ -43,6 +43,7 @@ public class MoveToDestinationCommand : Command
             return false;
         }
 
+
         // Set the destination and start moving   
         navMeshAgent.SetDestination(detection.target.position);
 

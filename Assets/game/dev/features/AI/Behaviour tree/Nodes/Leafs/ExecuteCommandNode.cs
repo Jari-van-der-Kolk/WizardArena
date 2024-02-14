@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Saxon.BT
 {
-    public class ExecuteCommandNode : LeafNode
+    public class ExecuteCommandNode : LeafNode, INodeDebugger
     {
         readonly bool queueCommand;
 
@@ -17,7 +17,12 @@ namespace Saxon.BT
             this.command = command;
             this.queueCommand = queueCommand;
         }
-      
+
+        public void Debugger<T>(T debug)
+        {
+            Debug.Log(base.debug + " " + state);
+        }
+
         protected override void OnStart()
         {
             if(command.isExecuted && !queueCommand)
@@ -27,8 +32,6 @@ namespace Saxon.BT
             }
             else if(command.isExecuted)
             {
-                Debug.Log("enlist");
-
                 agent.commandInvoker.queueCommands.AddCommand(command);
             }
         }

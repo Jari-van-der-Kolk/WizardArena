@@ -16,7 +16,7 @@ MonoBehaviour:
   distance: 10
   closeRangeAttackDistance: 4
   midRangeAttackDistance: 6.5
-  farRangeAttackDistance: 9.4
+  longRangeAttackDistance: 9.75
   angle: 45
   height: 1
   meshColor: {r: 0, g: 0, b: 1, a: 0.4392157}

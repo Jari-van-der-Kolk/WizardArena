@@ -1,19 +1,25 @@
 ﻿using UnityEngine;
 using Saxon.Sensor;
+using Saxon.BT;
 
 public class RotateTowardsCommand : Command
 {
     private readonly Transform objectToRotate;
-    private readonly ObjectDetection detection;
+    private readonly Agent agent;
     private readonly float rotationSpeed;
 
-    public RotateTowardsCommand(Transform objectToRotate, ObjectDetection detection, float rotationSpeed = 2f)
+    public RotateTowardsCommand(Transform objectToRotate, Agent agent, float rotationSpeed = 2f)
     {
         this.objectToRotate = objectToRotate;
-        this.detection = detection;
+        this.agent = agent;
         this.rotationSpeed = rotationSpeed;
     }
-   
+
+    public override void Enlisted()
+    {
+        base.Enlisted();
+        agent.navMesh.updateRotation = false;
+    }
 
     public override bool MoveNext()
     {
@@ -22,7 +28,7 @@ public class RotateTowardsCommand : Command
             return false;
         }
 
-        Vector3 direction = (detection.target.position - objectToRotate.position).normalized;
+        Vector3 direction = (agent.target.position - objectToRotate.position).normalized;
         if(direction == Vector3.zero)
         {
             return false;
@@ -33,13 +39,20 @@ public class RotateTowardsCommand : Command
         // Mark the command as executed when the rotation is complete
         if (Quaternion.Angle(objectToRotate.rotation, targetRotation) <= 0.1f)
         {
-            Debug.Log("rotated complete");
+            
             isExecuted = true;
         }
 
         //Debug.Log("rotating");
 
         return !isExecuted;
+    }
+
+    public override void Reset()
+    {
+        base.Reset();
+        agent.navMesh.updateRotation = true;
+
     }
 
 

@@ -234,15 +234,15 @@ namespace Saxon.Sensor
         {
             if (target == null)
             {
-                return true;   
+                return false;   
             }
 
             if (Physics.Linecast(_Tran.position, target.position, data.occlusionLayers))
             {
                 // The target is occluded
-                return false;
+                return true;
             }
-            return true;
+            return false;
         }
       
 

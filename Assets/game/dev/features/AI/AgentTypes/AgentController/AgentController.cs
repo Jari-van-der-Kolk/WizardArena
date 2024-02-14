@@ -65,6 +65,7 @@ namespace Saxon.BT.AI.Controller
 
         [Space]
         [SerializeField] private bool hasTargetInSight;
+        [SerializeField] private bool occlusion;
         [SerializeField] private bool isTargetRecentlyLost;
         [SerializeField] private Transform target;
         [SerializeField] private bool debug;
@@ -95,6 +96,7 @@ namespace Saxon.BT.AI.Controller
         {
             hasTargetInSight = objectDetection.hasTargetInSight;
             isTargetRecentlyLost = objectDetection.targetRecentlyLost;
+            occlusion = currentAgent.hasTargetOcclusion;
             target = objectDetection.target;
         }
 

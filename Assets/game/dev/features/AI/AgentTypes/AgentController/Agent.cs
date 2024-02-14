@@ -7,6 +7,7 @@ using Saxon.NodePositioning;
 using Saxon.BT.AI;
 using System.Collections.Generic;
 using System;
+using UnityEngine.Experimental.AI;
 
 namespace Saxon.BT
 {
@@ -60,6 +61,8 @@ namespace Saxon.BT
             Debug.Log(message);
         }
 
+        #region Nodes
+        
         public bool IsWithinDistanceCheck(float distance)
         {
             return navMesh.remainingDistance <= distance;
@@ -79,12 +82,12 @@ namespace Saxon.BT
         //3
         public Node HasOcclusion()
         {
-            return new ConditionNode("occlusion",() => hasTargetOcclusion);
+            return new ConditionNode(() => hasTargetOcclusion);
         }
 
         public Node HasNoOcclusion()
         {
-            return new ConditionNode("occlusion", () => !hasTargetOcclusion);
+            return new ConditionNode(() => !hasTargetOcclusion);
         }
 
         //4
@@ -116,9 +119,12 @@ namespace Saxon.BT
 
         public Node RotateTowardsTarget()
         {
+            RotateTowardsCommand rotateTowardsTargetCommand = new RotateTowardsCommand(transform, this);
+            ExecuteCommandNode rotateTowardsTarget = new ExecuteCommandNode(this, rotateTowardsTargetCommand, false);
+
             return new SequenceNode(new List<Node>
             {
-                TargetOutOfSight(), InRangeOfTarget(detection.data.midRangeAttackDistance) 
+                HasNoOcclusion(), RecentlyLostTarget(), InRangeOfTarget(detection.data.longRangeAttackDistance),rotateTowardsTarget
             });
         }
 
@@ -127,45 +133,49 @@ namespace Saxon.BT
             MoveToDestinationCommand standStillCommand = new MoveToDestinationCommand(navMesh, detection);
             ExecuteCommandNode standStill = new ExecuteCommandNode(this, standStillCommand);
 
-            RotateTowardsCommand rotateTowardsTargetCommand = new RotateTowardsCommand(transform, detection);
+            RotateTowardsCommand rotateTowardsTargetCommand = new RotateTowardsCommand(transform, this);
             ExecuteCommandNode rotateTowardsTarget = new ExecuteCommandNode(this, rotateTowardsTargetCommand, false);
 
-            MoveToDestinationCommand moveTowardsTargetCommand = new MoveToDestinationCommand(navMesh, detection, detection.data.longRangeAttackDistance);
+            MoveToDestinationCommand moveTowardsTargetCommand = new MoveToDestinationCommand(navMesh, detection);
+            MoveToDestinationCommand goToTowardsTargetCommand = new MoveToDestinationCommand(navMesh, detection);
             ExecuteCommandNode moveTowardsTarget = new ExecuteCommandNode(this, moveTowardsTargetCommand);
+            ExecuteCommandNode goToTarget = new ExecuteCommandNode(this, goToTowardsTargetCommand);
 
-            
-            /*SequenceNode engage = new SequenceNode("engage",new List<Node>
+
+            SequenceNode moveToTarget = new SequenceNode("move", new List<Node>
             {
-                RecentlyLostTarget(), HasOcclusion(), InRangeOfTarget(detection.data.midRangeAttackDistance), moveTowardsTarget, rotateTowardsTarget
-            });*/
-
-
-            SequenceNode found = new SequenceNode("found", new List<Node>
-            {
-                TargetInSight(), InRangeOfTarget(reachedTargetDistance), standStill     
+                RecentlyLostTarget(), moveTowardsTarget        
             });
 
 
-            SequenceNode adjust = new SequenceNode("adjust",new List<Node>
+            SequenceNode rotate = new SequenceNode("rotate",new List<Node>
             {
-                HasOcclusion(), RecentlyLostTarget(), InRangeOfTarget(detection.data.longRangeAttackDistance),rotateTowardsTarget                    
-            });   
+                HasNoOcclusion(), RecentlyLostTarget(), InRangeOfTarget(detection.data.longRangeAttackDistance), rotateTowardsTarget
+            });
+
 
             SequenceNode engage = new SequenceNode(new List<Node>
             {
-                moveTowardsTarget, rotateTowardsTarget
+                HasOcclusion(), goToTarget
             });
 
+
+            ReturnStateNode pause = new ReturnStateNode(Node.NodeState.Failure);
             FallbackNode chasePlayer = new FallbackNode(new List<Node>
             {
-                engage, found, adjust
+                rotate, engage, moveToTarget, pause
             });
 
 
-            RootNode rootNode = new RootNode(adjust);
+            RootNode rootNode = new RootNode(chasePlayer);
 
             return rootNode;
         }
+        
+        
+        #endregion
+        
+
     }
 
 

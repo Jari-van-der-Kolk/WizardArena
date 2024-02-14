@@ -36,10 +36,7 @@ namespace Saxon.BT.AI
             RandomPatrolNode patrol = new RandomPatrolNode("patrol", this, findNewLocationRadius, pickLocationRadius);
 
 
-            RootNode rootNode = new RootNode(new SequenceNode(new List<Node>
-            { 
-                ChasePlayer(4f) 
-            }));
+            RootNode rootNode = new RootNode(ChasePlayer(4f));
 
             return new BehaviourTree(rootNode);
         }
