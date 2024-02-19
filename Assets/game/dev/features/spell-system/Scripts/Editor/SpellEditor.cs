@@ -4,22 +4,24 @@ using System.Linq;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
-using static Unity.Burst.Intrinsics.X86.Avx;
+using Job.SpellSystem.Data;
 
 namespace Job.SpellSystem
 {
-    [CustomEditor(typeof(Spell))]
+    [CustomEditor(typeof(SpellSO))]
     [CanEditMultipleObjects]
     public class SpellEditor : Editor
     {
         private bool _showAddComponent;
         private static List<Type> _spellDataTypes = new();
-        private Spell spellSO;
+        private SpellSO spellSO;
 
-        private void OnEnable() => spellSO = target as Spell;
+        private void OnEnable() => spellSO = target as SpellSO;
 
         public override void OnInspectorGUI()
         {
+            if (spellSO == null)
+                return;
             base.OnInspectorGUI();
 
             //creates the foldout for the addComponent buttons
@@ -35,7 +37,7 @@ namespace Job.SpellSystem
                     continue;
                 
                 //adds the data to the list in the SO
-                SpellComponentData spellComponent = Activator.CreateInstance(type) as SpellComponentData;
+                ComponentData spellComponent = Activator.CreateInstance(type) as ComponentData;
 
                 if (spellComponent == null)
                     return;
@@ -58,7 +60,7 @@ namespace Job.SpellSystem
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             var types = assemblies.SelectMany(assembly => assembly.GetTypes());
             var filteredTypes = types.Where(
-                type => type.IsSubclassOf(typeof(SpellComponentData)) && !type.ContainsGenericParameters && type.IsClass
+                type => type.IsSubclassOf(typeof(ComponentData)) && !type.ContainsGenericParameters && type.IsClass
             );
             _spellDataTypes = filteredTypes.ToList();
         }
