@@ -6,6 +6,7 @@ namespace Saxon.BT
     public class FallbackNode : CompositeNode, INodeDebugger
     {
 
+        CommandInvoker commandInvoker;
         Command command;
 
         public FallbackNode(List<Node> children)
@@ -13,13 +14,19 @@ namespace Saxon.BT
             this.children = children;
         }
 
-        /*public FallbackNode(Agent agent ,Command command, List<Node> children)
+        public FallbackNode(CommandInvoker commandInvoker, List<Node> children)
         {
-            this.agent = agent;
-            this.command  = command;
+            this.commandInvoker = commandInvoker;
             this.children = children;
-        }                                       
-*/
+        }
+
+        public FallbackNode(CommandInvoker commandInvoker, Command command, List<Node> children)
+        {
+            this.commandInvoker = commandInvoker;
+            this.command = command;
+            this.children = children;
+        }
+
         public FallbackNode(string name, List<Node> children)
         {
             this.debug = name;
@@ -29,7 +36,11 @@ namespace Saxon.BT
 
         protected override void OnStart() 
         {
-
+            commandInvoker?.ClearAllCommands();
+            if(command != null )
+            {
+                commandInvoker.AddCommand(command);
+            }
         }
 
         internal override void OnStop() 

@@ -29,7 +29,9 @@ namespace Saxon.BT.AI
             RandomPatrolNode patrol = new RandomPatrolNode(this, 10f, 3f);
             //NodeControl control = new NodeControl(waypointPatrolNode, playerObject);
 
-            return new BehaviourTree(destinationNode);
+            RootNode rootNode = new RootNode(destinationNode);
+
+            return new BehaviourTree(rootNode);
         }
     }
 }

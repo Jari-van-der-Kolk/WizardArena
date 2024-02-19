@@ -19,27 +19,34 @@ namespace Saxon.BT.AI
 
         public override BehaviourTree CreateTree()
         {
-            MoveToTargetCommand standStillCommand = new MoveToTargetCommand(navMesh, detection );
-            ExecuteCommandNode standStill = new ExecuteCommandNode(this, standStillCommand);
+           
             int amountOfDeadNearby = 3;
             float necroReviveRadius = 5f;
+            SetDestinationNode standStill = new SetDestinationNode(this, 3f, transform);
             ConditionNode enoughDeadAgents = new ConditionNode(() => CountDeadAgentsInVicinity(necroReviveRadius) > amountOfDeadNearby);
             NecroSpell necroSpell = new NecroSpell(this, necroReviveRadius);
             WaitNode cast = new WaitNode(3f);
-            SequenceNode castNecroSpell = new SequenceNode("spell", new List<Node>
+            SequenceNode castNecroSpell = new SequenceNode(new List<Node>
             {
                 enoughDeadAgents, standStill, cast, necroSpell
             });
 
             float findNewLocationRadius = 10f;
             float pickLocationRadius = 3f;
-            RandomPatrolNode patrol = new RandomPatrolNode("patrol", this, findNewLocationRadius, pickLocationRadius);
+            RandomPatrolNode patrol = new RandomPatrolNode(this, findNewLocationRadius, pickLocationRadius);
+            ClearCommandsNode clear = new ClearCommandsNode(patrol, commandInvoker);
 
+            FallbackNode fallback = new FallbackNode(new List<Node>
+            {
+               castNecroSpell, ChasePlayer(4f) ,patrol
+            });
 
-            RootNode rootNode = new RootNode(ChasePlayer(4f));
+            RootNode rootNode = new RootNode(fallback);
 
             return new BehaviourTree(rootNode);
         }
+
+        #region functions
         public int CountDeadAgentsInVicinity(float searchRadius)
         {
             int count = 0;
@@ -82,38 +89,7 @@ namespace Saxon.BT.AI
 
             return count;
         }
+
+        #endregion
     }
 }
-    /* Saxon.GetPlayerObject(out var playerObject);
-            RotateTowardsCommand rotationCommand = new RotateTowardsCommand(transform, detection, 2f);
-            FollowTargetNode followTarget = new FollowTargetNode(this, 5f, rotationCommand);
-            SetDestinationNode targetPlayer = new SetDestinationNode(this, 5f, playerObject.transform);
-
-
-            ConditionNode targetSightCondition = new ConditionNode(() => detection.targetRecentlyLost || detection.hasTargetInSight);
-            ReturnStateNode pauseNode = new ReturnStateNode(Node.NodeState.Success);
-            SequenceNode chaseTarget = new SequenceNode("chase",new List<Node>                                      
-            {                                                    
-                targetSightCondition, followTarget
-            });
-
-           
-           
-          
-           
-
-       */
-
-    /*  ConditionNode lostTargetCondition = new ConditionNode(() => detection.targetRecentlyLost);
-            SequenceNode lostTarget = new SequenceNode(new List<Node>
-            {
-                lostTargetCondition, followTarget
-            });
-
-
-            ConditionNode foundTargetCondition = new ConditionNode(() => detection.hasTargetInSight);
-
-            SequenceNode foundTarget = new SequenceNode(new List<Node> 
-            {
-                foundTargetCondition, followTarget, pauseNode
-            });*/

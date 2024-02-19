@@ -12,10 +12,10 @@ namespace Saxon.BT
     {
         private float startTime;
 
-        public Node rootNode;
+        public RootNode rootNode;
         public AgentController agentController;
 
-        public BehaviourTree(Node rootNode)
+        public BehaviourTree(RootNode rootNode)
         {
             startTime = Time.time;
             this.rootNode = rootNode;

@@ -76,6 +76,7 @@ namespace Saxon.BT
         {
             destination = GetLocation();
             agent.SetDestination(destination);
+            agent.navMesh.SetDestination(destination);
             if (!IsPathReachable(destination))
             {
                 SetNewDestination();

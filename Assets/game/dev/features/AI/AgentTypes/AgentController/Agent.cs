@@ -40,7 +40,6 @@ namespace Saxon.BT
         public abstract BehaviourTree CreateTree();
         public void SetDestination(Vector3 destination) => agentController.SetDestination(destination);
 
-
         public List<T> SearchComponentsInArea<T>(List<T> targetList,float radius) where T : Component
         {
             List<T> result = new List<T>();
@@ -62,7 +61,26 @@ namespace Saxon.BT
         }
 
         #region Nodes
-        
+
+        public Node ChasePlayer(float reachedTargetDistance)
+        {
+            RotateTowardsTargetCommand rotateTowardsTargetCommand = new RotateTowardsTargetCommand(transform, this);
+            ExecuteCommandNode rotateTowardsTarget = new ExecuteCommandNode(this, rotateTowardsTargetCommand, false);
+
+            MoveToTargetCommand moveTowardsTargetCommand = new MoveToTargetCommand(navMesh, detection, reachedTargetDistance);
+            ExecuteCommandNode moveTowardsTarget = new ExecuteCommandNode(this, moveTowardsTargetCommand);
+
+            SequenceNode moveToTarget = new SequenceNode(new List<Node>
+            {
+                RecentlyLostTarget(), moveTowardsTarget, InRangeOfTarget(detection.data.longRangeAttackDistance), rotateTowardsTarget
+            });
+
+            Debug.Log(moveToTarget.state);
+            RootNode rootNode = new RootNode(moveToTarget);
+
+            return rootNode;
+        }
+
         public bool IsWithinDistanceCheck(float distance)
         {
             return navMesh.remainingDistance <= distance;
@@ -117,34 +135,8 @@ namespace Saxon.BT
             return new ConditionNode(() => detection.lostTarget || detection.targetRecentlyLost);
         }
 
-        public Node RotateTowardsTarget()
-        {
-            RotateTowardsTargetCommand rotateTowardsTargetCommand = new RotateTowardsTargetCommand(transform, this);
-            ExecuteCommandNode rotateTowardsTarget = new ExecuteCommandNode(this, rotateTowardsTargetCommand, false);
 
-            return new SequenceNode(new List<Node>
-            {
-                HasNoOcclusion(), RecentlyLostTarget(), InRangeOfTarget(detection.data.longRangeAttackDistance),rotateTowardsTarget
-            });
-        }
-
-        public Node ChasePlayer(float reachedTargetDistance)
-        {
-            RotateTowardsTargetCommand rotateTowardsTargetCommand = new RotateTowardsTargetCommand(transform, this);
-            ExecuteCommandNode rotateTowardsTarget = new ExecuteCommandNode(this, rotateTowardsTargetCommand, false);
-
-            MoveToTargetCommand moveTowardsTargetCommand = new MoveToTargetCommand(navMesh, detection, reachedTargetDistance);
-            ExecuteCommandNode moveTowardsTarget = new ExecuteCommandNode(this, moveTowardsTargetCommand);
-
-            SequenceNode moveToTarget = new SequenceNode( new List<Node>
-            {
-                RecentlyLostTarget(), moveTowardsTarget, InRangeOfTarget(detection.data.longRangeAttackDistance), rotateTowardsTarget
-            });
-          
-            RootNode rootNode = new RootNode(moveToTarget);
-
-            return rootNode;
-        }
+       
         
         
         #endregion
@@ -166,5 +158,15 @@ namespace Saxon.BT
             //4
             ConditionNode hasCloseRangeDistance = new ConditionNode(() => Vector3.Distance(position, target.position) < detection.data.closeRangeAttackDistance);
             //5
-            ConditionNode hasLostTargetCondition = new ConditionNode(() => detection.targetRecentlyLost);*/
+            ConditionNode hasLostTargetCondition = new ConditionNode(() => detection.targetRecentlyLost);
       
+        public Node RotateTowardsTarget()
+        {
+            RotateTowardsTargetCommand rotateTowardsTargetCommand = new RotateTowardsTargetCommand(transform, this);
+            ExecuteCommandNode rotateTowardsTarget = new ExecuteCommandNode(this, rotateTowardsTargetCommand, false);
+
+            return new SequenceNode(new List<Node>
+            {
+                HasNoOcclusion(), RecentlyLostTarget(), InRangeOfTarget(detection.data.longRangeAttackDistance),rotateTowardsTarget
+            });
+        }*/
