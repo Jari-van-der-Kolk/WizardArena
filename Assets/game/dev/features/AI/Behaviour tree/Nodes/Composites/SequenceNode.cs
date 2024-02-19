@@ -7,16 +7,24 @@ namespace Saxon.BT
 {
     public class SequenceNode : CompositeNode, INodeDebugger
     {
-        Action activeResponse;
 
+        CommandInvoker commandInvoker;
+        Command command;
         public SequenceNode(List<Node> children)
         {
             this.children = children;
         }  
-        public SequenceNode(Action activeResponse, List<Node> children)
+        public SequenceNode(CommandInvoker commandInvoker, List<Node> children)
         {
             this.children = children;
-            this.activeResponse = activeResponse;
+            this.commandInvoker = commandInvoker;
+        }
+
+        public SequenceNode(CommandInvoker commandInvoker,  Command command, List<Node> children)
+        {
+            this.children = children;
+            this.commandInvoker = commandInvoker;
+            this.command = command;
         }
         public SequenceNode(string name, List<Node> children)
         {
@@ -27,6 +35,11 @@ namespace Saxon.BT
 
         protected override void OnStart()
         {
+            commandInvoker?.ClearAllCommands();
+            if (command != null)
+            {
+                commandInvoker.AddCommand(command);
+            }
         }
 
         internal override void OnStop()

@@ -25,13 +25,7 @@ public class MoveToTargetCommand : Command
         this.stoppingDistance = stoppingDistance;
     }
 
-    public override void Enlisted()
-    {
-        base.Enlisted();
-        Move();
-
-    }
-
+  
     public override bool MoveNext()
     {
         if (isExecuted)

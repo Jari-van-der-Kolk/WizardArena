@@ -57,9 +57,6 @@ namespace Saxon.BT.AI.Controller
         Rigidbody rb;
         Collider col;
 
-
-        
-
         #region debug
 #if UNITY_EDITOR
 
@@ -90,8 +87,6 @@ namespace Saxon.BT.AI.Controller
             }
         }
 
-
-
         private void DebugVariables()
         {
             hasTargetInSight = objectDetection.hasTargetInSight;
@@ -99,7 +94,6 @@ namespace Saxon.BT.AI.Controller
             occlusion = currentAgent.hasTargetOcclusion;
             target = objectDetection.target;
         }
-
 
     #endif
 #endregion

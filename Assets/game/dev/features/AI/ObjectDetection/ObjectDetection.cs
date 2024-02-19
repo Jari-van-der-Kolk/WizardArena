@@ -230,6 +230,20 @@ namespace Saxon.Sensor
             return detectedObjects;
         }
 
+        public static List<T> GetComponentsInAreaNonAlocc<T>(Transform transform, float areaRadius, Collider[] colliders, LayerMask layer) where T : Component
+        {
+            List<T> detectedObjects = new List<T>();
+            int count = Physics.OverlapSphereNonAlloc(transform.position, areaRadius, colliders, layer, QueryTriggerInteraction.Collide);
+
+            for (int i = 0; i < count; i++)
+            {
+                T obj = colliders[i].GetComponent<T>();
+                detectedObjects.Add(obj);
+            }
+
+            return detectedObjects;
+        }
+
         public bool HasOcclusionWithTarget()
         {
             if (target == null)
