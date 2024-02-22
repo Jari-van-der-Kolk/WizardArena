@@ -1,17 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Saxon.BT
 {
-    public class SelectorNode : CompositeNode
+    public class SelectorNode : CompositeNode, INodeDebugger
     {
-        public SelectorNode(List<Node> children)
+        public SelectorNode(List<Node> children) : base(children) { }
+        public SelectorNode(string name, List<Node> children) : base(children) 
         {
-            this.children = children;
+            debug = name;
+            debugger = this;
+        
         }
 
-        protected override void OnStart()
+        public void Debugger<T>(T debug)
         {
+            Debug.Log(this.ToString() + " stopped " + state.ToString());
+
         }
 
         protected override NodeState OnUpdate()
@@ -34,11 +39,10 @@ namespace Saxon.BT
             }
 
             // If all children fail, the Selector returns failure
+            HaltChildren();
             return NodeState.Failure;
         }
 
-        internal override void OnStop()
-        {
-        }
+       
     }
 }

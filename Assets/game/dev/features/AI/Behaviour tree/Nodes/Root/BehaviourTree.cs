@@ -13,7 +13,6 @@ namespace Saxon.BT
         private float startTime;
 
         public RootNode rootNode;
-        public AgentController agentController;
 
         public BehaviourTree(RootNode rootNode)
         {
@@ -26,10 +25,12 @@ namespace Saxon.BT
             float time = Time.time;
             if (time - startTime > timestep)
             {
+                rootNode.SetDeltaTime(time - startTime);
                 rootNode.Update();
                 startTime = time;
             }
         }
+        
     }
 
 }

@@ -8,7 +8,7 @@ namespace Saxon.BT
 {
     public class NecroSpell : LeafNode, INodeDebugger
     {
-        new Necromancer agent;
+        new readonly Necromancer agent;
         float radiusEffect;
        
         public NecroSpell(Necromancer agent, float radius)
@@ -32,6 +32,7 @@ namespace Saxon.BT
             {
                 deadAgents[i].SetAgentActivity(true);
                 deadAgents[i].SetAgentType(AI.AgentTypes.NecroServant);
+                deadAgents[i].origin = agent.transform; 
             }
 
         }

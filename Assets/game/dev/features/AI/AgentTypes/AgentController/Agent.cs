@@ -1,25 +1,22 @@
-using UnityEngine.AI;
-using Saxon.Sensor;
-using Saxon.BT.AI.Controller;
 using UnityEngine;
+using UnityEngine.AI;
 using Saxon.HashGrid;
 using Saxon.NodePositioning;
+using Saxon.Sensor;
 using Saxon.BT.AI;
+using Saxon.BT.AI.Controller;
 using System.Collections.Generic;
-using System;
-using UnityEngine.Experimental.AI;
 
 namespace Saxon.BT
 {
-   
-
     public abstract class Agent
     {
         public abstract AgentTypes agentType { get; protected set; }
         public AgentController agentController;
         public NavMeshAgent navMesh;
         public ObjectDetection detection;
-        public Vector3 lastKnownTargetPosition;
+
+        public RootNode rootNode { get; protected set; }
 
         public Agent(AgentController agentController)
         {
@@ -28,7 +25,6 @@ namespace Saxon.BT
             this.detection = agentController.objectDetection;
         }
 
-        public CommandInvoker commandInvoker => agentController.commandInvoker;
         public Transform target => detection.target;
         public Transform transform => agentController.transform;
         public Vector3 position => agentController.transform.position;
@@ -39,7 +35,6 @@ namespace Saxon.BT
         public SpatialHashGrid<HashNode> spatialHashGrid => NodeGenerator.Instance.hashGrid;
         public abstract BehaviourTree CreateTree();
         public void SetDestination(Vector3 destination) => agentController.SetDestination(destination);
-
         public List<T> SearchComponentsInArea<T>(List<T> targetList,float radius) where T : Component
         {
             List<T> result = new List<T>();
@@ -54,7 +49,6 @@ namespace Saxon.BT
 
             return result;
         }
-
         public void Print(object message)
         {
             Debug.Log(message);
@@ -62,111 +56,59 @@ namespace Saxon.BT
 
         #region Nodes
 
-        public Node ChasePlayer(float reachedTargetDistance)
+        public Node ChaseTarget(float reachedTargetDistance)
         {
-            RotateTowardsTargetCommand rotateTowardsTargetCommand = new RotateTowardsTargetCommand(transform, this);
-            ExecuteCommandNode rotateTowardsTarget = new ExecuteCommandNode(this, rotateTowardsTargetCommand, false);
+            MoveTowardsTargetNode moveTowardsTarget = new MoveTowardsTargetNode(this, reachedTargetDistance);
+            RotateTowardsTargetNode rotateTowardsTarget = new RotateTowardsTargetNode(this, 2f);
 
-            MoveToTargetCommand moveTowardsTargetCommand = new MoveToTargetCommand(navMesh, detection, reachedTargetDistance);
-            ExecuteCommandNode moveTowardsTarget = new ExecuteCommandNode(this, moveTowardsTargetCommand);
+            SelectorNode lookAtTarget = new SelectorNode(new List<Node>
+            {
+                hasNoOcclusion, InRangeOfTarget(detection.data.longRangeAttackDistance) 
+            });
+
+            SequenceNode rotate = new SequenceNode(new List<Node>
+            {
+                lookAtTarget, rotateTowardsTarget
+            });
+
+            ParallelNode engage = new ParallelNode(new List<Node>
+            {
+                moveTowardsTarget, rotate    
+            });
+
+            SelectorNode chaseCheck = new SelectorNode(new List<Node>
+            {
+                recentlyLostTarget, targetInSight
+            });
 
             SequenceNode moveToTarget = new SequenceNode(new List<Node>
             {
-                RecentlyLostTarget(), moveTowardsTarget, InRangeOfTarget(detection.data.longRangeAttackDistance), rotateTowardsTarget
+                chaseCheck, engage       
             });
 
-            Debug.Log(moveToTarget.state);
+ 
             RootNode rootNode = new RootNode(moveToTarget);
 
             return rootNode;
         }
-
-        public bool IsWithinDistanceCheck(float distance)
-        {
-            return navMesh.remainingDistance <= distance;
-        }
-
-        //1
-        public Node TargetInSight()
-        {
-            return new ConditionNode(() => hasTargetInSight);
-        }
-
-        //2
-        public Node TargetOutOfSight()
-        {
-            return new ConditionNode(() => detection.noVisualsOnTarget);
-        }
-        //3
-        public Node HasOcclusion()
-        {
-            return new ConditionNode(() => hasTargetOcclusion);
-        }
-
-        public Node HasNoOcclusion()
-        {
-            return new ConditionNode(() => !hasTargetOcclusion);
-        }
-
-        //4
-        public Node InRangeOfTarget(float range)
-        {
-            return new ConditionNode(() => Saxon.IsInDistance(position, target, range));
-        }
-        
-        //5
-        public Node RecentlyLostTarget()
-        {
-            return new ConditionNode(() => detection.targetRecentlyLost);
-        }
-
-        //6
+        public Node targetInSight => new ConditionNode(() => hasTargetInSight);
+        public Node TargetOutOfSight => new ConditionNode(() => detection.noVisualsOnTarget);
+        public Node hasOcclusion => new ConditionNode(() => hasTargetOcclusion);
+        public Node hasNoOcclusion => new ConditionNode(() => !hasTargetOcclusion);
+        public Node InRangeOfTarget(float range) => new ConditionNode(() => Saxon.IsInDistance(position, target, range));
+        public Node recentlyLostTarget => new ConditionNode(() => detection.targetRecentlyLost);
         public Node FoundTarget()
         {
             return new SequenceNode(new List<Node>
             {
-                TargetInSight(), InRangeOfTarget(detection.data.closeRangeAttackDistance)
+                targetInSight, InRangeOfTarget(detection.data.closeRangeAttackDistance)
             });
         }
-
-        //7
-        public Node NoSightOnPlayerStatus()
-        {
-            return new ConditionNode(() => detection.lostTarget || detection.targetRecentlyLost);
-        }
-
-
-       
-        
+        public Node lostTarget => new ConditionNode(() => detection.lostTarget);
         
         #endregion
-        
 
     }
 
 
 }
-
-
-     
-/*            //1
-            ConditionNode hasSighOnTargetCondition = new ConditionNode(() => hasTargetInSight);
-            //2
-            ConditionNode hasNoSightOnTargetCondition = new ConditionNode(() => !hasTargetInSight);
-            //3
-            ConditionNode hasNoOcclusionWithTargetCondition = new ConditionNode(() => hasTargetOcclusion);
-            //4
-            ConditionNode hasCloseRangeDistance = new ConditionNode(() => Vector3.Distance(position, target.position) < detection.data.closeRangeAttackDistance);
-            //5
-            ConditionNode hasLostTargetCondition = new ConditionNode(() => detection.targetRecentlyLost);
-      
-        public Node RotateTowardsTarget()
-        {
-            RotateTowardsTargetCommand rotateTowardsTargetCommand = new RotateTowardsTargetCommand(transform, this);
-            ExecuteCommandNode rotateTowardsTarget = new ExecuteCommandNode(this, rotateTowardsTargetCommand, false);
-
-            return new SequenceNode(new List<Node>
-            {
-                HasNoOcclusion(), RecentlyLostTarget(), InRangeOfTarget(detection.data.longRangeAttackDistance),rotateTowardsTarget
-            });
-        }*/

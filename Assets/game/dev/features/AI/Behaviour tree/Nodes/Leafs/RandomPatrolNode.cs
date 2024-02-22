@@ -38,7 +38,6 @@ namespace Saxon.BT
             agent.navMesh.updateRotation = true;
             SetNewDestination();
             startTime = Time.time; // Record the start time
-            agent.agentController.commandInvoker.queueCommands.ClearQueueCommands();
         }
 
         protected override NodeState OnUpdate()

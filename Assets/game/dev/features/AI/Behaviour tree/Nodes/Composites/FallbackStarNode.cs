@@ -9,10 +9,8 @@ namespace Saxon.BT
     public class FallbackStarNode : CompositeNode
     {
 
-        public FallbackStarNode(List<Node> children)
-        {
-            this.children = children;     
-        } 
+        public FallbackStarNode(List<Node> children) :base(children) { }
+     
        
         protected override void OnStart()
         {

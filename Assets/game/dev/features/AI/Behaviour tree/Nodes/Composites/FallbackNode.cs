@@ -5,52 +5,16 @@ namespace Saxon.BT
 {
     public class FallbackNode : CompositeNode, INodeDebugger
     {
-
-        CommandInvoker commandInvoker;
-        Command command;
-
-        public FallbackNode(List<Node> children)
+        public FallbackNode(List<Node> children) : base(children) { }
+       
+        public FallbackNode(string name, List<Node> children) : base(children)
         {
-            this.children = children;
-        }
-
-        public FallbackNode(CommandInvoker commandInvoker, List<Node> children)
-        {
-            this.commandInvoker = commandInvoker;
-            this.children = children;
-        }
-
-        public FallbackNode(CommandInvoker commandInvoker, Command command, List<Node> children)
-        {
-            this.commandInvoker = commandInvoker;
-            this.command = command;
-            this.children = children;
-        }
-
-        public FallbackNode(string name, List<Node> children)
-        {
-            this.debug = name;
-            this.debugger = this;
-            this.children = children;
-        }
-
-        protected override void OnStart() 
-        {
-            commandInvoker?.ClearAllCommands();
-            if(command != null )
-            {
-                commandInvoker.AddCommand(command);
-            }
-        }
-
-        internal override void OnStop() 
-        {
-
+            debug = name;
+            debugger = this;
         }
 
         protected override NodeState OnUpdate()
         {
-            
             foreach (Node node in children)
             {
                 var childStatus = node.Update();
@@ -64,8 +28,9 @@ namespace Saxon.BT
                 }
 
             }
-            return NodeState.Failure;
 
+            HaltChildren();
+            return NodeState.Failure;
         }
 
         public void Debugger<T>(T debug)

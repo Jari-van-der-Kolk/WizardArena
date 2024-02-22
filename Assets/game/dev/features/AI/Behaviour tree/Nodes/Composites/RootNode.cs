@@ -4,15 +4,12 @@ namespace Saxon.BT
 {
     public class RootNode : DecoratorNode
     {
-
         public RootNode(Node childNode)
         {
             child = childNode;
         }
 
-        protected override void OnStart()
-        {
-        }
+        public float deltaTime { get; set; }
 
         protected override NodeState OnUpdate()
         {
@@ -30,11 +27,13 @@ namespace Saxon.BT
                 default:
                     return NodeState.Running;
             }
-
         }
 
-        internal override void OnStop()
+        public void SetDeltaTime(float deltaTime)
         {
+            this.deltaTime = deltaTime;
         }
+
+
     }
 }

@@ -7,55 +7,23 @@ namespace Saxon.BT
 {
     public class SequenceNode : CompositeNode, INodeDebugger
     {
-
-        CommandInvoker commandInvoker;
-        Command command;
-        public SequenceNode(List<Node> children)
+        public SequenceNode(List<Node> children) : base(children) { }  
+      
+        public SequenceNode(string name, List<Node> children) : base(children)
         {
-            this.children = children;
-        }  
-        public SequenceNode(CommandInvoker commandInvoker, List<Node> children)
-        {
-            this.children = children;
-            this.commandInvoker = commandInvoker;
-        }
-
-        public SequenceNode(CommandInvoker commandInvoker,  Command command, List<Node> children)
-        {
-            this.children = children;
-            this.commandInvoker = commandInvoker;
-            this.command = command;
-        }
-        public SequenceNode(string name, List<Node> children)
-        {
-            this.debug = name;
-            this.debugger = this;
-            this.children = children;
-        }
-
-        protected override void OnStart()
-        {
-            commandInvoker?.ClearAllCommands();
-            if (command != null)
-            {
-                commandInvoker.AddCommand(command);
-            }
-        }
-
-        internal override void OnStop()
-        {
-
+            debug = name;
+            debugger = this;
         }
 
         protected override NodeState OnUpdate()
         {
-
             foreach (var child in children)
             {
                 var childStatus = child.Update();
 
                 if(childStatus == NodeState.Failure)
                 {
+                    HaltChildren();
                     return NodeState.Failure;
                 }
 
@@ -65,10 +33,8 @@ namespace Saxon.BT
 
                 }
             }
-             
             
             return NodeState.Success;
-
         }
 
         public void Debugger<T>(T debug)

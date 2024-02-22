@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 9203849453139977951}
   - component: {fileID: 7835156541086727127}
   - component: {fileID: 5888146079623376894}
-  - component: {fileID: 8481207651654590426}
   m_Layer: 7
   m_Name: AgentDebugAI
   m_TagString: Agent
@@ -184,16 +183,9 @@ MonoBehaviour:
   alive: 0
   hasTargetInSight: 0
   isTargetRecentlyLost: 0
+  lostTarget: 0
+  occlusion: 0
+  navmeshRotate: 0
+  target: {fileID: 0}
   debug: 1
---- !u!114 &8481207651654590426
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5445588807857904294}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5469204d74a19b0439a0f33291d56e7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  debugAttackRanges: 0

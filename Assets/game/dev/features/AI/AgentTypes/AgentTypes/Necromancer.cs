@@ -34,14 +34,18 @@ namespace Saxon.BT.AI
             float findNewLocationRadius = 10f;
             float pickLocationRadius = 3f;
             RandomPatrolNode patrol = new RandomPatrolNode(this, findNewLocationRadius, pickLocationRadius);
-            ClearCommandsNode clear = new ClearCommandsNode(patrol, commandInvoker);
 
-            FallbackNode fallback = new FallbackNode(new List<Node>
+            SequenceNode lostPlayer = new SequenceNode(new List<Node>
             {
-               castNecroSpell, ChasePlayer(4f) ,patrol
+                recentlyLostTarget, patrol
             });
 
-            RootNode rootNode = new RootNode(fallback);
+            SelectorNode fallback = new SelectorNode(new List<Node>
+            {
+               castNecroSpell, ChaseTarget(detection.data.midRangeAttackDistance), patrol
+            });
+
+            rootNode = new RootNode(fallback);
 
             return new BehaviourTree(rootNode);
         }

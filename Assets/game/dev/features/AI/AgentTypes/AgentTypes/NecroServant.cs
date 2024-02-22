@@ -19,20 +19,19 @@ namespace Saxon.BT.AI
         public override BehaviourTree CreateTree()
         {
 
-
-
             FallbackNode fallback = new FallbackNode(new List<Node>
             {
                 
             });
 
-            RootNode rootNode = new RootNode(fallback);
+            rootNode = new RootNode(fallback);
 
             return new BehaviourTree(rootNode);
         }
     }
 }
-           /* var followTargetCommand = new MoveToDestinationCommand(navMesh, detection.target, reachedLocationDistance);
+         
+/* var followTargetCommand = new MoveToDestinationCommand(navMesh, detection.target, reachedLocationDistance);
             ExecuteCommandNode followTarget = new ExecuteCommandNode(this, followTargetCommand);
 
             var rotateTowardsTargetCommand = new RotateTowardsCommand(transform, detection);

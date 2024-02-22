@@ -13,6 +13,7 @@ namespace Saxon.BT
 
         public enum NodeState
         {
+            None,
             Running,
             Failure,
             Success
@@ -40,6 +41,8 @@ namespace Saxon.BT
 
             return state;
         }
+
+       
 
         protected virtual void OnStart() { }
         internal virtual void OnStop() { }

@@ -5,15 +5,8 @@ namespace Saxon.BT
 {
     public class ReactiveSequenceNode : CompositeNode
     {
-        public ReactiveSequenceNode(List<Node> children)
-        {
-            this.children = children;
-        }
-        
-        protected override void OnStart() { }
-
-        internal override void OnStop() { }
-
+        public ReactiveSequenceNode(List<Node> children) : base(children) { }
+       
         protected override NodeState OnUpdate()
         {
 

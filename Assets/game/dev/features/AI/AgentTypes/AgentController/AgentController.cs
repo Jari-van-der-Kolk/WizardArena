@@ -44,12 +44,10 @@ namespace Saxon.BT.AI.Controller
         [SerializeField] private float _detectionUpdateStep = 0.5f;
 
         public Vector3 destination { get; private set; }
-        public Vector3 origin { get; private set; }
+        public Transform origin { get; set; }
         public List<Transform> waypoints;
         public ObjectDetection objectDetection;
         public bool alive = true;
-        public CommandInvoker commandInvoker { get; private set; }
-
         internal NavMeshAgent navMesh;
     
         Agent currentAgent;
@@ -62,8 +60,10 @@ namespace Saxon.BT.AI.Controller
 
         [Space]
         [SerializeField] private bool hasTargetInSight;
-        [SerializeField] private bool occlusion;
         [SerializeField] private bool isTargetRecentlyLost;
+        [SerializeField] private bool lostTarget;
+        [SerializeField] private bool occlusion;
+        [SerializeField] private bool navmeshRotate;
         [SerializeField] private Transform target;
         [SerializeField] private bool debug;
         [SerializeField] private bool debugAttackRanges;
@@ -89,10 +89,12 @@ namespace Saxon.BT.AI.Controller
 
         private void DebugVariables()
         {
+            lostTarget = objectDetection.lostTarget;
             hasTargetInSight = objectDetection.hasTargetInSight;
             isTargetRecentlyLost = objectDetection.targetRecentlyLost;
             occlusion = currentAgent.hasTargetOcclusion;
             target = objectDetection.target;
+            navmeshRotate = navMesh.updateRotation;
         }
 
     #endif
@@ -102,13 +104,12 @@ namespace Saxon.BT.AI.Controller
             navMesh = GetComponent<NavMeshAgent>();
             rb = GetComponent<Rigidbody>();
             col = GetComponent<Collider>();
-            commandInvoker = GetComponent<CommandInvoker>();
         }
     
+        //var foo = FindObjectsOfType<GameObject>().Where(obj => obj.gameObject.layer == objectDetection.data.VieldOfViewLayers).ToList();
         void Start()
         {
 
-            var foo = FindObjectsOfType<GameObject>().Where(obj => obj.gameObject.layer == objectDetection.data.VieldOfViewLayers).ToList();
             SetAgentActivity(alive);
 
             //dont change the order of currentAgent and behaviourTree otherwise the debugger will start bitching 
@@ -124,7 +125,7 @@ namespace Saxon.BT.AI.Controller
     
         void Update()
         {
-            if (SetAgentActivity(alive))
+            if (alive)
             {
                 objectDetection.TimeStepUpdate(_detectionUpdateStep); 
                 behaviourTree.TimeStepUpdate(_BTUpdateStep);
