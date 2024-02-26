@@ -44,7 +44,6 @@ namespace Saxon.BT.AI.Controller
         [SerializeField] private float _detectionUpdateStep = 0.5f;
 
         public Vector3 destination { get; private set; }
-        public Transform origin { get; set; }
         public List<Transform> waypoints;
         public ObjectDetection objectDetection;
         public bool alive = true;
@@ -109,7 +108,6 @@ namespace Saxon.BT.AI.Controller
         //var foo = FindObjectsOfType<GameObject>().Where(obj => obj.gameObject.layer == objectDetection.data.VieldOfViewLayers).ToList();
         void Start()
         {
-
             SetAgentActivity(alive);
 
             //dont change the order of currentAgent and behaviourTree otherwise the debugger will start bitching 
@@ -149,6 +147,11 @@ namespace Saxon.BT.AI.Controller
         public void SetDestination(Vector3 destination)
         {
             this.destination = destination;
+        }
+
+        public void SetOrigin(Transform origin)
+        {
+            currentAgent.origin = origin;
         }
 
         //TODO make sure the agent can die and come alive again

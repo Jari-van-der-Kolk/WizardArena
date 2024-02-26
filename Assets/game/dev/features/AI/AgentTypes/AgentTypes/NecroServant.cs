@@ -19,12 +19,16 @@ namespace Saxon.BT.AI
         public override BehaviourTree CreateTree()
         {
 
-            FallbackNode fallback = new FallbackNode(new List<Node>
+            float findNewLocationRadius = 6f;
+            float pickLocationRadius = 2f;
+            OriginPatrolNode patrol = new OriginPatrolNode(this, findNewLocationRadius, pickLocationRadius);
+
+            SelectorNode selector = new SelectorNode(new List<Node>
             {
-                
+                ChaseTarget(detection.data.closeRangeAttackDistance), patrol
             });
 
-            rootNode = new RootNode(fallback);
+            rootNode = new RootNode(selector);
 
             return new BehaviourTree(rootNode);
         }

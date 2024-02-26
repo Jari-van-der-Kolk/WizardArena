@@ -6,10 +6,9 @@ namespace Saxon.NodePositioning
 {
     public class HashNode : MonoBehaviour
     {
-        public Vector3 ID;
-          
-
-        public void SetID(Vector3 ID) => this.ID = ID;
+        public Vector3Int ID;
+        public void SetID(Vector3Int ID) => this.ID = ID;
+       
     }
 
 }

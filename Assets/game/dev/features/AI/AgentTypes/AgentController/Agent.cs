@@ -11,20 +11,17 @@ namespace Saxon.BT
 {
     public abstract class Agent
     {
-        public abstract AgentTypes agentType { get; protected set; }
-        public AgentController agentController;
-        public NavMeshAgent navMesh;
-        public ObjectDetection detection;
-
-        public RootNode rootNode { get; protected set; }
-
         public Agent(AgentController agentController)
         {
             this.agentController = agentController;
-            this.navMesh = agentController.navMesh;
-            this.detection = agentController.objectDetection;
+            origin = agentController.transform;
         }
-
+        public abstract AgentTypes agentType { get; protected set; }
+        public AgentController agentController;
+        public NavMeshAgent navMesh => agentController.navMesh;
+        public ObjectDetection detection => agentController.objectDetection;
+        public Transform origin { get; set; }
+        public RootNode rootNode { get; protected set; }
         public Transform target => detection.target;
         public Transform transform => agentController.transform;
         public Vector3 position => agentController.transform.position;
@@ -52,6 +49,11 @@ namespace Saxon.BT
         public void Print(object message)
         {
             Debug.Log(message);
+        }
+
+        public void SetOrigin(Transform origin)
+        {
+            this.origin = origin;
         }
 
         #region Nodes

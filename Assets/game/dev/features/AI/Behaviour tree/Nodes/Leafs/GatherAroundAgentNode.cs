@@ -1,27 +1,34 @@
-﻿using System;
+﻿using Saxon.NodePositioning;
+using System;
 
 namespace Saxon.BT
 {
     public class GatherAroundAgentNode : LeafNode
     {
-        public GatherAroundAgentNode()
-        {
 
+        public GatherAroundAgentNode(Agent agent)
+        {
+            this.agent = agent;
         }
 
-        protected override void OnStart()
-        {
-            
-        }
-
+      
         protected override NodeState OnUpdate()
         {
+
+
+
+
+
             throw new NotImplementedException();
         }
 
-        internal override void OnStop()
+       
+
+        public void Foo()
         {
-            
+            //NodeGenerator.Instance.hashGrid.GetKeysInRadius<>        
         }
+
+
     }
 }

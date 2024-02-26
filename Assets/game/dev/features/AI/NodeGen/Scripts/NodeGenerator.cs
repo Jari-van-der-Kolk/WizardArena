@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using Saxon.HashGrid;
 using Unity.AI.Navigation;
+using static UnityEditor.PlayerSettings;
 
 //Later improvements for when revisiting this code
 
@@ -18,82 +19,7 @@ namespace Saxon.NodePositioning
     [ExecuteInEditMode]
     public class NodeGenerator : MonoBehaviour
     {
-        [Header("Bake settings")]
-
-        public LayerMask groundMask;
-        [Range(1, 20)]public int hashGridSize = 5;
-        [SerializeField] float nodeSize = 1f;
-        [SerializeField] float nodeGroundSeperation = 0.75f;
-
-        private GameObject nodesHolder;
-        public List<HashNode> hashNodes = new List<HashNode>();
-        public SpatialHashGrid<HashNode> hashGrid { get; private set; }
-
-        #region debug
-
-    #if UNITY_EDITOR
-        //put this variable here since its on the bottom anyway
-        [Space] public bool debugPoints = false;
-         public bool debugHashgrid = false;
-
-        void OnDrawGizmos()
-        {
-            if (debugPoints) {
-
-                if (hashNodes == null)
-                    return;
-
-                DebugNodes();
-            }
-
-            if(debugHashgrid)
-            {
-                if (hashGrid == null)
-                    return;
-
-                hashGrid.Debug();
-            }
-            
-        }
-
-        private void DebugNodes()
-        {
-            for (int i = 0; i < hashNodes.Count; i++)
-            {
-                Gizmos.DrawCube(hashNodes[i].transform.position, Vector3.one * .2f);
-                //Gizmos.DrawLine(hashNodes[i].transform.position, hashNodes[i].transform.position + Vector3.down);
-
-            }
-        }
-
-#endif
-
-        #endregion
-
-
-        private void OnValidate()
-        {
-            if(hashNodes != null && hashNodes.Count > 0)
-            {
-                hashGrid = new SpatialHashGrid<HashNode>(hashNodes, hashGridSize);
-            }
-        }
-        private void Start()
-        {
-            if (hashNodes != null && hashNodes.Count > 0)
-            {
-                hashGrid = new SpatialHashGrid<HashNode>(hashNodes, hashGridSize);
-            }
-        }
-
-        //this method is used as a button for giving the output data it creates for the hashNodes list
-        //when the button is pressed NodeGeneratorEditor calls this method and executes it
-        public void Bake()
-        {
-            nodesHolder = new GameObject("NodeHolder");
-            hashNodes = GenerateGridNodes();
-        }
-
+        #region Singleton
         private static NodeGenerator instance;
 
         public static NodeGenerator Instance
@@ -115,10 +41,111 @@ namespace Saxon.NodePositioning
             }
         }
 
+        #endregion
 
-        
+        [Header("Bake settings")]
 
-        List<HashNode> GenerateGridNodes()
+        public LayerMask groundMask;
+        [Range(1, 20)]public int hashGridSize = 5;
+        [SerializeField] float nodeSize = 1f;
+        [SerializeField] float nodeGroundSeperation = 0.75f;
+
+        private GameObject navigationNodesHolder;
+        private GameObject keyNodesHolder;
+        public List<HashNode> navigationNodes = new List<HashNode>();
+        public List<OriginHashNode> keyNodes = new List<OriginHashNode>();
+        public SpatialHashGrid<HashNode> hashGrid { get; private set; }
+
+        #region debug
+
+    #if UNITY_EDITOR
+        //put this variable here since its on the bottom anyway
+        [Space] public bool debugPoints = false;
+         public bool debugHashgrid = false;
+
+        void OnDrawGizmos()
+        {
+            if (debugPoints) {
+
+                if (navigationNodes == null)
+                    return;
+
+                DebugNodes();
+            }
+
+            if(debugHashgrid)
+            {
+                if (hashGrid == null)
+                    return;
+
+                hashGrid.Debug();
+            }
+            
+        }
+
+        private void DebugNodes()
+        {
+            for (int i = 0; i < navigationNodes.Count; i++)
+            {
+                Gizmos.DrawCube(navigationNodes[i].transform.position, Vector3.one * .2f);
+                //Gizmos.DrawLine(hashNodes[i].transform.position, hashNodes[i].transform.position + Vector3.down);
+
+            }
+        }
+
+#endif
+
+        #endregion
+
+
+        private void OnValidate()
+        {
+            if(navigationNodes != null && navigationNodes.Count > 0)
+            {
+                hashGrid = new SpatialHashGrid<HashNode>(hashGridSize);
+                AddValues(navigationNodes);
+                AddValues(keyNodes);
+            }
+        }
+        private void Start()
+        {
+            if (navigationNodes != null && navigationNodes.Count > 0)
+            {
+                hashGrid = new SpatialHashGrid<HashNode>(hashGridSize);
+                AddValues(navigationNodes);
+                AddValues(keyNodes);
+            }
+        }
+
+     
+
+        //this method is used as a button for giving the output data it creates for the hashNodes list
+        //when the button is pressed NodeGeneratorEditor calls this method and executes it
+        public void Bake()
+        {
+            hashGrid = new SpatialHashGrid<HashNode>(hashGridSize);
+
+            navigationNodesHolder = new GameObject("Navigation Nodes Holder");
+            keyNodesHolder = new GameObject("Key Nodes Holder");
+            
+            navigationNodes = GenerateNavigationNodes();
+            AddValues(navigationNodes);
+
+            keyNodes = GenerateKeyNodes();
+            AddValues(keyNodes);
+
+        }
+
+     
+        public void AddValues<T>(List<T> values) where T : HashNode
+        {
+            for (int i = 0; i < values.Count; i++)
+            {
+                hashGrid.Add(values[i], values[i].transform.position);
+            }
+        }
+
+        List<HashNode> GenerateNavigationNodes()
         {
             var nodePointList = new List<HashNode>();
 
@@ -144,8 +171,8 @@ namespace Saxon.NodePositioning
                         if (Saxon.IsGrounded(point, nodeGroundSeperation, groundMask) && IsPointOnNavMesh(point, navMeshData))
                         {
                             // Instantiate a cube or any other object at the generated point
-                            //:p
-                            var node = InstantiateNode(pos, new Vector3(x,y,z), nodesHolder);          
+                            var ID = hashGrid.GetGridKey(pos);
+                            var node = InstantiateNode<HashNode>(pos, ID, navigationNodesHolder);          
                             nodePointList.Add(node);   
 
                         }
@@ -154,8 +181,22 @@ namespace Saxon.NodePositioning
             }
             return nodePointList;
         }
-    
+
+        public List<OriginHashNode> GenerateKeyNodes()
+        {
+            var keyNodes = new List<OriginHashNode>();
+            foreach (Vector3Int position in hashGrid.grid.Keys)
+            {
+                var cellCenter = hashGrid.GetCellCenter(position, hashGridSize);
+                var node = InstantiateNode<OriginHashNode>(cellCenter, position, keyNodesHolder);  
+                keyNodes.Add(node);
+            }
+            return keyNodes;
+        }
+
        
+
+
         Bounds CalculateNavMeshBounds(Vector3[] vertices)
         {
             Vector3 min = vertices[0];
@@ -203,10 +244,10 @@ namespace Saxon.NodePositioning
                 return s >= 0 && t >= 0 && s + t <= d;
         }
     
-        HashNode InstantiateNode(Vector3 position, Vector3 ID, GameObject parent)
+        T InstantiateNode<T>(Vector3 position, Vector3Int ID, GameObject parent) where T : HashNode
         {
             GameObject nodeObject = new GameObject("Node");
-            var node = nodeObject.AddComponent<HashNode>();
+            var node = nodeObject.AddComponent<T>();
             node.SetID(ID);
 
             nodeObject.transform.position = position;

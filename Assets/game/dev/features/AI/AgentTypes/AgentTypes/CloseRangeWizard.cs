@@ -18,15 +18,14 @@ namespace Saxon.BT.AI
 
         public override BehaviourTree CreateTree()
         {
-            Saxon.GetPlayerObject(out var playerObject);
 
-            SetDestinationNode destinationNode = new SetDestinationNode(this, 3f,playerObject.transform);
+            SetDestinationNode destinationNode = new SetDestinationNode(this, 3f,transform);
 
             RepeatNode repeatNode = new RepeatNode(destinationNode, 4);
 
             WaypointPatrolNode waypointPatrolNode = new WaypointPatrolNode(this);
 
-            RandomPatrolNode patrol = new RandomPatrolNode(this, 10f, 3f);
+            OriginPatrolNode patrol = new OriginPatrolNode(this, 10f, 3f);
             //NodeControl control = new NodeControl(waypointPatrolNode, playerObject);
 
             RootNode rootNode = new RootNode(destinationNode);

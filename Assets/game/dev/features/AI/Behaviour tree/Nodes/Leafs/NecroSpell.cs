@@ -32,7 +32,8 @@ namespace Saxon.BT
             {
                 deadAgents[i].SetAgentActivity(true);
                 deadAgents[i].SetAgentType(AI.AgentTypes.NecroServant);
-                deadAgents[i].origin = agent.transform; 
+                deadAgents[i].SetOrigin(agent.transform);
+                deadAgents[i].objectDetection = agent.detection;
             }
 
         }

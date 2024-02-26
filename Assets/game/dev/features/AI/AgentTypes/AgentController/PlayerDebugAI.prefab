@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4739554403953903492}
   - component: {fileID: 6985652814032691457}
   - component: {fileID: 8508684367750968563}
+  - component: {fileID: 2491592217190069285}
   m_Layer: 6
   m_Name: PlayerDebugAI
   m_TagString: Player
@@ -143,3 +144,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9472e73a59274b9b8da79d72004bd8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2491592217190069285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3740104763544042602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d56e83109e3e22469130704f7c9195a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: {x: 0, y: 0, z: 0}

@@ -33,7 +33,7 @@ namespace Saxon.BT.AI
 
             float findNewLocationRadius = 10f;
             float pickLocationRadius = 3f;
-            RandomPatrolNode patrol = new RandomPatrolNode(this, findNewLocationRadius, pickLocationRadius);
+            OriginPatrolNode patrol = new OriginPatrolNode(this, findNewLocationRadius, pickLocationRadius);
 
             SequenceNode lostPlayer = new SequenceNode(new List<Node>
             {
