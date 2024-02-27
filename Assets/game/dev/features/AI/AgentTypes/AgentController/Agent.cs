@@ -78,14 +78,9 @@ namespace Saxon.BT
                 moveTowardsTarget, rotate    
             });
 
-            SelectorNode chaseCheck = new SelectorNode(new List<Node>
+            SequenceNode moveToTarget = new SequenceNode("move",new List<Node>
             {
-                recentlyLostTarget, targetInSight
-            });
-
-            SequenceNode moveToTarget = new SequenceNode(new List<Node>
-            {
-                chaseCheck, engage       
+                engage       
             });
 
  
@@ -93,6 +88,8 @@ namespace Saxon.BT
 
             return rootNode;
         }
+
+
         public Node targetInSight => new ConditionNode(() => hasTargetInSight);
         public Node TargetOutOfSight => new ConditionNode(() => detection.noVisualsOnTarget);
         public Node hasOcclusion => new ConditionNode(() => hasTargetOcclusion);

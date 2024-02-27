@@ -270,10 +270,9 @@ namespace Saxon.Sensor
             gameObjects = new List<GameObject>();
             List<GameObject> detectedObjects = new List<GameObject>();
 
-            int targetCount = Physics.OverlapSphereNonAlloc(_Tran.position, data.distance, _vieldOfViewColliders, data.VieldOfViewLayers, QueryTriggerInteraction.Collide);
-            int vicinityCount = Physics.OverlapSphereNonAlloc(_Tran.position, data.distance, _vicinityColliders, data.targetLayers, QueryTriggerInteraction.Collide);
 
-            for (int i = 0; i < targetCount; i++)
+            int vieldOfViewTargets = Physics.OverlapSphereNonAlloc(_Tran.position, data.distance, _vieldOfViewColliders, data.VieldOfViewLayers, QueryTriggerInteraction.Collide);
+            for (int i = 0; i < vieldOfViewTargets; i++)
             {
                 GameObject obj = _vieldOfViewColliders[i].gameObject;
                 if (IsObjectInSight(data, _Tran.position, scanDirection, obj))
@@ -282,6 +281,7 @@ namespace Saxon.Sensor
                 }
             }
 
+            int vicinityCount = Physics.OverlapSphereNonAlloc(_Tran.position, data.distance, _vicinityColliders, data.targetLayers, QueryTriggerInteraction.Collide);
             for (int i = 0; i < vicinityCount; i++)
             {
                 GameObject obj = _vicinityColliders[i].gameObject;

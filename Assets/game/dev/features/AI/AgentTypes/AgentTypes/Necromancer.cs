@@ -17,6 +17,8 @@ namespace Saxon.BT.AI
 
         public override AgentTypes agentType { get { return AgentTypes.Necromancer; } protected set { } }
 
+        NecroSpell necroSpell;
+
         public override BehaviourTree CreateTree()
         {
            
@@ -24,7 +26,7 @@ namespace Saxon.BT.AI
             float necroReviveRadius = 5f;
             SetDestinationNode standStill = new SetDestinationNode(this, 3f, transform);
             ConditionNode enoughDeadAgents = new ConditionNode(() => CountDeadAgentsInVicinity(necroReviveRadius) > amountOfDeadNearby);
-            NecroSpell necroSpell = new NecroSpell(this, necroReviveRadius);
+            necroSpell = new NecroSpell(this, necroReviveRadius);
             WaitNode cast = new WaitNode(3f);
             SequenceNode castNecroSpell = new SequenceNode(new List<Node>
             {
@@ -35,14 +37,26 @@ namespace Saxon.BT.AI
             float pickLocationRadius = 3f;
             OriginPatrolNode patrol = new OriginPatrolNode(this, findNewLocationRadius, pickLocationRadius);
 
-            SequenceNode lostPlayer = new SequenceNode(new List<Node>
+
+            ConditionNode servertsDetection = new ConditionNode(() => CheckServantsDetection());
+            SelectorNode servantsHaveSeenTarget = new SelectorNode(new List<Node>
             {
-                recentlyLostTarget, patrol
+                servertsDetection, ChaseTarget(detection.data.longRangeAttackDistance)
+            });
+
+            SelectorNode chaseCheck = new SelectorNode(new List<Node>
+            {
+                recentlyLostTarget, targetInSight
+            });
+
+            SequenceNode chaseTarget = new SequenceNode(new List<Node>
+            {
+                chaseCheck, ChaseTarget(detection.data.longRangeAttackDistance)
             });
 
             SelectorNode fallback = new SelectorNode(new List<Node>
             {
-               castNecroSpell, ChaseTarget(detection.data.midRangeAttackDistance), patrol
+               castNecroSpell, chaseTarget, patrol
             });
 
             rootNode = new RootNode(fallback);
@@ -75,8 +89,6 @@ namespace Saxon.BT.AI
 
             return count;
         }
-
-
         public int CountDeadAgentsInVicinity(float searchRadius, out List<AgentController> agents)
         {
             int count = 0;
@@ -93,6 +105,25 @@ namespace Saxon.BT.AI
 
             return count;
         }
+
+        public bool CheckServantsDetection()
+        {
+            var controllingAgents = necroSpell.controllingAgents;
+            if (controllingAgents .Count > 0)
+            {
+                for (int i = 0; i < controllingAgents.Count; i++)
+                {
+                    if (controllingAgents[i].objectDetection.hasTargetInSight)
+                    {
+                        return true;
+                    }
+
+                }
+            }
+
+            return false;
+        }
+
 
         #endregion
     }

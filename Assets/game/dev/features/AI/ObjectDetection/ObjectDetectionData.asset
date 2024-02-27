@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6dcd6386e6008c04b9e565cc4cb8b5ca, type: 3}
   m_Name: ObjectDetectionData
   m_EditorClassIdentifier: Assembly-CSharp::ObjectDetectionData
-  lostPlayerDuration: 6
-  distance: 10
-  closeRangeAttackDistance: 4
+  lostPlayerDuration: 12
+  distance: 17.5
+  closeRangeAttackDistance: 2
   midRangeAttackDistance: 6.5
   longRangeAttackDistance: 9.75
-  angle: 45
-  height: 1
+  angle: 58.7
+  height: 2
   meshColor: {r: 0, g: 0, b: 1, a: 0.4392157}
   occlusionLayers:
     serializedVersion: 2

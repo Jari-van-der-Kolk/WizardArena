@@ -66,11 +66,7 @@ namespace Saxon.BT
                 return NodeState.Running;
             }
         }
-
-        internal override void OnStop() {
-
-        }
-
+    
         private void SetNewDestination()
         {
             destination = GetLocation();
