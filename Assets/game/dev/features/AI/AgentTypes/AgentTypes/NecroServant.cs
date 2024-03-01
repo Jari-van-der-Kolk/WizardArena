@@ -33,7 +33,7 @@ namespace Saxon.BT.AI
                 chaseCheck, ChaseTarget(detection.data.closeRangeAttackDistance)
             });
 
-            SelectorNode selector = new SelectorNode(new List<Node>
+            FallbackNode selector = new FallbackNode(new List<Node>
             {
                 chaseTarget, patrol
             });

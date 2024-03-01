@@ -37,9 +37,8 @@ namespace Saxon.BT.AI
             float pickLocationRadius = 3f;
             OriginPatrolNode patrol = new OriginPatrolNode(this, findNewLocationRadius, pickLocationRadius);
 
-
-            ConditionNode servertsDetection = new ConditionNode(() => CheckServantsDetection());
-            SelectorNode servantsHaveSeenTarget = new SelectorNode(new List<Node>
+            ConditionNode servertsDetection = new ConditionNode(() => CheckServantsDetection(necroSpell.controllingAgents));
+            SequenceNode servantsHaveSeenTarget = new SequenceNode("s see",new List<Node>
             {
                 servertsDetection, ChaseTarget(detection.data.longRangeAttackDistance)
             });
@@ -56,7 +55,7 @@ namespace Saxon.BT.AI
 
             SelectorNode fallback = new SelectorNode(new List<Node>
             {
-               castNecroSpell, chaseTarget, patrol
+               castNecroSpell, servantsHaveSeenTarget, chaseTarget, patrol
             });
 
             rootNode = new RootNode(fallback);
@@ -106,23 +105,33 @@ namespace Saxon.BT.AI
             return count;
         }
 
-        public bool CheckServantsDetection()
+        public bool CheckServantsDetection(List<AgentController> agents)
         {
-            var controllingAgents = necroSpell.controllingAgents;
-            if (controllingAgents .Count > 0)
+            if (agents.Count > 0)
             {
-                for (int i = 0; i < controllingAgents.Count; i++)
+                for (int i = 0; i < agents.Count; i++)
                 {
-                    if (controllingAgents[i].objectDetection.hasTargetInSight)
+                    if (agents[i].objectDetection.hasTargetInSight)
                     {
+                        var target = agents[i].objectDetection.target;
+                        detection.SetTarget(target);
+
+                        for (int c = 0; c < agents.Count; c++)
+                        {
+                            agents[c].objectDetection.ToggleTargetRecentlyLost(true);
+                            agents[c].objectDetection.ResetRecentlyLostTimer();
+                            agents[c].objectDetection.SetTarget(target);
+                        }
+                        
                         return true;
                     }
 
                 }
             }
-
             return false;
         }
+
+
 
 
         #endregion

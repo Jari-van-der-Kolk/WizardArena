@@ -215,6 +215,21 @@ namespace Saxon.Sensor
 
         }
 
+        public void SetTarget(Transform target)
+        {
+            this.target = target;
+        }
+
+        public void ToggleTargetRecentlyLost(bool onOff)
+        {
+            targetRecentlyLost = onOff;
+        }
+
+        public void ResetRecentlyLostTimer()
+        {
+            _scanTimer = Time.time;
+        }
+
 
         public List<T> GetComponentsInArea<T>(float areaRadius) where T : Component
         {
