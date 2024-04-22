@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 7835156541086727127}
   - component: {fileID: 5888146079623376894}
   m_Layer: 7
-  m_Name: AgentDebugAI
+  m_Name: AgentAI
   m_TagString: Agent
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

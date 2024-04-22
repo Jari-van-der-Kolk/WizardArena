@@ -54,6 +54,7 @@ namespace Saxon.BT.AI.Controller
         Rigidbody rb;
         Collider col;
 
+        [Header("Debug")]
         #region debug
 #if UNITY_EDITOR
 
@@ -98,6 +99,8 @@ namespace Saxon.BT.AI.Controller
 
     #endif
 #endregion
+
+
         void Awake()
         {
             navMesh = GetComponent<NavMeshAgent>();

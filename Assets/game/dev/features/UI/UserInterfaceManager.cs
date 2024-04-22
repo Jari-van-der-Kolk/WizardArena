@@ -280,7 +280,7 @@ public class MenuData
     public int panelOrder;
     [Tooltip("The activated menu will close all other lower priority menus with a activated stopActivity")]
     public bool closeAllLowPriorityMenuActivity; 
-    [Tooltip("When another panel is open with higher priority the called panel wont open")]
+    [Tooltip("When another panel is open with a higher priority, the called upon panel wont open")]
     public bool holdActivity;
     [Tooltip("The activated menu will close all other lower priority menus")]
     public bool stopActivity;
