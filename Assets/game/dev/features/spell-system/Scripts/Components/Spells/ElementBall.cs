@@ -27,7 +27,7 @@ namespace Job.SpellSystem.Spells
             IDamageable damageable = other.GetComponent<IDamageable>();
             if (damageable != null)
             {
-                damageable.TakeDamage(_data.damageOnContact);
+                damageable.DoDamage(_data.damageOnContact);
             }
         }
     }

@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using Saxon.HashGrid;
 using Unity.AI.Navigation;
-using static UnityEditor.PlayerSettings;
+using DependencyInjection;
 
 //Later improvements for when revisiting this code
 
@@ -17,8 +17,15 @@ namespace Saxon.NodePositioning
 {
 
     [ExecuteInEditMode]
-    public class NodeGenerator : MonoBehaviour
+    [RequireComponent(typeof(NavMeshSurface))]
+    public class NodeGenerator : MonoBehaviour, IDependencyProvider
     {
+
+        [Provide]
+        public NodeGenerator ProvideNodeGenerator() {
+            return this;
+        }
+
         #region Singleton
         private static NodeGenerator instance;
 

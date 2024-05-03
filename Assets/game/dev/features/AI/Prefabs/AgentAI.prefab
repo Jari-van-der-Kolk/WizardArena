@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 9203849453139977951}
   - component: {fileID: 7835156541086727127}
   - component: {fileID: 5888146079623376894}
+  - component: {fileID: 2299854805792853863}
   m_Layer: 7
   m_Name: AgentAI
   m_TagString: Agent
@@ -189,3 +190,26 @@ MonoBehaviour:
   target: {fileID: 0}
   debug: 1
   debugAttackRanges: 0
+--- !u!114 &2299854805792853863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5445588807857904294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a9b7f50633fec84c845efdad2acbc53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  health:
+    value: 100
+    onValueChanged:
+      m_PersistentCalls:
+        m_Calls: []
+  deathEvent:
+    m_PersistentCalls:
+      m_Calls: []

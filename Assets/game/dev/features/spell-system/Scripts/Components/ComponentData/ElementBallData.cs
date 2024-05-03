@@ -10,7 +10,7 @@ namespace Job.SpellSystem.Data
         public float radius;
         public float launchSpeed;
         public bool useGravity;
-        public float damageOnContact;
+        public int damageOnContact;
         public GameObject particle;
         
         protected override void SetComponentDependency()
