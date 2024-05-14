@@ -9,11 +9,11 @@ public class PainField : MonoBehaviour
 {
     public string effectName;
     public LayerMask target;
-    public bool removeOnHit;
+    public bool deleteOnContact = true;
 
     [Inject]
     private StatusEffectFactory _effectFactory;
-    private List<IStatusEffect> _appliedEffects = new List<IStatusEffect>();
+    private IStatusEffect _statusEffect;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -21,25 +21,23 @@ public class PainField : MonoBehaviour
 
         if (health != null)
         {
-            var statusEffect = _effectFactory.Get(effectName, target, 2);
-            _appliedEffects.Add(statusEffect);
-            health.ApplyStatusEffect(statusEffect, 5);
+            _statusEffect = _effectFactory.Get(effectName, target, 2);
+            health.ApplyStatusEffect(_statusEffect, 5);
+            if (deleteOnContact)
+            {
+                Destroy(gameObject);
+            }
         }
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
-        foreach (var e in _appliedEffects)
-        {
-            e.OnReset();
-        }   
     }
 
     private void OnTriggerExit(Collider other)
     {
         HealthComponent health = other.GetComponent<HealthComponent>();
-        
+        if(health != null)
+        {
+            health.GetStatusEffect(_statusEffect).ReleaseHold();
+        }
     }
 
-
+  
 }

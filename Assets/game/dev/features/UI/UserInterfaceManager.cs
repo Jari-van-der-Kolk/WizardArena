@@ -9,11 +9,13 @@ using UnityEngine.Events;
 public class UserInterfaceManager : MonoBehaviour
 {
     [SerializeField] private bool _dontDestroyOnLoad;
-
     [Space]
+    [SerializeField] private UnityEvent onNextScene;
     [SerializeField] private List<MenuData> menus;
-    private Dictionary<string, MenuData> menusDict;
-    private List<MenuData> _selectedMenus = new List<MenuData>();
+
+
+   private List<MenuData> _selectedMenus = new List<MenuData>();
+   private List<MenuData> _previouslyClosedMenus = new List<MenuData>();
 
 
     #region singleton
@@ -70,6 +72,8 @@ public class UserInterfaceManager : MonoBehaviour
     #endregion
 
     #region UserInterface manager functions
+
+
     private void HandleMenu(MenuData menuData)
     {
         //hier check je of de node dat is aangedrukt al actief is of niet.
@@ -83,15 +87,13 @@ public class UserInterfaceManager : MonoBehaviour
                 Deactivate(menuData);
             }
         }
-        else if (menuData.activated == false && menuData.closeAllLowPriorityMenuActivity)
+        else
         {
-            CloseAllLowerPriorityMenus(menuData);
+            if(menuData.closeAllLowPriorityMenuActivity)
+            {
+                CloseAllLowerPriorityMenus(menuData);
+            }
 
-            ActivateMenu(menuData);
-
-        }
-        else if (menuData.activated == false)
-        {
             //als de aangedrukte node niet actief is dan zet je hem op active met deze functie.
             ActivateMenu(menuData);
         }
@@ -100,33 +102,58 @@ public class UserInterfaceManager : MonoBehaviour
 
     public void HandleSpecificMenu(string ID)
     {
-         var menuData = GetLocalMenu(ID);
+         MenuData menuData = GetLocalMenu(ID);
 
-        //hier check je of de node dat is aangedrukt al actief is of niet.
-        if (menuData.activated == true)
+        if (menuData.activated)
         {
-            //checked of er een menuNode in selectedNodes niet al op stopActivity staat.
-            //checked of de menuNode waar op gedrukt is niet zelf op stopActivity staat.
             if (HoldDeactivation() == false || menuData.holdActivity)
             {
-                //als dit zo is dan zet hij hem op inactive
                 Deactivate(menuData);
             }
         }
-        else if (menuData.activated == false && menuData.closeAllLowPriorityMenuActivity)
+        else
         {
-            CloseAllLowerPriorityMenus(menuData);
+            if (menuData.closeAllLowPriorityMenuActivity)
+            {
+                var closingMenus = CloseAllLowerPriorityMenus(menuData);
+                SaveClosingMenus(closingMenus);
+            }
 
-            ActivateMenu(menuData);
+            
 
-        }
-        else if (menuData.activated == false)
-        {
-            //als de aangedrukte node niet actief is dan zet je hem op active met deze functie.
             ActivateMenu(menuData);
         }
 
     }
+
+    private void SaveClosingMenus(List<MenuData> closingMenus)
+    {
+        foreach(var m in closingMenus)
+        {
+            _previouslyClosedMenus.Add(m);
+            _selectedMenus.Remove(m);
+        }
+
+    }
+
+    public void LoadPreviouslyClosedMenus()
+    {
+        foreach (var m in _previouslyClosedMenus)
+        {
+            ActivateMenu(m);
+        }
+        _previouslyClosedMenus.Clear();
+    }
+    
+    public void DeleteSpecificMenu(string ID)
+    {
+        var calledMenu = GetLocalMenu(ID);
+        menus.Remove(calledMenu);
+        _previouslyClosedMenus.Contains(calledMenu);
+    }
+
+    public void ClearPreviouslyClosedMenus() => _previouslyClosedMenus.Clear();
+
 
     private bool HoldDeactivation()
     {
@@ -143,15 +170,16 @@ public class UserInterfaceManager : MonoBehaviour
         return false;
     }
 
-    private void CloseAllLowerPriorityMenus(MenuData menuData)
+   
+    private List<MenuData> CloseAllLowerPriorityMenus(MenuData menuData)
     {
-        var getLowerPrio = GetLowerPriorityMenus(menuData);
+        List<MenuData> getLowerPrio = GetLowerPriorityMenus(menuData);
         foreach (var l in getLowerPrio)
         {
-            if(l.stopActivity)
+            if (l.stopActivity)
                 Deactivate(l);
         }
-
+        return getLowerPrio;
     }
 
     private bool CheckForHigherPriority(MenuData menuData)
@@ -171,6 +199,9 @@ public class UserInterfaceManager : MonoBehaviour
         var menus = new List<MenuData>();
         for (int i = 0; i < _selectedMenus.Count; i++)
         {
+            if (_selectedMenus[i].ID == "PlaceHolder")
+                continue;
+
             if (menuData.panelOrder > _selectedMenus[i].panelOrder)
             {
                 menus.Add(_selectedMenus[i]);
@@ -178,7 +209,6 @@ public class UserInterfaceManager : MonoBehaviour
         }
         return menus;
     }
-
 
     private void ActivateMenu(MenuData menuData)
     {
@@ -255,19 +285,17 @@ public class UserInterfaceManager : MonoBehaviour
         panel.SetActive(!panel.activeSelf);
     }
 
-    public void NextScene(string name) => UnityEngine.SceneManagement.SceneManager.LoadScene(name);
+    public void NextScene(string name)
+    {
+        onNextScene?.Invoke();
+
+        UnityEngine.SceneManagement.SceneManager.LoadScene(name);
+    }
     public void QuitApplication() => Application.Quit();
-
-
 
    
     #endregion
 
-    #region Observer methods
-
-
-
-    #endregion
 }
 
 [System.Serializable]

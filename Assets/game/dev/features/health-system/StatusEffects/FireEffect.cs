@@ -6,10 +6,11 @@ public class FireEffect : EffectBase
     {
     }
 
-    public override void OnApply(HealthComponent health, int tickAmount)
+    public override void OnApply(HealthComponent health, int tickAmount, bool putOnHold = false)
     {
         base.OnApply(health, tickAmount);
         Debug.Log(health.transform.name + " starts recieveing fire damage");
+        Effect(health);
 
     }
 
@@ -20,7 +21,7 @@ public class FireEffect : EffectBase
             return false;
         }
 
-        health.SubractHealth(targetMask, statusHealthModifierAmount);
+        Effect(health);
 
         Debug.Log(health.transform.name + " recieves fire damage");
 
@@ -32,6 +33,11 @@ public class FireEffect : EffectBase
         base.OnRemove(health);
         Debug.Log(health.transform.name + " stopped recieveing fire damage");
 
+    }
+
+    private void Effect(HealthComponent health)
+    {
+        health.SubractHealth(targetMask, statusHealthModifierAmount);
     }
 }
 

@@ -3,8 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-
-
+using UnityEngine.UI;
 
 public class HealthComponent : MonoBehaviour
 {
@@ -82,8 +81,29 @@ public class HealthComponent : MonoBehaviour
         }
     }
 
-   
-    
+    public IStatusEffect GetStatusEffect(IStatusEffect effect)
+    {
+        foreach (IStatusEffect existingEffects in statusEffects)
+        {
+            print(existingEffects.GetType().ToString() + " "  + effect.GetType().ToString());
+            if (existingEffects.GetType() == effect.GetType())
+            {
+                return effect;
+            }
+        }
+        Debug.LogError("there is no such type available on this object: make sure you have null checked the code that provides this method");
+        return null;
+    }
+
+    public void ScaleHealthBar(Image image)
+    {
+        Vector3 newScale = image.rectTransform.localScale;
+        newScale.x = 1.0f / 100.0f * health.Value;
+        image.rectTransform.localScale = newScale;
+    }
+
+
+
     public void UpdateStatusEffects()
     {
         tick += 1f * Time.deltaTime;

@@ -5,10 +5,10 @@ public abstract class EffectBase : IStatusEffect
 {
     public LayerMask targetMask;
     public int statusHealthModifierAmount;
+    public bool onHold;
 
-    int currentTick;
-    int tickDuration;
-    public bool cancelEffect;
+    int _currentTick;
+    int _tickDuration;
 
     public EffectBase(LayerMask targetMask, int statusHealthModifierAmount)
     {
@@ -16,19 +16,22 @@ public abstract class EffectBase : IStatusEffect
         this.statusHealthModifierAmount = statusHealthModifierAmount;
     }
    
-    public virtual void OnApply(HealthComponent health, int tickDuration)
+    public virtual void OnApply(HealthComponent health, int tickDuration, bool putOnHold = false)
     {
-        currentTick = 0;
-        this.tickDuration = tickDuration;           
+        _currentTick = 0;
+        this._tickDuration = tickDuration;           
+        onHold = putOnHold;
+
     }
 
     public virtual bool OnUpdate(HealthComponent health)
     {
-        currentTick++;
-        if(currentTick >= tickDuration)
-        {
+        if(onHold == false)
+            _currentTick++;
+
+        if(_currentTick >= _tickDuration)
             return false;
-        }
+
         return true;
     }
 
@@ -37,10 +40,12 @@ public abstract class EffectBase : IStatusEffect
         health.StatusEffects.Remove(this);  
     }
 
-    public void OnReset()
+    public void ReleaseHold()
     {
-        currentTick = -1;
+        onHold = false;
     }
+
+  
 }
 
 
