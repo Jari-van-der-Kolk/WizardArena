@@ -226530,6 +226530,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PainField
       objectReference: {fileID: 0}
+    - target: {fileID: 6918891832712332707, guid: d7637cb45d9a8b74e862ad86a255febc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -230578,6 +230583,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Scene-Dependoncy
+      objectReference: {fileID: 0}
+    - target: {fileID: 4431664703133624870, guid: a8fb6f1e8562f554db7e56c09ba6ab10,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7836792581336039888, guid: a8fb6f1e8562f554db7e56c09ba6ab10,
         type: 3}
