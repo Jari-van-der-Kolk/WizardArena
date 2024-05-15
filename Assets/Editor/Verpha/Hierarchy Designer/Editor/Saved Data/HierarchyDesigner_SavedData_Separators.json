@@ -1,0 +1,42 @@
+{
+    "items": [
+        {
+            "name": "Player",
+            "textColor": {
+                "r": 0.0,
+                "g": 0.6912975311279297,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "backgroundColor": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "fontStyle": 0,
+            "fontSize": 12,
+            "textAlignment": 4,
+            "backgroundImageType": 0
+        },
+        {
+            "name": "Light",
+            "textColor": {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 1.0
+            },
+            "backgroundColor": {
+                "r": 1.0,
+                "g": 0.881693422794342,
+                "b": 0.0,
+                "a": 1.0
+            },
+            "fontStyle": 0,
+            "fontSize": 12,
+            "textAlignment": 4,
+            "backgroundImageType": 0
+        }
+    ]
+}

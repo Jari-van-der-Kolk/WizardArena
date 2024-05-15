@@ -459,7 +459,7 @@ namespace Dreamteck.Blenda.Editor
         private static void GenerateFadeTexture(int width, int height, ref Texture2D tex, AnimationCurve curve)
         {
             if (tex == null) tex = new Texture2D(width, height, TextureFormat.ARGB32, false);
-            else tex.Resize(width, height);
+            else tex.Reinitialize(width, height);
             if (tex.width <= 1)
             {
                 tex.Apply();
