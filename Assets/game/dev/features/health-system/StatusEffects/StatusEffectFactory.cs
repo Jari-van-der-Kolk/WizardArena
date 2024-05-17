@@ -16,7 +16,7 @@ public class StatusEffectFactory : MonoBehaviour, IDependencyProvider
         Debug.Log("init");
     }
 
-    public IStatusEffect Get(string name, LayerMask targetMask,int healthModifier)
+    public IStatusEffect Create(string name, LayerMask targetMask,int healthModifier)
     {
         switch(name)
         {

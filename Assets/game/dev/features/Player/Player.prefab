@@ -326,7 +326,7 @@ MonoBehaviour:
     m_Bits: 193
   m_MovingPlatformMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 0
 --- !u!114 &5574876959144462838
 MonoBehaviour:
   m_ObjectHideFlags: 0

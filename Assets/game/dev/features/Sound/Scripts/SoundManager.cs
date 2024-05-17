@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class SoundManager : MonoBehaviour
 {
-    public static List<SoundEffect> sounds;
+    public static List<SoundEffect> sounds = new List<SoundEffect>()    ;
     public static event Action<float> OnVolumeChanged;
 
     private static SoundManager singleton;

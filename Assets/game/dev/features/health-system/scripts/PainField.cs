@@ -21,7 +21,7 @@ public class PainField : MonoBehaviour
 
         if (health != null)
         {
-            _statusEffect = _effectFactory.Get(effectName, target, 2);
+            _statusEffect = _effectFactory.Create(effectName, target, 2);
             health.ApplyStatusEffect(_statusEffect, 5);
             if (deleteOnContact)
             {

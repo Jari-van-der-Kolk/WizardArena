@@ -3,19 +3,8 @@ using UnityEngine;
 using UnityEngine.AI;
 using Saxon.Sensor;
 using System.Linq;
-
-namespace Saxon.BT.AI
-{
-    public enum AgentTypes
-    {
-        CloseRangeWizard,
-        MidRangeWizard,
-        LongRangeWizard,
-        Necromancer,
-        NecroServant,
-        Spider,
-    };
-}
+using DependencyInjection;
+using Saxon.BT.AI.Types;
 
 namespace Saxon.BT.AI.Controller
 {
@@ -30,12 +19,10 @@ namespace Saxon.BT.AI.Controller
 
     //TODO zorg ervoor dat de necroservant een random plaats rondom de necromancer vind met behulp van de spacial hash grid
 
-
-    
-
     [RequireComponent(typeof(NavMeshAgent))]
     public class AgentController : MonoBehaviour
     {
+
         [SerializeField] private AgentTypes _agentType;
         [SerializeField] private ObjectDetectionData _detectionData;
         [Tooltip("The speed at which the behaviour tree updates")]
@@ -49,15 +36,21 @@ namespace Saxon.BT.AI.Controller
         public bool alive = true;
         internal NavMeshAgent navMesh;
     
+        
+        [Inject]
+        private AgentFactory _agentFactory; 
+        
         Agent currentAgent;
         BehaviourTree behaviourTree;
         Rigidbody rb;
         Collider col;
 
-        [Header("Debug")]
+
+
         #region debug
 #if UNITY_EDITOR
 
+        [Header("Debug")]
         [Space]
         [SerializeField] private bool hasTargetInSight;
         [SerializeField] private bool isTargetRecentlyLost;
@@ -142,7 +135,7 @@ namespace Saxon.BT.AI.Controller
         }
         public void SetAgentType(AgentTypes agentType)
         {
-            currentAgent = AgentFactory(agentType);
+            currentAgent = _agentFactory.Create(agentType, this);
             behaviourTree = currentAgent.CreateTree();
             _agentType = agentType;
         }
@@ -168,39 +161,7 @@ namespace Saxon.BT.AI.Controller
             return agentStatus;
         }
 
-        Agent AgentFactory(AgentTypes agentType)
-        {
-            Agent agent = null;
-    
-            switch (agentType)
-            {
-                case AgentTypes.CloseRangeWizard:
-                    agent = new CloseRangeWizard(this);
-                    break;
-                case AgentTypes.MidRangeWizard:
-                    agent = new MidRangeWizard(this);
-                    break;
-                case AgentTypes.LongRangeWizard:
-                    agent = new LongRangeWizard(this);
-                    break;
-                case AgentTypes.Necromancer:
-                    agent = new Necromancer(this);
-                    break;
-                case AgentTypes.NecroServant:
-                    agent = new NecroServant(this);
-                    break;
-                case AgentTypes.Spider:
-                    agent = new Spider(this);
-                    break;
-                // Add more cases as needed
-                default:
-                    Debug.Log("You might want to assign the: " + agentType + 
-                        " Inside of the Factory method found inside of: " + gameObject);
-                    break;
-            }
-    
-            return agent;
-        }
+       
     
     }
 

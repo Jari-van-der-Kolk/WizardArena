@@ -3,7 +3,7 @@ using UnityEngine.AI;
 using Saxon.HashGrid;
 using Saxon.NodePositioning;
 using Saxon.Sensor;
-using Saxon.BT.AI;
+using Saxon.BT.AI.Types;
 using Saxon.BT.AI.Controller;
 using System.Collections.Generic;
 

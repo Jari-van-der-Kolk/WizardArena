@@ -3,6 +3,7 @@ using Saxon.BT.AI.Controller;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Saxon.BT.AI.Types;
 
 namespace Saxon.BT
 {
@@ -11,6 +12,7 @@ namespace Saxon.BT
         new readonly Necromancer agent;
         float radiusEffect;
         public List<AgentController> controllingAgents = new List<AgentController>();
+
        
         public NecroSpell(Necromancer agent, float radius)
         {
@@ -32,7 +34,7 @@ namespace Saxon.BT
             for (int i = 0; i < deadAgents.Count; i++)
             {
                 deadAgents[i].SetAgentActivity(true);
-                deadAgents[i].SetAgentType(AI.AgentTypes.NecroServant);
+                deadAgents[i].SetAgentType(AgentTypes.NecroServant);
                 deadAgents[i].SetOrigin(agent.transform);
                 controllingAgents.Add(deadAgents[i]);
             }
