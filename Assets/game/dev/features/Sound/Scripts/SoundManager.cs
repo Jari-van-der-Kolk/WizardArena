@@ -50,7 +50,6 @@ public class SoundManager : MonoBehaviour
             s.source.loop = s.loop;
         }
 
-        DontDestroyOnLoad(gameObject);
     }
 
     public void Play(SoundEffect soundEffect)
