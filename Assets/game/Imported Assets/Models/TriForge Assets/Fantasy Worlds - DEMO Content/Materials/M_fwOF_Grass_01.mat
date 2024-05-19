@@ -119,7 +119,7 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _EnvironmentReflections: 1
-    - _FadeDistance: 40
+    - _FadeDistance: 100
     - _FadeFalloff: 2.5
     - _FlipBackNormals: 0
     - _Float0: 0.57
