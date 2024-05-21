@@ -1,11 +1,14 @@
 using UnityEngine;
 using System.Collections;
+ 
 
 public class BackAndForthAnimation : MonoBehaviour
 {
     public Transform targetObject;
     public float moveDistance = 5.0f;
     public float moveDuration = 2.0f;
+
+    
 
     void Start()
     {
@@ -25,6 +28,8 @@ public class BackAndForthAnimation : MonoBehaviour
 
     void MoveBack()
     {
+
+        
         // Move the object back to its original position
         LTDescr moveLeft = LeanTween.moveX(targetObject.gameObject, targetObject.position.x - moveDistance, moveDuration);
 
