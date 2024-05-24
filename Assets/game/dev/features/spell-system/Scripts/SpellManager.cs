@@ -1,84 +1,97 @@
+using DependencyInjection;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using UnityEditor.ShortcutManagement;
 using UnityEngine;
 
-namespace Job.SpellSystem
+public enum ElementType
+{
+    Fire,
+    Ice,
+    Lightning
+}
+
+public class SpellManager : MonoBehaviour, IDependencyProvider
 {
 
-    public class SpellManager : MonoBehaviour
+    [Provide]
+    public SpellManager ProvideSpellManager()
     {
-        public static SpellManager Instance;
-        [SerializeField] private SpellSO[] _spells;
+        return this;
+    }
 
-        [SerializeField] private EShapes[] _selectedShapes = new EShapes[2];
-        [SerializeField] private EElements[] _selectedElements = new EElements[2];
-        [SerializeField] private EActivation[] _selectedActivation = new EActivation[2];
+    public List<SpellStratagy> spellDataList;
 
-        private List<SpellSO> _possibleSpells = new List<SpellSO>();
+    private Dictionary<SpellStratagy, KeyCombination> _keyCombinations;
 
-        private void Awake()
+    private void Start()
+    {
+        _keyCombinations = new Dictionary<SpellStratagy, KeyCombination>();
+        foreach (var spellData in spellDataList)
         {
-            Instance = this;
-        }
-        private void Start()
-        {
-            GetPossibleSpells();
-        }
-        private void GetPossibleSpells()
-        {
-            foreach (SpellSO spell in _spells)
-            {
-                bool shapesMatch = _selectedShapes.Contains(spell.spellCombo.shape);
-                bool elementsMatch = spell.spellCombo.elements.All(_selectedElements.Contains);
-                bool activationsMatch = spell.spellCombo.activations.All(_selectedActivation.Contains);
-
-                if (shapesMatch && elementsMatch && activationsMatch)
-                {
-                    _possibleSpells.Add(spell);
-                }
-            }
-        }
-
-        public SpellSO GetSpellFromCombo(SpellCombo combo)
-        {
-            foreach (SpellSO spell in _possibleSpells)
-            {
-                bool shapesMatch = spell.spellCombo.shape == combo.shape;
-                if (!shapesMatch)
-                    continue;
-
-                bool elementsMatch = spell.spellCombo.elements.OrderBy(x => x).SequenceEqual(combo.elements.OrderBy(x => x));
-                if (!elementsMatch)
-                    continue;
-
-                bool activationsMatch = spell.spellCombo.activations.OrderBy(x => x).SequenceEqual(combo.activations.OrderBy(x => x));
-                if (!activationsMatch)
-                    continue;
-
-                if (shapesMatch && elementsMatch && activationsMatch)
-                {
-                    return spell;
-                }
-            }
-
-            return null;
-        }
-
-        public EShapes[] GetSelectedShapes()
-        {
-            return _selectedShapes;
-        }
-
-        public EElements[] GetsSelectedElements()
-        {
-            return _selectedElements;
-        }
-
-        public EActivation[] GetSelectedActivations()
-        {
-            return _selectedActivation;
+            _keyCombinations[spellData] = new KeyCombination(spellData.keyCombination);
         }
     }
+
+   
+    private void CreateSpell()
+    {
+        foreach (var spellData in _keyCombinations.Keys)
+        {
+            if (CheckCombination(_keyCombinations[spellData]))
+            {
+                
+            }
+        }
+    }
+
+    private bool CheckCombination(KeyCombination keyCombination)
+    {
+        foreach (KeyCode key in keyCombination.KeySequence)
+        {
+            if (Input.GetKeyDown(key))
+            {
+                if (keyCombination.CheckKey(key))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
+
+
+// Key Combination Class
+public class KeyCombination
+{
+    public List<KeyCode> KeySequence { get; private set; }
+    private int currentIndex;
+
+    public KeyCombination(List<KeyCode> keySequence)
+    {
+        KeySequence = keySequence;
+        currentIndex = 0;
+    }
+
+    public bool CheckKey(KeyCode key)
+    {
+        if (key == KeySequence[currentIndex])
+        {
+            currentIndex++;
+            if (currentIndex >= KeySequence.Count)
+            {
+                currentIndex = 0;
+                return true;
+            }
+        }
+        else
+        {
+            currentIndex = 0;
+        }
+        return false;
+    }
+}
+
 
 

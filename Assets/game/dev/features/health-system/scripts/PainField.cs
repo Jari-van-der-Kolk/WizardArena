@@ -7,7 +7,7 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class PainField : MonoBehaviour
 {
-    public string effectName;
+    public ElementType element;
     public LayerMask target;
     public bool deleteOnContact = true;
 
@@ -21,7 +21,7 @@ public class PainField : MonoBehaviour
 
         if (health != null)
         {
-            _statusEffect = _effectFactory.Create(effectName, target, 2);
+            _statusEffect = _effectFactory.Create(element, target, 2);
             health.ApplyStatusEffect(_statusEffect, 5);
             if (deleteOnContact)
             {

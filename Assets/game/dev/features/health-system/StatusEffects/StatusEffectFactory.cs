@@ -16,11 +16,11 @@ public class StatusEffectFactory : MonoBehaviour, IDependencyProvider
         Debug.Log("init");
     }
 
-    public IStatusEffect Create(string name, LayerMask targetMask,int healthModifier)
+    public IStatusEffect Create(ElementType element, LayerMask targetMask,int healthModifier)
     {
-        switch(name)
+        switch(element)
         {
-            case "Fire":
+            case ElementType.Fire:
                 return new FireEffect(targetMask, healthModifier);
             
             default :
