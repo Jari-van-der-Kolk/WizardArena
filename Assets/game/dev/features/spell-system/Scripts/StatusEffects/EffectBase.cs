@@ -1,6 +1,8 @@
 ﻿using TMPro.EditorUtilities;
 using UnityEngine;
 
+
+
 public abstract class EffectBase : IStatusEffect
 {
     public LayerMask targetMask;

@@ -26,7 +26,7 @@ namespace Movement
         
         [Header("Aiming")]
         [SerializeField] private Camera m_Camera;
-        [SerializeField] private MouseLook m_MouseLook = new MouseLook();
+        public MouseLook mouseLook = new MouseLook();
 
         [Header("Movement")]
         [SerializeField] private float m_Friction = 6;
@@ -76,13 +76,12 @@ namespace Movement
                 m_Camera = Camera.main;
 
             m_CamTran = m_Camera.transform;
-            m_MouseLook.Init(m_Tran, m_CamTran);
+            mouseLook.Init(m_Tran, m_CamTran);
         }
 
         private void Update()
         {
             m_MoveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
-            m_MouseLook.UpdateCursorLock();
 
             QueueJump();
 
@@ -121,7 +120,7 @@ namespace Movement
             }
 
             // Rotate the character and camera.
-            m_MouseLook.LookRotation(m_Tran, m_CamTran);
+            mouseLook.LookRotation(m_Tran, m_CamTran);
 
             // Move the character.
             

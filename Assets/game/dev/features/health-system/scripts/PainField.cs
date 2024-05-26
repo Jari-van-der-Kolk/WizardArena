@@ -15,6 +15,12 @@ public class PainField : MonoBehaviour
     private StatusEffectFactory _effectFactory;
     private IStatusEffect _statusEffect;
 
+    public void Initizlize(ElementType type, LayerMask targetLayer)
+    {
+        element = type;
+        this.target = targetLayer;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         HealthComponent health = other.GetComponent<HealthComponent>();

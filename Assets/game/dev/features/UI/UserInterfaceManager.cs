@@ -1,3 +1,4 @@
+using Movement;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,6 +6,20 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+
+
+
+
+//--------------TODO--------------------
+
+//add :  public bool LoadPreviousStoppedActivity;                // <--- add this feature 
+
+
+
+
+
+
+
 
 public class UserInterfaceManager : MonoBehaviour
 {
@@ -293,6 +308,15 @@ public class UserInterfaceManager : MonoBehaviour
     }
     public void QuitApplication() => Application.Quit();
 
+    public void ShowMousePointer(Q3PlayerController controller)
+    {
+        controller.mouseLook.SetCursorLock(false);
+        
+    }
+    public void HideMousePointer(Q3PlayerController controller)
+    {
+        controller.mouseLook.SetCursorLock(true);
+    }
    
     #endregion
 
@@ -312,6 +336,8 @@ public class MenuData
     public bool holdActivity;
     [Tooltip("The activated menu will close all other lower priority menus")]
     public bool stopActivity;
+    [Tooltip("Opens the menu which were closed by the stop activity")]
+    public bool LoadPreviousStoppedActivity;                // <--- add this feature
     [HideInInspector] public bool activated;
     public bool activateOnStart;
 

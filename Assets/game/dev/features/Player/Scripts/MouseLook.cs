@@ -6,7 +6,7 @@ namespace Movement
     /// <summary>
     /// Custom script based on the version from the Standard Assets.
     /// </summary>
-    [Serializable]
+    [System.Serializable]
     public class MouseLook
     {
         [SerializeField] private float m_XSensitivity = 2f;
@@ -30,30 +30,33 @@ namespace Movement
 
         public void LookRotation(Transform character, Transform camera)
         {
-            float yRot = Input.GetAxis("Mouse X") * m_XSensitivity;
-            float xRot = Input.GetAxis("Mouse Y") * m_YSensitivity;
-
-            m_CharacterTargetRot *= Quaternion.Euler(0f, yRot, 0f);
-            m_CameraTargetRot *= Quaternion.Euler(-xRot, 0f, 0f);
-
-            if (m_ClampVerticalRotation)
+            if(m_LockCursor)
             {
-                m_CameraTargetRot = ClampRotationAroundXAxis(m_CameraTargetRot);
-            }
+                float yRot = Input.GetAxis("Mouse X") * m_XSensitivity;
+                float xRot = Input.GetAxis("Mouse Y") * m_YSensitivity;
 
-            if (m_Smooth)
-            {
-                character.localRotation = Quaternion.Slerp(character.localRotation, m_CharacterTargetRot,
-                    m_SmoothTime * Time.deltaTime);
-                camera.localRotation = Quaternion.Slerp(camera.localRotation, m_CameraTargetRot,
-                    m_SmoothTime * Time.deltaTime);
-            }
-            else
-            {
-                character.localRotation = m_CharacterTargetRot;
-                camera.localRotation = m_CameraTargetRot;
-            }
+                m_CharacterTargetRot *= Quaternion.Euler(0f, yRot, 0f);
+                m_CameraTargetRot *= Quaternion.Euler(-xRot, 0f, 0f);
 
+                if (m_ClampVerticalRotation)
+                {
+                    m_CameraTargetRot = ClampRotationAroundXAxis(m_CameraTargetRot);
+                }
+
+                if (m_Smooth)
+                {
+                    character.localRotation = Quaternion.Slerp(character.localRotation, m_CharacterTargetRot,
+                        m_SmoothTime * Time.deltaTime);
+                    camera.localRotation = Quaternion.Slerp(camera.localRotation, m_CameraTargetRot,
+                        m_SmoothTime * Time.deltaTime);
+                }
+                else
+                {
+                    character.localRotation = m_CharacterTargetRot;
+                    camera.localRotation = m_CameraTargetRot;
+                }
+
+            }
             UpdateCursorLock();
         }
 
