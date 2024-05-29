@@ -1,12 +1,11 @@
 {
-    "name": "AYellowpaper.SerializeInterfaces.Editor",
-    "rootNamespace": "",
+    "name": "Utils",
+    "rootNamespace": "Utils",
     "references": [
+        "GUID:b32fdbddbdb19af4a815366ee0894067",
         "GUID:31976cc9e85bdd9459e856fcb40d0d50"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

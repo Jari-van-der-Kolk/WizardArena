@@ -1,12 +1,11 @@
 {
-    "name": "AYellowpaper.SerializeInterfaces.Editor",
+    "name": "SPackages",
     "rootNamespace": "",
     "references": [
-        "GUID:31976cc9e85bdd9459e856fcb40d0d50"
+        "Unity.TextMeshPro",
+        "Dreamteck.Utilities"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

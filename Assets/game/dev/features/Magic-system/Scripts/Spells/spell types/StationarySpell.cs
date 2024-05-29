@@ -19,7 +19,7 @@ public class StationarySpell : SpellBase
 
     public override void CastSpell(Transform origin)
     {
-        var shield = Instantiate(_prefab, origin.position.With(y: -1.5f), Quaternion.identity);
+        var shield = Instantiate(_prefab, origin.position.With(y: 1f), Quaternion.identity);
         Destroy(shield, _duration);
     }
 }

@@ -17,5 +17,5 @@ MonoBehaviour:
     playerKeyCombination: 
   elementType: 0
   damageOverTime: 0
-  _shieldPrefab: {fileID: 0}
+  _prefab: {fileID: 0}
   _duration: 0
