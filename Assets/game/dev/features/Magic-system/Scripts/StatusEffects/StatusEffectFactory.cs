@@ -18,10 +18,6 @@ public class StatusEffectFactory : MonoBehaviour, IDependencyProvider
         return this;
     }
 
-    public void init()
-    {
-        Debug.Log("init");
-    }
 
     public IStatusEffect Create(ElementType element, LayerMask targetMask,int healthModifier)
     {
