@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dfd1def337afd54186428dae7e65d97, type: 3}
+  m_Name: Shield
+  m_EditorClassIdentifier: 
+  spellID:
+    EffectName: Shield
+    playerKeyCombination: 
+  appliedStatusEffect:
+    _underlyingValue: {fileID: 0}
+  _prefab: {fileID: 1144611443530481257, guid: 80f88bf679f7c8941ae773ae20786a99, type: 3}
+  _duration: 5
