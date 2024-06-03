@@ -36,7 +36,6 @@ namespace Saxon.BT
             {
                 OnStop();
                 started = false;
-                debugger?.Debugger(this);
             }
 
             return state;

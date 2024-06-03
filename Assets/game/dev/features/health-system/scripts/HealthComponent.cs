@@ -7,7 +7,8 @@ using UnityEngine.UI;
 
 public class HealthComponent : MonoBehaviour
 {
-    [SerializeField] private LayerMask hitLayer;
+
+    [SerializeField] private TargetLayerData hitLayer;
     [SerializeField] private Observer<int> health = new Observer<int>(100);
     [SerializeField] private UnityEvent deathEvent;
 
@@ -28,26 +29,37 @@ public class HealthComponent : MonoBehaviour
         UpdateStatusEffects();
     }
 
-    public void AddHealth(LayerMask layer, int amount)
+    public void UpdateStatusEffects()
     {
+        tick += 1f * Time.deltaTime;
 
-        if(layer != hitLayer)
-            return;
+        if (tick > tickDelay)
+        {
+            foreach (IStatusEffect s in statusEffects)
+            {
+                if (!s.OnUpdate(this))
+                {
+                    s.OnRemove(this);
+                    break;
+                }
+            }
 
+            tick = 0f;
+        }
+    }
+
+    public void AddHealth(int amount)
+    {
         this.health.Value += amount;
 
         if (health.Value <= 0)
         {
             deathEvent.Invoke();
         }
-
     }
     
-    public void SubractHealth(LayerMask layer, int amount) 
+    public void SubractHealth(int amount) 
     {
-        if (layer != hitLayer)
-            return;
-
         this.health.Value -= amount;
 
         if (health.Value <= 0)
@@ -56,9 +68,19 @@ public class HealthComponent : MonoBehaviour
         }
     }
 
-    public void ApplyStatusEffect(IStatusEffect appliedEffect, int duration)
+    public void ModifyHeatlh(int amount)
     {
-        if (appliedEffect == null)
+        this.health.Value += amount;
+
+        if (health.Value <= 0)
+        {
+            deathEvent.Invoke();
+        }
+    }
+
+    public void ApplyStatusEffect(IStatusEffect appliedEffect, int duration, LayerMask hitMask)
+    {
+        if (appliedEffect == null || hitLayer.targetedLayers != hitMask)
             return;
 
         foreach (IStatusEffect existingEffects in statusEffects)
@@ -104,24 +126,7 @@ public class HealthComponent : MonoBehaviour
 
 
 
-    public void UpdateStatusEffects()
-    {
-        tick += 1f * Time.deltaTime;
-
-        if(tick > tickDelay)
-        {
-            foreach (IStatusEffect s in statusEffects)
-            {
-                if (!s.OnUpdate(this))
-                {
-                    s.OnRemove(this);
-                    break;
-                }
-            }
-            
-            tick = 0f;
-        }
-    }
+   
 
 }
 

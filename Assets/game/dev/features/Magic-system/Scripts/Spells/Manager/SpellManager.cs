@@ -5,68 +5,59 @@ using UnityEngine;
 
 public class SpellManager : MonoBehaviour
 {
-    private static List<SpellBase> spells;
-    private static Dictionary<SpellID, SpellBase> spellMap = new Dictionary<SpellID, SpellBase>();
-
-    private void Awake()
-    {
-        spellMap = new Dictionary<SpellID, SpellBase>();
-        foreach (SpellBase spell in spells)
-        {
-            spellMap.Add(spell.spellID, spell);
-        }
-
-        print(spellMap.Count);
-    }
+    private static List<ISpell> spells;
 
     public static void Subscribe(SpellBase spell)
     {
         if (spells == null)
         {
-            spells = new List<SpellBase>();
+            spells = new List<ISpell>();
         }
 
         spells.Add(spell);
     }
 
-    public static void CastSpellByString(string stringID, Transform origin)
+    public static void CastSpellByString(string SpellName, Transform origin, LayerMask hitableTargets)
     {
-        stringID.ToLower();
-        GetSpellByString(stringID)?.CastSpell(origin);
+        SpellName.ToLower();
+        GetSpellByString(SpellName)?.CastSpell(origin, hitableTargets);
     }
 
-    private static SpellBase GetSpellByString(string id)
+    public static void CastSpellByReference(ISpell spell, Transform origin, LayerMask hitableTargets)
     {
-        foreach (var key in spellMap.Keys)
+        spell.CastSpell(origin, hitableTargets);
+    }
+
+    public static ISpell GetSpellByString(string spellName)
+    {
+        spellName.ToLower();
+        foreach (var key in spells)
         {
-            if (key.stringID == id)
+            if (key.SpellID.EffectName == spellName)
             {
-                return spellMap[key];
+                return key;
             }
         }
-
-        Debug.LogWarning($"No spell found with ID {id}");
+#if UNITY_EDITOR
+        Debug.LogWarning($"No spell found with ID {spellName}");
+#endif
         return null;    
     }
 
-    private static SpellBase GetStringByKeyCombonation(List<KeyCode> id) 
+    private static ISpell GetStringByKeyCombonation(List<KeyCode> keyCombination) 
     {
-        foreach(var key in spellMap.Keys)
+        foreach(var key in spells)
         {
-            if(key.playerKeyCombination == id)
+            if(key.SpellID.playerKeyCombination == keyCombination)
             {
-                return spellMap[key];
+                return key;
             }
         }
-
-        Debug.LogWarning($"No spell found with ID {id}");
+#if UNITY_EDITOR
+        Debug.LogWarning($"No spell found with ID {keyCombination}");
+#endif
         return null;
 
-    }
-
-    private static string GetKeyCombinationString(List<KeyCode> keyCombination)
-    {
-        return string.Join("+", keyCombination);
     }
 
 }

@@ -1,3 +1,4 @@
+using DependencyInjection;
 using Movement;
 using System;
 using System.Collections;
@@ -6,6 +7,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 
 
@@ -16,7 +18,17 @@ using UnityEngine.Events;
 
 
 
+[Serializable]
+public class Settings
+{
+    //####  Sounds  ####
+    [Inject]
+    private SoundManager soundManager;
+    [SerializeField] private Slider masterVolumeSlider;
 
+    //####  Graphics  ####
+
+}
 
 
 
@@ -29,8 +41,10 @@ public class UserInterfaceManager : MonoBehaviour
     [SerializeField] private List<MenuData> menus;
 
 
-   private List<MenuData> _selectedMenus = new List<MenuData>();
-   private List<MenuData> _previouslyClosedMenus = new List<MenuData>();
+    private List<MenuData> _selectedMenus = new List<MenuData>();
+    private List<MenuData> _previouslyClosedMenus = new List<MenuData>();
+
+    
 
 
     #region singleton

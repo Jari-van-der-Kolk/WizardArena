@@ -15,7 +15,6 @@ public class SoundEffect : ScriptableObject, IVolumeObserver
 
     private void OnEnable()
     {
-        Debug.Log("weird");
         SoundManager.Subscribe(this);
         SoundManager.OnVolumeChanged += OnVolumeChanged;
     }

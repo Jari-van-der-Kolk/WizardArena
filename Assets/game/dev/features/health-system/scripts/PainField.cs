@@ -1,3 +1,4 @@
+using AYellowpaper;
 using DependencyInjection;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,18 +8,15 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class PainField : MonoBehaviour
 {
-    public ElementType element;
-    public LayerMask target;
+    [SerializeField] private TargetLayerData targetLayerData;
+    [SerializeField] private InterfaceReference<IStatusEffect, StatusEffectBase> _appliedEffect;
     public bool deleteOnContact = true;
-
-    [Inject]
-    private StatusEffectFactory _effectFactory;
-    private IStatusEffect _statusEffect;
-
-    public void Initizlize(ElementType type, LayerMask targetLayer)
+    public int duration = 1;
+ 
+    public void SetPainField(TargetLayerData targetLayerData, IStatusEffect statusEffect)
     {
-        element = type;
-        this.target = targetLayer;
+        this.targetLayerData = targetLayerData;
+        _appliedEffect.Value = statusEffect;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -27,8 +25,7 @@ public class PainField : MonoBehaviour
 
         if (health != null)
         {
-            _statusEffect = _effectFactory.Create(element, target, 2);
-            health.ApplyStatusEffect(_statusEffect, 5);
+            health.ApplyStatusEffect(_appliedEffect.Value, duration, targetLayerData.targetedLayers);
             if (deleteOnContact)
             {
                 Destroy(gameObject);
@@ -41,9 +38,28 @@ public class PainField : MonoBehaviour
         HealthComponent health = other.GetComponent<HealthComponent>();
         if(health != null)
         {
-            health.GetStatusEffect(_statusEffect).ReleaseHold();
+            health.GetStatusEffect(_appliedEffect.Value).ReleaseHold();
         }
     }
+
+    public PainField SetTargetLayer(TargetLayerData targetLayer)
+    {
+        this.targetLayerData = targetLayer;
+        return this;
+    }
+
+    public PainField SetStatusEffect(IStatusEffect statusEffect)
+    {
+        _appliedEffect.Value = statusEffect;
+        return this;
+    }
+
+    public PainField SetDeleteOnContect(bool deleteOnContact)
+    {
+        this.deleteOnContact = deleteOnContact;
+        return this;
+    }
+
 
   
 }

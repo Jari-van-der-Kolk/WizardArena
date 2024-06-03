@@ -2,9 +2,16 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using DependencyInjection;
 
-public class SoundManager : MonoBehaviour
+public class SoundManager : MonoBehaviour, IDependencyProvider
 {
+    [Provide]
+    public SoundManager ProvideSoundManager()
+    {
+        return this;
+    }
+
     public static List<SoundEffect> sounds = new List<SoundEffect>()    ;
     public static event Action<float> OnVolumeChanged;
 
@@ -20,8 +27,8 @@ public class SoundManager : MonoBehaviour
         {
             if (singleton)
             {
-                Destroy(value);
                 Debug.LogError("We have more than one SoundManager!!!");
+                Destroy(value);
                 return;
             }
 
@@ -38,6 +45,8 @@ public class SoundManager : MonoBehaviour
         {
             Destroy(this);
         }
+
+
 
         //makes AudioSource components on this gameobject and initializes their settings from the ScriptableObject
         foreach (SoundEffect s in sounds)
