@@ -18,7 +18,7 @@ namespace Saxon.BT
 
         protected override void OnStart()
         {
-            inDistance = Saxon.IsInDistance(agent.position, destinationTransform.position, reachedTargetDistance);
+            inDistance = agent.IsInDistance(agent.position, destinationTransform.position, reachedTargetDistance);
             if(!inDistance)
             {
                 agent.SetDestination(destinationTransform.position);

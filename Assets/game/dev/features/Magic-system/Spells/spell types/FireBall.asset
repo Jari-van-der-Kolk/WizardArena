@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f8219ce5489e07409e53eacac75f31d, type: 3}
+  m_Name: FireBall
+  m_EditorClassIdentifier: 
+  spellID:
+    EffectName: fireball
+    playerKeyCombination: 78000000
+  _prefab: {fileID: 7719381396193258354, guid: e386f1ebd41646444bdf5083bd5f822d, type: 3}
+  _statusEffect:
+    _underlyingValue: {fileID: 11400000, guid: 6673501daf085134289c445cff8c5413, type: 2}
+  _duration: 20
+  _speed: 10
+  _deleteSpellOnContact: 1

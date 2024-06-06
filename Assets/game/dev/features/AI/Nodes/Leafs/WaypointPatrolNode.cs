@@ -32,7 +32,7 @@ namespace Saxon.BT
 
         protected override NodeState OnUpdate()
         {
-            if(Saxon.IsInDistance(agent.agentController.transform.position, destination, 2f)) { 
+            if(agent.IsInDistance(agent.agentController.transform.position, destination, 2f)) { 
                 index++;
                 return NodeState.Success;
             }

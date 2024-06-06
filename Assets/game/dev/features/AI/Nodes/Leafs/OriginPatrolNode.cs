@@ -47,7 +47,7 @@ namespace Saxon.BT
                 SetNewDestination();
             }
 
-            if (Saxon.IsInDistance(agent.navMesh.transform.position, destination, 2.5f))
+            if (agent.IsInDistance(agent.navMesh.transform.position, destination, 2.5f))
             {
                 // Check if the required delay has passed
                 if (Time.time - startTime >= successDelay)

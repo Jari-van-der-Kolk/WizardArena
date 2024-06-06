@@ -32,6 +32,17 @@ namespace Saxon.BT
         public SpatialHashGrid<HashNode> spatialHashGrid => NodeGenerator.Instance.hashGrid;
         public abstract BehaviourTree CreateTree();
         public void SetDestination(Vector3 destination) => agentController.SetDestination(destination);
+        public bool IsInDistance(Vector3 origin, Vector3 target, float inDistanceLength)
+        {
+            return Vector3.Distance(origin, target) < inDistanceLength;
+        }
+        public bool IsInDistance(Vector3 origin, Transform target, float inDistanceLength)
+        {
+            if (target == null)
+                return false;
+            return Vector3.Distance(origin, target.position) < inDistanceLength;
+        }
+
         public List<T> SearchComponentsInArea<T>(List<T> targetList,float radius) where T : Component
         {
             List<T> result = new List<T>();
@@ -94,7 +105,7 @@ namespace Saxon.BT
         public Node TargetOutOfSight => new ConditionNode(() => detection.noVisualsOnTarget);
         public Node hasOcclusion => new ConditionNode(() => hasTargetOcclusion);
         public Node hasNoOcclusion => new ConditionNode(() => !hasTargetOcclusion);
-        public Node InRangeOfTarget(float range) => new ConditionNode(() => Saxon.IsInDistance(position, target, range));
+        public Node InRangeOfTarget(float range) => new ConditionNode(() => IsInDistance(position, target, range));
         public Node recentlyLostTarget => new ConditionNode(() => detection.targetRecentlyLost);
         public Node FoundTarget()
         {

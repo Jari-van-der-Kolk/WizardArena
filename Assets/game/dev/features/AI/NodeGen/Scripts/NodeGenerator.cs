@@ -175,7 +175,7 @@ namespace Saxon.NodePositioning
                         Vector3 pos = point + (Vector3.up * 1f);
 
                         // Make sure the point is on the NavMesh
-                        if (Saxon.IsGrounded(point, nodeGroundSeperation, groundMask) && IsPointOnNavMesh(point, navMeshData))
+                        if (IsGrounded(point, nodeGroundSeperation, groundMask) && IsPointOnNavMesh(point, navMeshData))
                         {
                             // Instantiate a cube or any other object at the generated point
                             var ID = hashGrid.GetGridKey(pos);
@@ -187,6 +187,22 @@ namespace Saxon.NodePositioning
                 }
             }
             return nodePointList;
+        }
+
+        public static bool IsGrounded(Vector3 origin, float distance, LayerMask mask)
+        {
+            // Cast a ray downward from the specified origin point
+            Ray ray = new Ray(origin, Vector3.down);
+
+            // Check if the ray hits something
+            if (Physics.Raycast(ray, distance, mask))
+            {
+                // Ground hit detected
+                return true;
+            }
+
+            // No ground hit
+            return false;
         }
 
         public List<OriginHashNode> GenerateKeyNodes()
