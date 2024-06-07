@@ -11,8 +11,8 @@ public class HealthComponent : MonoBehaviour
     [SerializeField] private Observer<int> health = new Observer<int>(100);
     [SerializeField] private UnityEvent deathEvent;
 
-    private List<IStatusEffect> statusEffects = new List<IStatusEffect>();
-    public List<IStatusEffect> StatusEffects { get { return statusEffects; } }
+    private List<IHealthModifier> statusEffects = new List<IHealthModifier>();
+    public List<IHealthModifier> StatusEffects { get { return statusEffects; } }
 
 
     readonly float tickDelay = 2f;
@@ -34,7 +34,7 @@ public class HealthComponent : MonoBehaviour
 
         if (tick > tickDelay)
         {
-            foreach (IStatusEffect s in statusEffects)
+            foreach (IHealthModifier s in statusEffects)
             {
                 if (!s.OnUpdate(this))
                 {
@@ -77,12 +77,12 @@ public class HealthComponent : MonoBehaviour
         }
     }
 
-    public void ApplyStatusEffect(IStatusEffect appliedEffect, int duration, LayerMask hitMask)
+    public void ApplyStatusEffect(IHealthModifier appliedEffect, int duration, LayerMask hitMask)
     {
         if (appliedEffect == null || recievableHitLayer.targetedLayers != hitMask)
             return;
 
-        foreach (IStatusEffect existingEffects in statusEffects)
+        foreach (IHealthModifier existingEffects in statusEffects)
         {
             if(existingEffects.GetType() == appliedEffect.GetType())
             {
@@ -94,7 +94,7 @@ public class HealthComponent : MonoBehaviour
         statusEffects.Add(appliedEffect);
     }
 
-    public void CancelStatusEffect(IStatusEffect statusEffect)
+    public void CancelStatusEffect(IHealthModifier statusEffect)
     {
         if(statusEffects.Contains(statusEffect))
         {
@@ -102,9 +102,9 @@ public class HealthComponent : MonoBehaviour
         }
     }
 
-    public IStatusEffect GetStatusEffect(IStatusEffect effect)
+    public IHealthModifier GetStatusEffect(IHealthModifier effect)
     {
-        foreach (IStatusEffect existingEffects in statusEffects)
+        foreach (IHealthModifier existingEffects in statusEffects)
         {
             print(existingEffects.GetType().ToString() + " "  + effect.GetType().ToString());
             if (existingEffects.GetType() == effect.GetType())

@@ -74,22 +74,22 @@ namespace Saxon.BT
             MoveTowardsTargetNode moveTowardsTarget = new MoveTowardsTargetNode(this, reachedTargetDistance);
             RotateTowardsTargetNode rotateTowardsTarget = new RotateTowardsTargetNode(this, 2f);
 
-            SelectorNode lookAtTarget = new SelectorNode(new List<Node>
+            SelectorNode lookAtTarget = new SelectorNode(new Node[]
             {
                 hasNoOcclusion, InRangeOfTarget(detection.data.longRangeAttackDistance) 
             });
 
-            SequenceNode rotate = new SequenceNode(new List<Node>
+            SequenceNode rotate = new SequenceNode(new Node[]
             {
                 lookAtTarget, rotateTowardsTarget
             });
 
-            ParallelNode engage = new ParallelNode(new List<Node>
+            ParallelNode engage = new ParallelNode(new Node[]
             {
                 moveTowardsTarget, rotate    
             });
 
-            SequenceNode moveToTarget = new SequenceNode("move",new List<Node>
+            SequenceNode moveToTarget = new SequenceNode("move",new Node[]
             {
                 engage       
             });
@@ -109,7 +109,7 @@ namespace Saxon.BT
         public Node recentlyLostTarget => new ConditionNode(() => detection.targetRecentlyLost);
         public Node FoundTarget()
         {
-            return new SequenceNode(new List<Node>
+            return new SequenceNode(new Node[]
             {
                 targetInSight, InRangeOfTarget(detection.data.closeRangeAttackDistance)
             });

@@ -1,16 +1,34 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class StatusEffectBase : ScriptableObject, IStatusEffect
+public enum HealthModifierType
 {
+    None,
+    Melee,
+    Fire,
+    Earth,
+    Wind,
+} 
+
+public abstract class StatusEffectBase : ScriptableObject, IHealthModifier
+{
+    //config
+    public int tickDuration { private get; set; }
+    
     public Image effectLogo;
     public int statusHealthModifierAmount;
+    
+    
+    //mutable
     public bool onHold {  get; private set; }
-    public int tickDuration { private get; set; }
-
-    public string Name => name;
-
     int _currentTick;
+
+
+
+    public HealthModifierID ID => throw new System.NotImplementedException();
+
+
+
 
     public void OnEnable()
     {

@@ -9,7 +9,7 @@ namespace Saxon.BT
     public class FallbackStarNode : CompositeNode
     {
 
-        public FallbackStarNode(List<Node> children) :base(children) { }
+        public FallbackStarNode(Node[] children) :base(children) { }
      
        
         protected override void OnStart()
@@ -34,7 +34,7 @@ namespace Saxon.BT
                 default:
                     break;
             }
-            return index >= children.Count ? NodeState.Success : NodeState.Running;
+            return index >= children.Length ? NodeState.Success : NodeState.Running;
         }
     }
 }

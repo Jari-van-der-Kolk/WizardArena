@@ -5,12 +5,12 @@ namespace Saxon.BT
 {
     public class ReactiveSequenceNode : CompositeNode
     {
-        public ReactiveSequenceNode(List<Node> children) : base(children) { }
+        public ReactiveSequenceNode(Node[] children) : base(children) { }
        
         protected override NodeState OnUpdate()
         {
 
-            while (index < children.Count)
+            while (index < children.Length)
             {
                 var child = children[index].Update();
 

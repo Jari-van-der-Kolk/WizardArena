@@ -15,7 +15,7 @@ namespace Saxon.BT.AI
         public override BehaviourTree CreateTree()
         {
 
-            FallbackNode fallback = new FallbackNode(new List<Node>
+            FallbackNode fallback = new FallbackNode(new Node[]
             {
 
             });

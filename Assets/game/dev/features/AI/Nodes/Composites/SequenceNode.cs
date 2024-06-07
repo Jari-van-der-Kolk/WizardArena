@@ -6,9 +6,9 @@ namespace Saxon.BT
 {
     public class SequenceNode : CompositeNode, INodeDebugger
     {
-        public SequenceNode(List<Node> children) : base(children) { }  
+        public SequenceNode(Node[] children) : base(children) { }  
       
-        public SequenceNode(string name, List<Node> children) : base(children)
+        public SequenceNode(string name, Node[] children) : base(children)
         {
             debug = name;
             debugger = this;

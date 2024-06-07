@@ -26,17 +26,14 @@ public class PlayerSpellCaster : MonoBehaviour
     {
         KeyCode[] keyCodes = (KeyCode[])System.Enum.GetValues(typeof(KeyCode));
 
-        // Iterate through all possible KeyCode values using a for loop
         for (int i = 0; i < keyCodes.Length; i++)
         {
             KeyCode keyCode = keyCodes[i];
 
-            // Check if the key is pressed down and is not in the ignoreKeys array
             if (Input.GetKeyDown(keyCode) && !IsKeyIgnored(keyCode))
             {
-                // Add the key to the list
                 _pressedKeys.Add(keyCode);
-                // Print the key to the console
+
                 Debug.Log("Key Pressed: " + keyCode);
             }
         }

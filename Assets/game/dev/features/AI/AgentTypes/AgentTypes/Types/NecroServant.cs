@@ -21,17 +21,17 @@ namespace Saxon.BT.AI
             float pickLocationRadius = 2f;
             OriginPatrolNode patrol = new OriginPatrolNode(this, findNewLocationRadius, pickLocationRadius);
 
-            SelectorNode chaseCheck = new SelectorNode(new List<Node>
+            SelectorNode chaseCheck = new SelectorNode(new Node[]
             {
                 recentlyLostTarget, targetInSight
             });
 
-            SequenceNode chaseTarget = new SequenceNode(new List<Node>
+            SequenceNode chaseTarget = new SequenceNode(new Node[]
             {
                 chaseCheck, ChaseTarget(detection.data.closeRangeAttackDistance)
             });
 
-            FallbackNode selector = new FallbackNode(new List<Node>
+            FallbackNode selector = new FallbackNode(new Node[]
             {
                 chaseTarget, patrol
             });

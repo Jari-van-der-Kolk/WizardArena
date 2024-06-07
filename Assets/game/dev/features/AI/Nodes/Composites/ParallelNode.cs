@@ -7,7 +7,7 @@ namespace Saxon.BT
 {
     public class ParallelNode : CompositeNode
     {
-        public ParallelNode(List<Node> children) : base(children) { }
+        public ParallelNode(Node[] children) : base(children) { }
 
         protected override NodeState OnUpdate()
         {

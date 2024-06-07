@@ -5,8 +5,8 @@ namespace Saxon.BT
 {
     public class SelectorNode : CompositeNode, INodeDebugger
     {
-        public SelectorNode(List<Node> children) : base(children) { }
-        public SelectorNode(string name, List<Node> children) : base(children) 
+        public SelectorNode(Node[] children) : base(children) { }
+        public SelectorNode(string name, Node[] children) : base(children) 
         {
             debug = name;
             debugger = this;

@@ -10,7 +10,7 @@ public class ProjectileSpell : SpellBase
 {
 
     [SerializeField] private PainField _prefab;
-    [SerializeField] InterfaceReference<IStatusEffect, StatusEffectBase> _statusEffect;
+    [SerializeField] InterfaceReference<IHealthModifier, StatusEffectBase> _statusEffect;
     [SerializeField] private float _duration = 20f;
     [SerializeField] private float _speed = 10f;
     [SerializeField] private bool _deleteSpellOnContact = true;

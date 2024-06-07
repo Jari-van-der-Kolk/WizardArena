@@ -22,7 +22,7 @@ namespace Saxon.BT.AI
             ConditionNode enoughDeadAgents = new ConditionNode(() => CountDeadAgentsInVicinity(necroReviveRadius) > amountOfDeadNearby);
             necroSpell = new NecroSpell(this, necroReviveRadius);
             WaitNode cast = new WaitNode(3f);
-            SequenceNode castNecroSpell = new SequenceNode(new List<Node>
+            SequenceNode castNecroSpell = new SequenceNode(new Node[]
             {
                 enoughDeadAgents, standStill, cast, necroSpell
             });
@@ -32,22 +32,22 @@ namespace Saxon.BT.AI
             OriginPatrolNode patrol = new OriginPatrolNode(this, findNewLocationRadius, pickLocationRadius);
 
             ConditionNode servertsDetection = new ConditionNode(() => CheckServantsDetection(necroSpell.controllingAgents));
-            SequenceNode servantsHaveSeenTarget = new SequenceNode("s see",new List<Node>
+            SequenceNode servantsHaveSeenTarget = new SequenceNode("s see",new Node[]
             {
                 servertsDetection, ChaseTarget(detection.data.longRangeAttackDistance)
             });
 
-            SelectorNode chaseCheck = new SelectorNode(new List<Node>
+            SelectorNode chaseCheck = new SelectorNode(new Node[]
             {
                 recentlyLostTarget, targetInSight
             });
 
-            SequenceNode chaseTarget = new SequenceNode(new List<Node>
+            SequenceNode chaseTarget = new SequenceNode(new Node[]
             {
                 chaseCheck, ChaseTarget(detection.data.longRangeAttackDistance)
             });
 
-            SelectorNode fallback = new SelectorNode(new List<Node>
+            SelectorNode fallback = new SelectorNode(new Node[]
             {
                castNecroSpell, servantsHaveSeenTarget, chaseTarget, patrol
             });

@@ -7,26 +7,54 @@ using UnityEngine;
 public class StatusEffectManager : MonoBehaviour
 {
 
-    public static List<IStatusEffect> statusEffects = new List<IStatusEffect>(); 
 
-    public static void Subscribe(IStatusEffect statusEffect)
+#region data
+    public static List<IHealthModifier> healthModifiersTypes = new List<IHealthModifier>();
+
+
+    #endregion
+
+    #region config
+    public int max_HealthModifiers = 1000;
+
+#endregion
+
+#region mutable
+
+
+    #endregion
+    public static void Subscribe(IHealthModifier statusEffect)
     {
         if(statusEffect == null)
         {
-            statusEffects = new List<IStatusEffect>();
+            healthModifiersTypes = new List<IHealthModifier>();
         }
 
-        statusEffects.Add(statusEffect);
+        healthModifiersTypes.Add(statusEffect);
     }
 
-    public static IStatusEffect GetStatusEffectByString(string effectName)
+    public static IHealthModifier GetHealthModifierByEnum(HealthModifierType type)
+    {
+        for (int i = 0; i < healthModifiersTypes.Count; i++)
+        {
+            if (healthModifiersTypes[i].ID.Type == type)
+            {
+                return healthModifiersTypes[i];
+            }
+        }
+
+        return null;
+
+    }
+
+    public static IHealthModifier GetHealthModifierByString(string effectName)
     {
         effectName.ToLower();
-        foreach (var statusEffect in statusEffects)
+        for (int i = 0; i < healthModifiersTypes.Count; i++)
         {
-            if(statusEffect.Name == effectName)
+            if (healthModifiersTypes[i].ID.modifierName == effectName)
             {
-                return statusEffect;
+                return healthModifiersTypes[i];
             }
         }
 

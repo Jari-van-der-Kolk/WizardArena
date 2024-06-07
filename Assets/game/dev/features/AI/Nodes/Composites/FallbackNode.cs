@@ -5,9 +5,9 @@ namespace Saxon.BT
 {
     public class FallbackNode : CompositeNode, INodeDebugger
     {
-        public FallbackNode(List<Node> children) : base(children) { }
+        public FallbackNode(Node[] children) : base(children) { }
        
-        public FallbackNode(string name, List<Node> children) : base(children)
+        public FallbackNode(string name, Node[] children) : base(children)
         {
             debug = name;
             debugger = this;

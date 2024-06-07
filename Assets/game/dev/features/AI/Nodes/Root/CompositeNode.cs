@@ -4,17 +4,17 @@ namespace Saxon.BT
 {
     public abstract class CompositeNode : Node
     {
-        protected readonly List<Node> children = new List<Node>();
+        protected readonly Node[] children;
         public int index;
 
-        public CompositeNode(List<Node> children)
+        public CompositeNode(Node[] children)
         {
             this.children = children;
         }
 
         internal void HaltChildren()
         {
-            for (int i = 0; i < children.Count; i++)
+            for (int i = 0; i < children.Length; i++)
             {
                 children[i].OnStop();
                 children[i].started = false;
