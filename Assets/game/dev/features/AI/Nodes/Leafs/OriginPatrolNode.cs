@@ -35,19 +35,19 @@ namespace Saxon.BT
 
         protected override void OnStart()
         {
-            agent.navMesh.updateRotation = true;
+            agent.agentData.navMesh.updateRotation = true;
             SetNewDestination();
             startTime = Time.time; // Record the start time
         }
 
         protected override NodeState OnUpdate()
         {
-            if(agent.agentController.destination != destination)
+            if(agent.agentData.destination != destination)
             {
                 SetNewDestination();
             }
 
-            if (agent.IsInDistance(agent.navMesh.transform.position, destination, 2.5f))
+            if (agent.IsInDistance(agent.agentData.navMesh.transform.position, destination, 2.5f))
             {
                 // Check if the required delay has passed
                 if (Time.time - startTime >= successDelay)
@@ -71,7 +71,7 @@ namespace Saxon.BT
         {
             destination = GetLocation();
             agent.SetDestination(destination);
-            agent.navMesh.SetDestination(destination);
+            agent.agentData.navMesh.SetDestination(destination);
             if (!IsPathReachable(destination))
             {
                 SetNewDestination();

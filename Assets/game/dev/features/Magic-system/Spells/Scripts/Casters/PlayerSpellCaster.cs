@@ -14,7 +14,7 @@ public class PlayerSpellCaster : MonoBehaviour
     private KeyCode[] ignoreKeys = 
     {
         KeyCode.W, KeyCode.D, KeyCode.A, KeyCode.S , KeyCode.Mouse0, KeyCode.Mouse1,
-        KeyCode.Escape        
+        KeyCode.Escape, KeyCode.Space        
     };
     
 

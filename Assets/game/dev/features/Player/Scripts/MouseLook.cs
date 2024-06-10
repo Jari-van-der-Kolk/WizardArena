@@ -26,6 +26,8 @@ namespace Movement
         {
             m_CharacterTargetRot = character.localRotation;
             m_CameraTargetRot = camera.localRotation;
+            PlayerPrefs.SetInt("MouseToggle", 1);
+            PlayerPrefs.Save();
         }
 
         public void LookRotation(Transform character, Transform camera)
@@ -60,42 +62,24 @@ namespace Movement
             UpdateCursorLock();
         }
 
-        public void SetCursorLock(bool value)
-        {
-            m_LockCursor = value;
-            if (!m_LockCursor)
-            {//we force unlock the cursor if the user disable the cursor locking helper
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-            }
-        }
 
         public void UpdateCursorLock()
         {
             //if the user set "lockCursor" we check & properly lock the cursos
-            if (m_LockCursor)
-            {
-                InternalLockUpdate();
-            }
-        }
-
-        private void InternalLockUpdate()
-        {
+            m_LockCursor = PlayerPrefs.GetInt("MouseToggle") == 1 ? true : false;
+            
             if (Input.GetKeyUp(KeyCode.Escape))
             {
                 m_cursorIsLocked = false;
             }
-            else if (Input.GetMouseButtonUp(0))
-            {
-                m_cursorIsLocked = true;
-            }
 
-            if (m_cursorIsLocked)
+
+            if (m_LockCursor)
             {
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
             }
-            else if (!m_cursorIsLocked)
+            else if (!m_LockCursor)
             {
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5891487591770719006}
   - component: {fileID: 7232260877460956671}
-  - component: {fileID: 7719381396193258354}
+  - component: {fileID: 892286823850434745}
   - component: {fileID: 47145427379179378}
   m_Layer: 0
   m_Name: FireBall
@@ -56,7 +56,7 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: -0.28}
---- !u!114 &7719381396193258354
+--- !u!114 &892286823850434745
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -68,11 +68,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 918896cd57215fa4691f244f9c8f4cca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _targetLayerData: {fileID: 11400000, guid: 1b4bf6092bf77024586de25156b55afa, type: 2}
-  _appliedEffect:
-    _underlyingValue: {fileID: 11400000, guid: 6673501daf085134289c445cff8c5413, type: 2}
-  deleteOnContact: 1
-  duration: 5
 --- !u!54 &47145427379179378
 Rigidbody:
   m_ObjectHideFlags: 0

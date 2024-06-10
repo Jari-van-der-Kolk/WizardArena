@@ -4,7 +4,7 @@
 
 public class CustomStatusEffect : StatusEffectBase
 {
-    public override void OnApply(HealthComponent health, int tickAmount, bool putOnHold = false)
+  /*  public override void OnApply(HealthComponent health, int tickAmount, bool putOnHold = false)
     {
         base.OnApply(health, tickAmount);
         Debug.Log(health.transform.name + $" starts recieveing {name} damage");
@@ -36,7 +36,7 @@ public class CustomStatusEffect : StatusEffectBase
     private void Effect(HealthComponent health)
     {
         health.SubractHealth(statusHealthModifierAmount);
-    }
+    }*/
 }
 
 

@@ -24,11 +24,11 @@ namespace Job.SpellSystem.Spells
 
         private void OnTriggerEnter(Collider other)
         {
-            IDamageable damageable = other.GetComponent<IDamageable>();
-            if (damageable != null)
+            //IDamageable damageable = other.GetComponent<IDamageable>();
+            /*if (damageable != null)
             {
                 damageable.DoDamage(_data.damageOnContact);
-            }
+            }*/
         }
     }
 }

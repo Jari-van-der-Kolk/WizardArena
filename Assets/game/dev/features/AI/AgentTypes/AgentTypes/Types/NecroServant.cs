@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using Saxon.Sensor;
 using Saxon.BT.AI.Controller;
 using Saxon.BT.AI.Types;
 
@@ -10,9 +9,9 @@ namespace Saxon.BT.AI
 {
     public class NecroServant : Agent
     {
-        public NecroServant(AgentController agent) : base(agent) { }
+        public NecroServant(AgentControllerData agentControllerData) : base(agentControllerData) { }
 
-        public override AgentTypes agentType { get { return AgentTypes.NecroServant; } protected set { } }
+        public override AgentType agentType { get { return AgentType.NecroServant; } protected set { } }
 
         public override BehaviourTree CreateTree()
         {

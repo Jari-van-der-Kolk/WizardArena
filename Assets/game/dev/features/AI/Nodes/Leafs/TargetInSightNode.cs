@@ -1,5 +1,4 @@
-﻿using Saxon.Sensor;
-using System;
+﻿using System;
 
 namespace Saxon.BT
 {

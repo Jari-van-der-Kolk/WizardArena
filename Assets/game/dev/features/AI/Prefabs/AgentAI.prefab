@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 7209820538663204941}
   - component: {fileID: 7835156541086727127}
   - component: {fileID: 5888146079623376894}
-  - component: {fileID: 2299854805792853863}
   - component: {fileID: 8977679635264283463}
   - component: {fileID: 6265072155313061308}
   - component: {fileID: 9203849453139977951}
@@ -91,27 +90,6 @@ MonoBehaviour:
   target: {fileID: 0}
   debug: 1
   debugAttackRanges: 0
---- !u!114 &2299854805792853863
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5445588807857904294}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a9b7f50633fec84c845efdad2acbc53, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  recievableHitLayer: {fileID: 11400000, guid: 1b4bf6092bf77024586de25156b55afa, type: 2}
-  health:
-    value: 100
-    onValueChanged:
-      m_PersistentCalls:
-        m_Calls: []
-  deathEvent:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &8977679635264283463
 MonoBehaviour:
   m_ObjectHideFlags: 0

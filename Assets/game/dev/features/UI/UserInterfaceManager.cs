@@ -1,5 +1,4 @@
 using DependencyInjection;
-using Movement;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -101,7 +100,7 @@ public class UserInterfaceManager : MonoBehaviour
 
     #region UserInterface manager functions
 
-
+   
     private void HandleMenu(MenuData menuData)
     {
         //hier check je of de node dat is aangedrukt al actief is of niet.
@@ -321,14 +320,11 @@ public class UserInterfaceManager : MonoBehaviour
     }
     public void QuitApplication() => Application.Quit();
 
-    public void ShowMousePointer(Q3PlayerController controller)
+    public void ToggleMousePointer(bool toggle)
     {
-        controller.mouseLook.SetCursorLock(false);
-        
-    }
-    public void HideMousePointer(Q3PlayerController controller)
-    {
-        controller.mouseLook.SetCursorLock(true);
+        int value = toggle ? 0 : 1;
+        PlayerPrefs.SetInt("MouseToggle", value);
+        PlayerPrefs.Save();
     }
    
     #endregion

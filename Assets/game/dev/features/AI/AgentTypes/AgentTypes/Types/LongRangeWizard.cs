@@ -7,11 +7,11 @@ namespace Saxon.BT.AI
 {
     public class LongRangeWizard : Agent
     {
-        public LongRangeWizard(AgentController agent) : base(agent)
+        public LongRangeWizard(AgentControllerData agentControllerData) : base(agentControllerData)
         {
         }
 
-        public override AgentTypes agentType { get { return AgentTypes.CloseRangeWizard; } protected set { } }
+        public override AgentType agentType { get { return AgentType.CloseRangeWizard; } protected set { } }
 
         public override BehaviourTree CreateTree()
         {

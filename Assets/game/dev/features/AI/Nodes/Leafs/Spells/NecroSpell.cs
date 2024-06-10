@@ -34,8 +34,8 @@ namespace Saxon.BT
             for (int i = 0; i < deadAgents.Count; i++)
             {
                 deadAgents[i].SetAgentActivity(true);
-                deadAgents[i].SetAgentType(AgentTypes.NecroServant);
-                deadAgents[i].SetOrigin(agent.transform);
+                deadAgents[i].SetAgentType(AgentType.NecroServant);
+                deadAgents[i].currentAgent.SetOrigin(agent.transform);
                 controllingAgents.Add(deadAgents[i]);
             }
 

@@ -7,9 +7,9 @@ namespace Saxon.BT.AI
 {
     public class Necromancer : Agent
     {
-        public Necromancer(AgentController agent) : base(agent) { }
+        public Necromancer(AgentControllerData agent) : base(agent) { }
 
-        public override AgentTypes agentType { get { return AgentTypes.Necromancer; } protected set { } }
+        public override AgentType agentType { get { return AgentType.Necromancer; } protected set { } }
 
         NecroSpell necroSpell;
 
@@ -31,10 +31,10 @@ namespace Saxon.BT.AI
             float pickLocationRadius = 3f;
             OriginPatrolNode patrol = new OriginPatrolNode(this, findNewLocationRadius, pickLocationRadius);
 
-            ConditionNode servertsDetection = new ConditionNode(() => CheckServantsDetection(necroSpell.controllingAgents));
+            ConditionNode servantsDetection = new ConditionNode(() => CheckServantsDetection(necroSpell.controllingAgents));
             SequenceNode servantsHaveSeenTarget = new SequenceNode("s see",new Node[]
             {
-                servertsDetection, ChaseTarget(detection.data.longRangeAttackDistance)
+                servantsDetection, ChaseTarget(detection.data.longRangeAttackDistance)
             });
 
             SelectorNode chaseCheck = new SelectorNode(new Node[]
@@ -67,7 +67,7 @@ namespace Saxon.BT.AI
             {
                 for (int i = 0; i < agentsInVicinity.Count; i++)
                 {
-                    if (!agentsInVicinity[i].alive && agentsInVicinity[i].transform != agentController.transform)
+                    if (!agentsInVicinity[i].IsAlive() && agentsInVicinity[i].transform != agentData.transform)
                     {
                         count++;
                     }
@@ -89,9 +89,9 @@ namespace Saxon.BT.AI
             var agentsInVicinity = detection.GetComponentsInArea<AgentController>(searchRadius);
             for (int i = 0; i < agentsInVicinity.Count; i++)
             {
-                if (!agentsInVicinity[i].alive && agentsInVicinity[i].transform != agentController.transform)
+                if (agentsInVicinity[i].IsAlive() == false && agentsInVicinity[i].transform != agentData.transform)
                 {
-                    agents.Add(agentsInVicinity[i]);    
+                    agents.Add(agentsInVicinity[i]);
                     count++;
                 }
             }

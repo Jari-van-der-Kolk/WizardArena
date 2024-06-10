@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.AI;
 using Saxon.HashGrid;
 using Saxon.NodePositioning;
-using Saxon.Sensor;
 using Saxon.BT.AI.Types;
 using Saxon.BT.AI.Controller;
 using System.Collections.Generic;
@@ -11,27 +10,26 @@ namespace Saxon.BT
 {
     public abstract class Agent
     {
-        public Agent(AgentController agentController)
+        public abstract BehaviourTree CreateTree();
+        public abstract AgentType agentType { get; protected set; }
+        public Agent(AgentControllerData agentData)
         {
-            this.agentController = agentController;
-            origin = agentController.transform;
+            this.agentData = agentData;
         }
-        public abstract AgentTypes agentType { get; protected set; }
-        public AgentController agentController;
-        public NavMeshAgent navMesh => agentController.navMesh;
-        public ObjectDetection detection => agentController.objectDetection;
-        public Transform origin { get; set; }
+        public AgentControllerData agentData;
+
+        public ObjectDetection detection => agentData.objectDetection;
+        public Transform origin => agentData.origin;
         public RootNode rootNode { get; protected set; }
         public Transform target => detection.target;
-        public Transform transform => agentController.transform;
-        public Vector3 position => agentController.transform.position;
+        public Transform transform => agentData.transform;
+        public Vector3 position => agentData.transform.position;
         public float reachedLocationDistance = 3f;
-        public bool isAgentAtDestination => navMesh.remainingDistance <= navMesh.stoppingDistance;
+        public bool isAgentAtDestination => agentData.navMesh.remainingDistance <= agentData.navMesh.stoppingDistance;
         public bool hasTargetInSight => detection.hasTargetInSight;
         public bool hasTargetOcclusion => detection.HasOcclusionWithTarget();
         public SpatialHashGrid<HashNode> spatialHashGrid => NodeGenerator.Instance.hashGrid;
-        public abstract BehaviourTree CreateTree();
-        public void SetDestination(Vector3 destination) => agentController.SetDestination(destination);
+        public void SetDestination(Vector3 destination) => agentData.navMesh.SetDestination(destination);
         public bool IsInDistance(Vector3 origin, Vector3 target, float inDistanceLength)
         {
             return Vector3.Distance(origin, target) < inDistanceLength;
@@ -60,11 +58,6 @@ namespace Saxon.BT
         public void Print(object message)
         {
             Debug.Log(message);
-        }
-
-        public void SetOrigin(Transform origin)
-        {
-            this.origin = origin;
         }
 
         #region Nodes

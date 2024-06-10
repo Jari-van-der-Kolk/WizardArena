@@ -5,9 +5,9 @@ namespace Saxon.BT.AI
 {
     internal class CloseRangeWizard : Agent
     {
-        public CloseRangeWizard(AgentController agentController) : base(agentController) { }
+        public CloseRangeWizard(AgentControllerData agentControllerData) : base(agentControllerData) { }
 
-        public override AgentTypes agentType { get { return AgentTypes.CloseRangeWizard; } protected set { } }
+        public override AgentType agentType { get { return AgentType.CloseRangeWizard; } protected set { } }
 
 
         public override BehaviourTree CreateTree()
@@ -17,7 +17,6 @@ namespace Saxon.BT.AI
 
             RepeatNode repeatNode = new RepeatNode(destinationNode, 4);
 
-            WaypointPatrolNode waypointPatrolNode = new WaypointPatrolNode(this);
 
             OriginPatrolNode patrol = new OriginPatrolNode(this, 10f, 3f);
             //NodeControl control = new NodeControl(waypointPatrolNode, playerObject);

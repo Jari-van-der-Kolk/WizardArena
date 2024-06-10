@@ -1,5 +1,4 @@
-﻿using Saxon.Sensor;
-using System;
+﻿using System;
 using UnityEngine;
 
 namespace Saxon.BT
@@ -16,14 +15,14 @@ namespace Saxon.BT
         protected override void OnStart()
         {
             base.OnStart();
-            agent.navMesh.updateRotation = false;
+            agent.agentData.navMesh.updateRotation = false;
 
         }
 
         internal override void OnStop()
         {
             base.OnStop();
-            agent.navMesh.updateRotation = true;
+            agent.agentData.navMesh.updateRotation = true;
         }
 
         protected override NodeState OnUpdate()

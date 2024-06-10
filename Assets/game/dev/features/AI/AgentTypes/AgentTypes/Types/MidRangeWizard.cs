@@ -8,11 +8,11 @@ namespace Saxon.BT.AI
 {
     public class MidRangeWizard : Agent
     {
-        public MidRangeWizard(AgentController agent) : base(agent)
+        public MidRangeWizard(AgentControllerData agentControllerData) : base(agentControllerData)
         {
         }
 
-        public override AgentTypes agentType { get { return AgentTypes.CloseRangeWizard; } protected set { } }
+        public override AgentType agentType { get { return AgentType.CloseRangeWizard; } protected set { } }
 
         public override BehaviourTree CreateTree()
         {

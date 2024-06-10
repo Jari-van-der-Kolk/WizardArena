@@ -1,5 +1,4 @@
-﻿using Saxon.Sensor;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Assertions.Must;
 
@@ -19,15 +18,15 @@ namespace Saxon.BT
 
         protected override NodeState OnUpdate()
         {
-            bool outOfRange = Vector3.Distance(agent.navMesh.transform.position, agent.detection.target.position) >= stoppingDistance;
+            bool outOfRange = Vector3.Distance(agent.agentData.navMesh.transform.position, agent.detection.target.position) >= stoppingDistance;
             if (outOfRange || agent.detection.HasOcclusionWithTarget())
             {
-                agent.navMesh.SetDestination(agent.detection.target.position);
+                agent.agentData.navMesh.SetDestination(agent.detection.target.position);
                 return NodeState.Running;
             }
             else
             {
-                agent.navMesh.SetDestination(agent.transform.position);
+                agent.agentData.navMesh.SetDestination(agent.transform.position);
                 return NodeState.Success;
             }
         }
@@ -35,9 +34,9 @@ namespace Saxon.BT
         internal override void OnStop()
         {
             base.OnStop();
-            if (agent.navMesh != null)
+            if (agent.agentData.navMesh != null)
             {
-                agent.navMesh.ResetPath();
+                agent.agentData.navMesh.ResetPath();
             }
         }
 
