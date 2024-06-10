@@ -105,7 +105,7 @@ namespace Saxon.BT.AI
             {
                 for (int i = 0; i < agents.Count; i++)
                 {
-                    if (agents[i].objectDetection.hasTargetInSight)
+                    /*if (agents[i].objectDetection.hasTargetInSight)
                     {
                         var target = agents[i].objectDetection.target;
                         detection.SetTarget(target);
@@ -118,7 +118,7 @@ namespace Saxon.BT.AI
                         }
                         
                         return true;
-                    }
+                    }*/
 
                 }
             }

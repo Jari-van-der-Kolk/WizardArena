@@ -1,8 +1,5 @@
 using Saxon.BT.AI.Controller;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -31,7 +28,7 @@ public class ObjectDetection
     {
         target = agentData.transform;
         this._Tran = agentData.transform;
-        this.data = data;
+        this.data = agentData.detectionData;
         vicinityTargets = new List<GameObject>();
         lostTarget = true;
     }

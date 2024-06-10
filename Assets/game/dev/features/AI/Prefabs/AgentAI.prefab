@@ -72,24 +72,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8edcd894d4217a4298e0a0f7bfee11f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _agentType: 0
-  _detectionData: {fileID: 11400000, guid: 0d35cb23d552b2546a9c60f37749cc6b, type: 2}
-  _BTUpdateStep: 0.025
-  _detectionUpdateStep: 0.01
-  waypoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  alive: 0
-  hasTargetInSight: 0
-  isTargetRecentlyLost: 0
-  lostTarget: 0
-  occlusion: 0
-  navmeshRotate: 0
-  target: {fileID: 0}
-  debug: 1
-  debugAttackRanges: 0
+  agentData:
+    agentType: 0
+    detectionData: {fileID: 11400000, guid: 0d35cb23d552b2546a9c60f37749cc6b, type: 2}
+    alive: 1
+    active: 0
+  debug:
+    debugcontroller: 0
+    debugDecisionRanges: 0
+    hasTargetInSight: 0
+    isTargetRecentlyLost: 0
+    lostTarget: 0
+    occlusion: 0
+    navmeshRotate: 0
+    target: {fileID: 0}
 --- !u!114 &8977679635264283463
 MonoBehaviour:
   m_ObjectHideFlags: 0

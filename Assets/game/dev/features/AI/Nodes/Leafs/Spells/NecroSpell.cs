@@ -33,10 +33,10 @@ namespace Saxon.BT
             agent.CountDeadAgentsInVicinity(radiusEffect ,out var deadAgents);
             for (int i = 0; i < deadAgents.Count; i++)
             {
-                deadAgents[i].SetAgentActivity(true);
+                /*deadAgents[i].SetAgentActivity(true);
                 deadAgents[i].SetAgentType(AgentType.NecroServant);
                 deadAgents[i].currentAgent.SetOrigin(agent.transform);
-                controllingAgents.Add(deadAgents[i]);
+                controllingAgents.Add(deadAgents[i]);*/
             }
 
         }

@@ -1,10 +1,7 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using System.Linq;
 using DependencyInjection;
 using Saxon.BT.AI.Types;
-using System;
 
 namespace Saxon.BT.AI.Controller
 {
@@ -59,21 +56,6 @@ namespace Saxon.BT.AI.Controller
 
 
     //#################
-
-    [System.Serializable]
-    public class DebugAgentController
-    {
-        [Header("Config")]
-        public bool debugcontroller;
-        public bool debugDecisionRanges;
-        [Header("Mutable")]
-        public bool hasTargetInSight;
-        public bool isTargetRecentlyLost;
-        public bool lostTarget;
-        public bool occlusion;
-        public bool navmeshRotate;
-        public Transform target;
-    }
 
     [System.Serializable]
     public class AgentControllerData
@@ -137,6 +119,44 @@ namespace Saxon.BT.AI.Controller
         [Inject]
         private AgentFactory _agentFactory;
 
+        #region debug
+#if UNITY_EDITOR
+
+        [SerializeField] private DebugAgentControllerData _debugAgentData;
+
+
+        private void OnValidate()
+        {
+            agentData.SetComponents(this);
+            agentData.objectDetection = new ObjectDetection(agentData);
+            agentData.objectDetection.Validate();
+        }
+
+        private void OnDrawGizmos()
+        {
+            if (_debugAgentData.debug)
+            {
+                agentData.objectDetection.DrawGizmo();
+                if (_debugAgentData.showDecisionRanges)
+                {
+                    agentData.objectDetection.DrawAttackRanges();
+                }
+
+            }
+        }
+
+        private void DebugVariables()
+        {
+            _debugAgentData.lostTarget = agentData.objectDetection.lostTarget;
+            _debugAgentData.hasTargetInSight = agentData.objectDetection.hasTargetInSight;
+            _debugAgentData.isTargetRecentlyLost = agentData.objectDetection.targetRecentlyLost;
+            _debugAgentData.occlusion = agentData.currentAgent.hasTargetOcclusion;
+            _debugAgentData.target = agentData.objectDetection.target;
+            _debugAgentData.navmeshRotate = agentData.navMesh.updateRotation;
+        }
+
+#endif
+        #endregion
 
 
         void Awake()
@@ -167,8 +187,10 @@ namespace Saxon.BT.AI.Controller
             {
                 agentData.SetDestination(transform.position);
             }
-            
+
+#if UNITY_EDITOR
             DebugVariables();
+#endif
 
         }
        
@@ -192,45 +214,6 @@ namespace Saxon.BT.AI.Controller
 
 
 
-        #region debug
-#if UNITY_EDITOR
-
-
-        [Space]
-        public DebugAgentController debug;
-       
-
-        private void OnValidate()
-        {
-            agentData.objectDetection = new ObjectDetection(agentData);
-            agentData.objectDetection.Validate();
-        }
-
-        private void OnDrawGizmos()
-        {
-            if (debug.debugcontroller)
-            {
-                agentData.objectDetection.DrawGizmo();
-                if(debug.debugDecisionRanges)
-                {
-                    agentData.objectDetection.DrawAttackRanges();
-                }
-
-            }
-        }
-
-        private void DebugVariables()
-        {
-            debug.lostTarget = agentData.objectDetection.lostTarget;
-            debug.hasTargetInSight = agentData.objectDetection.hasTargetInSight;
-            debug.isTargetRecentlyLost = agentData.objectDetection.targetRecentlyLost;
-            debug.occlusion = agentData.currentAgent.hasTargetOcclusion;
-            debug.target = agentData.objectDetection.target;
-            debug.navmeshRotate = agentData.navMesh.updateRotation;
-        }
-
-    #endif
-#endregion
     }
 
 }
