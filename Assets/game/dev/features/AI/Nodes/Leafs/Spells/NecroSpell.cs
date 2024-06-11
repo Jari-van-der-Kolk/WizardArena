@@ -11,7 +11,7 @@ namespace Saxon.BT
     {
         new readonly Necromancer agent;
         float radiusEffect;
-        public List<AgentController> controllingAgents = new List<AgentController>();
+        public List<AgentControllerData> controllingAgents = new List<AgentControllerData>();
 
        
         public NecroSpell(Necromancer agent, float radius)

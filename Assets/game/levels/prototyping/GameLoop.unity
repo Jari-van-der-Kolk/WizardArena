@@ -110825,8 +110825,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5888146079623376894, guid: bf262e75f581bfc4dbbe47377696228c,
         type: 3}
+      propertyPath: occlusion
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5888146079623376894, guid: bf262e75f581bfc4dbbe47377696228c,
+        type: 3}
       propertyPath: _agentType
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5888146079623376894, guid: bf262e75f581bfc4dbbe47377696228c,
+        type: 3}
+      propertyPath: lostTarget
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5888146079623376894, guid: bf262e75f581bfc4dbbe47377696228c,
         type: 3}
@@ -110845,13 +110855,43 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5888146079623376894, guid: bf262e75f581bfc4dbbe47377696228c,
         type: 3}
+      propertyPath: hasTargetInSight
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5888146079623376894, guid: bf262e75f581bfc4dbbe47377696228c,
+        type: 3}
+      propertyPath: showDecisionRanges
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5888146079623376894, guid: bf262e75f581bfc4dbbe47377696228c,
+        type: 3}
       propertyPath: agentData.agentType
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5888146079623376894, guid: bf262e75f581bfc4dbbe47377696228c,
         type: 3}
+      propertyPath: debug.KrijgDeKanker
+      value: 273
+      objectReference: {fileID: 0}
+    - target: {fileID: 5888146079623376894, guid: bf262e75f581bfc4dbbe47377696228c,
+        type: 3}
+      propertyPath: isTargetRecentlyLost
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5888146079623376894, guid: bf262e75f581bfc4dbbe47377696228c,
+        type: 3}
+      propertyPath: _debugAgentData.debug
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5888146079623376894, guid: bf262e75f581bfc4dbbe47377696228c,
+        type: 3}
       propertyPath: debug.debugcontroller
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5888146079623376894, guid: bf262e75f581bfc4dbbe47377696228c,
+        type: 3}
+      propertyPath: _debugAgentData.showDecisionRanges
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7209820538663204941, guid: bf262e75f581bfc4dbbe47377696228c,
         type: 3}
@@ -117031,15 +117071,25 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 101640363}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2909108990694138080, guid: 25258623b7dbc5049a61767ea95f6eb6,
+        type: 3}
+      insertIndex: 4
+      addedObject: {fileID: 1300813206}
   m_SourcePrefab: {fileID: 100100000, guid: 25258623b7dbc5049a61767ea95f6eb6, type: 3}
+--- !u!1 &1300813193 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2909108990694138080, guid: 25258623b7dbc5049a61767ea95f6eb6,
+    type: 3}
+  m_PrefabInstance: {fileID: 1300813192}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1300813196 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2657898443447790885, guid: 25258623b7dbc5049a61767ea95f6eb6,
     type: 3}
   m_PrefabInstance: {fileID: 1300813192}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1300813193}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 689c7b4cc1dbae54cbfa41c0c84fb174, type: 3}
@@ -117051,6 +117101,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1300813192}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1300813206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1300813193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31d2e681bd9f9c74cbc8f5c0e26cae2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1301422021
 GameObject:
   m_ObjectHideFlags: 0

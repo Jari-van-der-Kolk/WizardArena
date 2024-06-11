@@ -1,10 +1,10 @@
 {
-    "name": "AI",
+    "name": "Game.Dev",
     "rootNamespace": "",
     "references": [
         "GUID:a3d29676cf073774ab9eb23f5b14431c",
         "GUID:8c4dd21966739024fbd72155091d199e",
-        "GUID:321fe5277150df94cb4b91648f52bf6e"
+        "GUID:31976cc9e85bdd9459e856fcb40d0d50"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

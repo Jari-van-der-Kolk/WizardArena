@@ -7,12 +7,14 @@ namespace Saxon.BT.AI
 {
     internal class Spider : Agent
     {
-        public Spider(AgentControllerData agentControllerData) : base(agentControllerData) { }
+        public override RootNode rootNode { get; protected set; }
+
+        public Spider(AgentControllerData agentControllerData) : base(agentControllerData) { rootNode = CreateTree(); }
 
         public override AgentType agentType { get { return AgentType.CloseRangeWizard; } protected set { } }
 
 
-        public override BehaviourTree CreateTree()
+        public override RootNode CreateTree()
         {
 
             FallbackNode fallback = new FallbackNode(new Node[]
@@ -22,7 +24,7 @@ namespace Saxon.BT.AI
 
             RootNode root = new RootNode(fallback);
 
-            return new BehaviourTree(root);
+            return root;
         }
     }
 }

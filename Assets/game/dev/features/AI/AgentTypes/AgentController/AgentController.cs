@@ -2,6 +2,9 @@ using UnityEngine;
 using UnityEngine.AI;
 using DependencyInjection;
 using Saxon.BT.AI.Types;
+using Saxon.HashGrid;
+using Saxon.NodePositioning;
+using System.Collections.Generic;
 
 namespace Saxon.BT.AI.Controller
 {
@@ -58,41 +61,58 @@ namespace Saxon.BT.AI.Controller
     //#################
 
     [System.Serializable]
-    public class AgentControllerData
+    public struct AgentControllerData
     {
         [Header("Config")]
         public AgentType agentType;
-        public Agent currentAgent;
-        public ObjectDetectionData detectionData;
-        public ObjectDetection objectDetection;
-        public BehaviourTree behaviourTree;
+        private Agent agent;
 
+        public ObjectDetection objectDetection;
         public Transform transform {  get; private set; }
+        public Health health { get; private set; }
         public SpellCaster spellCaster {  get; private set; }
         public NavMeshAgent navMesh {  get; private set; }
         public Rigidbody rb { get; private set; }
         public Collider col {  get; private set; }
 
+        public void Init(Agent agent)
+        {
+            this.agent = agent;
 
+        }
         public void SetComponents(MonoBehaviour monoBehaviour)
         {
             transform = monoBehaviour.transform;
+            objectDetection = monoBehaviour.GetComponent<ObjectDetection>();    
             spellCaster = monoBehaviour.GetComponent<SpellCaster>();    
             navMesh = monoBehaviour.GetComponent<NavMeshAgent>();
             rb = monoBehaviour.GetComponent<Rigidbody>();
             col = monoBehaviour.GetComponent<Collider>();
         }
-       
 
         [Header("Mutable")]
-        public bool alive = true;
+        public bool enabled;
+        public bool alive;
         public bool active;
-        public Vector3 destination { get; private set; }
-        public Transform origin {  get; private set; }
+        public Vector3 destination;
+        public Transform origin;
 
-        public void SetOrigin(Transform origin)
+        public void Poll(float BTUpdateStep, float ODUpdateStep)
         {
-            transform = origin;
+            if (alive)
+            {
+                objectDetection.TimeStepUpdate(ODUpdateStep);
+                agent.TimeStepUpdate(BTUpdateStep);
+            }
+            else
+            {
+                SetDestination(transform.position);
+            }
+        }
+
+            public void SetOrigin(Transform origin)
+        {
+            this.origin = origin;
         }
 
         public void SetDestination(Vector3 destination)
@@ -105,41 +125,97 @@ namespace Saxon.BT.AI.Controller
             active = lifeStatus;
         }
 
-    }
+        public bool SetAgentActivity(bool agentStatus)
+        {
+            alive = agentStatus;
+            rb.useGravity = !agentStatus;
+            col.isTrigger = agentStatus;
 
+            return agentStatus;
+        }
+
+        public bool IsAlive()
+        {
+            return alive;
+        }
+
+        
+    }
 
     [RequireComponent(typeof(NavMeshAgent))]
     public class AgentController : MonoBehaviour
     {
-        [SerializeField] private AgentControllerData agentData;
-        
-        [Inject]
-        private AgentManager agentManager;
+        [SerializeField] private AgentControllerData _agentControllerData;
+
+        public Agent agent { get; private set; }
+        public ObjectDetection objectDetection { get; private set; }
 
         [Inject]
-        private AgentFactory _agentFactory;
+        private AgentManager _agentManager;
+
+        [Inject]
+        private BehaviourTreeFactory _agentFactory;
+
+        private void Start()
+        {
+            _agentControllerData.SetComponents(this);
+            _agentManager.Register(_agentControllerData);
+            
+        }
+
+        public void SetAgentActivity(bool activity)
+        {
+            _agentControllerData.alive = activity;
+            _agentControllerData.rb.useGravity = !activity;
+            _agentControllerData.col.isTrigger = activity;
+        }
+
+        public bool IsAlive()
+        {
+            return _agentControllerData.alive;
+        }
+
+    }
+
+}
+            //_agentControllerData.SetAgentData(agent).SetObjectDetectionData(objectDetection);
+/*        void Awake()
+        {
+            agentControllerData.SetComponents(this);
+        }
+
+        public void Init()
+        {
+            _agentFactory.director.Construct(agentControllerData);
+            agentManager.Register(this);
+
+            #region Editor
+#if UNITY_EDITOR
+            agentControllerData.objectDetection.Validate();
+#endif
+            #endregion
+        }
 
         #region debug
 #if UNITY_EDITOR
 
         [SerializeField] private DebugAgentControllerData _debugAgentData;
 
-
         private void OnValidate()
         {
-            agentData.SetComponents(this);
-            agentData.objectDetection = new ObjectDetection(agentData);
-            agentData.objectDetection.Validate();
+            agentControllerData.SetComponents(this);
+            agentControllerData.objectDetection = new ObjectDetection(agentControllerData);
+            agentControllerData.objectDetection.Validate();
         }
 
         private void OnDrawGizmos()
         {
             if (_debugAgentData.debug)
             {
-                agentData.objectDetection.DrawGizmo();
+                agentControllerData.objectDetection.DrawGizmo();
                 if (_debugAgentData.showDecisionRanges)
                 {
-                    agentData.objectDetection.DrawAttackRanges();
+                    agentControllerData.objectDetection.DrawAttackRanges();
                 }
 
             }
@@ -147,73 +223,17 @@ namespace Saxon.BT.AI.Controller
 
         private void DebugVariables()
         {
-            _debugAgentData.lostTarget = agentData.objectDetection.lostTarget;
-            _debugAgentData.hasTargetInSight = agentData.objectDetection.hasTargetInSight;
-            _debugAgentData.isTargetRecentlyLost = agentData.objectDetection.targetRecentlyLost;
-            _debugAgentData.occlusion = agentData.currentAgent.hasTargetOcclusion;
-            _debugAgentData.target = agentData.objectDetection.target;
-            _debugAgentData.navmeshRotate = agentData.navMesh.updateRotation;
+            _debugAgentData.lostTarget = agentControllerData.objectDetection.lostTarget;
+            _debugAgentData.hasTargetInSight = agentControllerData.objectDetection.hasTargetInSight;
+            _debugAgentData.isTargetRecentlyLost = agentControllerData.objectDetection.targetRecentlyLost;
+            _debugAgentData.occlusion = agentControllerData.agent.hasTargetOcclusion;
+            _debugAgentData.target = agentControllerData.objectDetection.target;
+            _debugAgentData.navmeshRotate = agentControllerData.navMesh.updateRotation;
         }
 
 #endif
         #endregion
 
 
-        void Awake()
-        {
-            agentData.SetComponents(this); 
-        }
     
-        public void Init()
-        {
-            _agentFactory.director.Construct(agentData);
-            agentManager.Register(this);
-           
-            #region Editor
-#if UNITY_EDITOR
-            agentData.objectDetection.Validate();
-#endif
-            #endregion
-        }
-    
-        public void Poll(float BTUpdateStep, float ODUpdateStep)
-        {
-            if (agentData.alive)
-            {
-                agentData.objectDetection.TimeStepUpdate(ODUpdateStep);
-                agentData.behaviourTree.TimeStepUpdate(BTUpdateStep);
-            }
-            else
-            {
-                agentData.SetDestination(transform.position);
-            }
-
-#if UNITY_EDITOR
-            DebugVariables();
-#endif
-
-        }
-       
-        //TODO make sure the agent can die and come alive again
-        public bool SetAgentActivity(bool agentStatus)
-        {
-            agentData.alive = agentStatus;
-            agentData.navMesh.enabled = agentStatus;
-            agentData.rb.useGravity = !agentStatus;
-            agentData.col.isTrigger = agentStatus;
-
-            return agentStatus;
-        }
-
-        public bool IsAlive()
-        {
-            return agentData.alive;
-        }
-
-       
-
-
-
-    }
-
-}
+      */

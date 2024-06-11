@@ -18,13 +18,12 @@ namespace Saxon.BT.AI.Types
         Spider,
     };
 
-    public class AgentFactory : MonoBehaviour, IDependencyProvider
+    public class BehaviourTreeFactory : MonoBehaviour, IDependencyProvider
     {
         [Provide]
-        public AgentFactory ProvideAgentFactory()
+        public BehaviourTreeFactory ProvideAgentFactory()
         {
             return this;
-
         }
 
         public AgentDirector director = new AgentDirector();
@@ -36,7 +35,7 @@ namespace Saxon.BT.AI.Types
             public AgentControllerData Construct(AgentControllerData agentData)
             {
                 builder.SetAgentType(agentData.agentType);
-                builder.CreateAgent();
+                
                 return builder.Build();
             }
         }
@@ -50,16 +49,7 @@ namespace Saxon.BT.AI.Types
                 agentData.agentType = agentType;  
             }
             
-            public void CreateAgent()
-            {
-                agentData.currentAgent = CreateAgent(agentData.agentType, agentData);
-            }
-
-            public void CreateObjectDetection()
-            {
-                agentData.objectDetection = new ObjectDetection(agentData);
-            }
-
+           
             public AgentControllerData Build()
             {
                 return agentData; 
@@ -101,7 +91,6 @@ namespace Saxon.BT.AI.Types
 
             public ObjectDetectionData detectionData;
             public ObjectDetection objectDetection;
-            public BehaviourTree behaviourTree;
 
         }
 

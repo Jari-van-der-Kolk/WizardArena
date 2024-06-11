@@ -10,36 +10,50 @@ namespace Saxon.BT
 {
     public abstract class Agent
     {
-        public abstract BehaviourTree CreateTree();
+        public abstract RootNode CreateTree();
         public abstract AgentType agentType { get; protected set; }
         public Agent(AgentControllerData agentData)
         {
             this.agentData = agentData;
+            startTime = Time.time;
         }
-        public AgentControllerData agentData;
 
+        public AgentControllerData agentData;
+        public abstract RootNode rootNode { get; protected set; }
+
+        private float startTime;
+
+
+
+        public void TimeStepUpdate(float timestep)
+        {
+            float time = Time.time;
+            if (time - startTime > timestep)
+            {
+                rootNode.SetDeltaTime(time - startTime);
+                rootNode.Update();
+                startTime = time;
+            }
+        }
+        public BehaviourTreeFactory agentFactory { get; protected set; }
+
+
+
+        //Object Detection ShortCuts
         public ObjectDetection detection => agentData.objectDetection;
-        public Transform origin => agentData.origin;
-        public RootNode rootNode { get; protected set; }
         public Transform target => detection.target;
+        //AgentData ShortCuts
+        public Transform origin => agentData.origin;
         public Transform transform => agentData.transform;
         public Vector3 position => agentData.transform.position;
-        public float reachedLocationDistance = 3f;
-        public bool isAgentAtDestination => agentData.navMesh.remainingDistance <= agentData.navMesh.stoppingDistance;
-        public bool hasTargetInSight => detection.hasTargetInSight;
-        public bool hasTargetOcclusion => detection.HasOcclusionWithTarget();
-        public SpatialHashGrid<HashNode> spatialHashGrid => NodeGenerator.Instance.hashGrid;
+        
+        //Method ShortCuts
         public void SetDestination(Vector3 destination) => agentData.navMesh.SetDestination(destination);
         public bool IsInDistance(Vector3 origin, Vector3 target, float inDistanceLength)
         {
             return Vector3.Distance(origin, target) < inDistanceLength;
         }
-        public bool IsInDistance(Vector3 origin, Transform target, float inDistanceLength)
-        {
-            if (target == null)
-                return false;
-            return Vector3.Distance(origin, target.position) < inDistanceLength;
-        }
+       
 
         public List<T> SearchComponentsInArea<T>(List<T> targetList,float radius) where T : Component
         {
@@ -60,16 +74,32 @@ namespace Saxon.BT
             Debug.Log(message);
         }
 
+        public void TestFoo()
+        {
+            detection.Data.longRangeAttackDistance = 5f;
+        }
+
+        public float reachedLocationDistance = 3f;
+        private AgentControllerData agentControllerData;
+
+        public SpatialHashGrid<HashNode> spatialHashGrid => NodeGenerator.Instance.hashGrid;
+
+
+
+
+
+
         #region Nodes
 
         public Node ChaseTarget(float reachedTargetDistance)
         {
+
             MoveTowardsTargetNode moveTowardsTarget = new MoveTowardsTargetNode(this, reachedTargetDistance);
             RotateTowardsTargetNode rotateTowardsTarget = new RotateTowardsTargetNode(this, 2f);
 
             SelectorNode lookAtTarget = new SelectorNode(new Node[]
             {
-                hasNoOcclusion, InRangeOfTarget(detection.data.longRangeAttackDistance) 
+                hasNoOcclusion, InRangeOfTarget(detection.Data.longRangeAttackDistance) 
             });
 
             SequenceNode rotate = new SequenceNode(new Node[]
@@ -93,18 +123,17 @@ namespace Saxon.BT
             return rootNode;
         }
 
-
-        public Node targetInSight => new ConditionNode(() => hasTargetInSight);
+        public Node targetInSight => new ConditionNode(() => detection.hasTargetInSight);
         public Node TargetOutOfSight => new ConditionNode(() => detection.noVisualsOnTarget);
-        public Node hasOcclusion => new ConditionNode(() => hasTargetOcclusion);
-        public Node hasNoOcclusion => new ConditionNode(() => !hasTargetOcclusion);
-        public Node InRangeOfTarget(float range) => new ConditionNode(() => IsInDistance(position, target, range));
+        public Node hasOcclusion => new ConditionNode(() => detection.HasOcclusionWithTarget());
+        public Node hasNoOcclusion => new ConditionNode(() => !detection.HasOcclusionWithTarget());
+        public Node InRangeOfTarget(float range) => new ConditionNode(() => IsInDistance(position, target.position, range));
         public Node recentlyLostTarget => new ConditionNode(() => detection.targetRecentlyLost);
         public Node FoundTarget()
         {
             return new SequenceNode(new Node[]
             {
-                targetInSight, InRangeOfTarget(detection.data.closeRangeAttackDistance)
+                targetInSight, InRangeOfTarget(detection.Data.closeRangeAttackDistance)
             });
         }
         public Node lostTarget => new ConditionNode(() => detection.lostTarget);
@@ -115,3 +144,7 @@ namespace Saxon.BT
 
 
 }
+
+
+//Misc
+//public bool isAgentAtDestination => agentData.navMesh.remainingDistance <= agentData.navMesh.stoppingDistance;

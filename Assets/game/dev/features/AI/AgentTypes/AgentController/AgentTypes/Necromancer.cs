@@ -7,13 +7,15 @@ namespace Saxon.BT.AI
 {
     public class Necromancer : Agent
     {
-        public Necromancer(AgentControllerData agent) : base(agent) { }
+        public override RootNode rootNode { get; protected set; }
+
+        public Necromancer(AgentControllerData agentData) : base(agentData) { rootNode = CreateTree(); }
 
         public override AgentType agentType { get { return AgentType.Necromancer; } protected set { } }
 
         NecroSpell necroSpell;
 
-        public override BehaviourTree CreateTree()
+        public override RootNode CreateTree()
         {
            
             int amountOfDeadNearby = 3;
@@ -34,7 +36,7 @@ namespace Saxon.BT.AI
             ConditionNode servantsDetection = new ConditionNode(() => CheckServantsDetection(necroSpell.controllingAgents));
             SequenceNode servantsHaveSeenTarget = new SequenceNode("s see",new Node[]
             {
-                servantsDetection, ChaseTarget(detection.data.longRangeAttackDistance)
+                servantsDetection, ChaseTarget(detection.Data.longRangeAttackDistance)
             });
 
             SelectorNode chaseCheck = new SelectorNode(new Node[]
@@ -44,7 +46,7 @@ namespace Saxon.BT.AI
 
             SequenceNode chaseTarget = new SequenceNode(new Node[]
             {
-                chaseCheck, ChaseTarget(detection.data.longRangeAttackDistance)
+                chaseCheck, ChaseTarget(detection.Data.longRangeAttackDistance)
             });
 
             SelectorNode fallback = new SelectorNode(new Node[]
@@ -54,7 +56,7 @@ namespace Saxon.BT.AI
 
             rootNode = new RootNode(fallback);
 
-            return new BehaviourTree(rootNode);
+            return rootNode;
         }
 
         #region functions
@@ -99,7 +101,7 @@ namespace Saxon.BT.AI
             return count;
         }
 
-        public bool CheckServantsDetection(List<AgentController> agents)
+        public bool CheckServantsDetection(List<AgentControllerData> agents)
         {
             if (agents.Count > 0)
             {

@@ -9,16 +9,16 @@ namespace Utilities {
         }
 
         // Extension method for getting components in an area around a Transform
-        public static List<T> GetComponentsInArea<T>(this Transform transform, float areaRadius, LayerMask layerMask, Collider[] targetColliders) where T : Component
+        public static List<T> GetComponentsInArea<T>(this Transform transform, float areaRadius) where T : Component
         {
             List<T> detectedObjects = new List<T>();
 
             // Use OverlapSphereNonAlloc to avoid garbage collection
-            int count = Physics.OverlapSphereNonAlloc(transform.position, areaRadius, targetColliders, layerMask, QueryTriggerInteraction.Collide);
+            Collider[] hits = Physics.OverlapSphere(transform.position, areaRadius);
 
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < hits.Length; i++)
             {
-                T obj = targetColliders[i].GetComponent<T>();
+                T obj = hits[i].GetComponent<T>();
                 if (obj != null)
                 {
                     detectedObjects.Add(obj);

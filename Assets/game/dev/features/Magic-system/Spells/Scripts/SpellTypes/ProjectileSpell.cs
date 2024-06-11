@@ -17,13 +17,13 @@ public class ProjectileSpell : SpellBase
 
     public override void CastSpell(Transform origin, TargetLayerData hitableLayers)
     {
-        var shield = Instantiate(_prefab, origin.position.Add(y: .25f).Add(z: 1.25f), Quaternion.identity);
+        var projectile = Instantiate(_prefab, origin.position.Add(y: .25f).Add(z: 1.25f), Quaternion.identity);
 
-        shield.GetComponent<PainField>();
-        
+        var painfield = projectile.GetComponent<PainField>();
+
         Vector3 targetPosition = origin.position + origin.forward * _speed * _duration;
-        shield.transform.LeanMove(targetPosition, _duration).setLoopType(LeanTweenType.linear);
+        projectile.transform.LeanMove(targetPosition, _duration).setLoopType(LeanTweenType.linear);
 
-        Destroy(shield, _duration);
+        Destroy(projectile, _duration);
     }
 }

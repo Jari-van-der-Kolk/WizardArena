@@ -1,173 +1,59 @@
 using Saxon.BT.AI.Controller;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
-public class ObjectDetection 
+public class ObjectDetection : MonoBehaviour
 {
-    public ObjectDetectionData data { get; private set; }
-    Transform _Tran;
-    Collider[] _vieldOfViewColliders = new Collider[50];
-    Collider[] _vicinityColliders = new Collider[50];
-    Collider[] _targetColliders = new Collider[50];
-    Mesh _mesh;
-    int _count;
-    float _scanTimer;
-    float _lostTimer;
+    [SerializeField] private ObjectDetectionData data;
+    private Collider[] _vieldOfViewColliders = new Collider[50];
+    private Collider[] _vicinityColliders = new Collider[50];
+    private Collider[] _targetColliders = new Collider[50];
+    private ObjectDetectionDebug _debug;
+    private int _count;
+    private float _scanTimer;
+    private float _lostTimer;
+
+    public ObjectDetectionData Data
+    {
+        get { return data; }
+        private set { } // Provide a body for the setter
+    }
 
     internal Transform target { get; private set; }
-    internal List<GameObject> detectedTargets {  get; private set; }
-    internal List<GameObject> vicinityTargets {  get; private set; }
-    public bool hasTargetInSight {  get; private set; }
+    internal List<GameObject> detectedTargets { get; private set; }
+    internal List<GameObject> vicinityTargets { get; private set; }
+    public bool hasTargetInSight { get; private set; }
     public bool noVisualsOnTarget { get; private set; }
     public bool targetRecentlyLost { get; private set; }
-    public bool lostTarget {  get; private set; }
+    public bool lostTarget { get; private set; }
 
+    //Shortcuts
 
-    public ObjectDetection(AgentControllerData agentData)
+    private void Awake()
     {
-        target = agentData.transform;
-        this._Tran = agentData.transform;
-        this.data = agentData.detectionData;
+        detectedTargets = new List<GameObject>();
         vicinityTargets = new List<GameObject>();
         lostTarget = true;
+        _debug = new ObjectDetectionDebug(transform, data, _vieldOfViewColliders); // Use transform
     }
 
-    #region Debug
-Mesh CreateFieldOfViewWedgeMesh()
-{
-    Mesh mesh = new Mesh();
 
-    int segments = 10;
-    int numTriangles = (segments * 4) + 2 + 2;
-    int numVertices = numTriangles * 3;
-
-    Vector3[] vertices = new Vector3[numVertices];
-    int[] triangles = new int[numVertices];
-
-    Vector3 bottomCenter = Vector3.zero;
-    Vector3 bottomLeft = Quaternion.Euler(0, -data.angle, 0) * Vector3.forward * data.distance; 
-    Vector3 bottomRight = Quaternion.Euler(0, data.angle, 0) * Vector3.forward * data.distance;
-
-    Vector3 topCenter = bottomCenter + Vector3.up * data.height;
-    Vector3 topRight = bottomRight + Vector3.up * data.height;
-    Vector3 topLeft = bottomLeft + Vector3.up * data.height;
-
-    int vert = 0;
-
-    //left side 
-    vertices[vert++] = bottomCenter;
-    vertices[vert++] = bottomLeft;
-    vertices[vert++] = topLeft;
-
-    vertices[vert++] = topLeft;
-    vertices[vert++] = topCenter;
-    vertices[vert++] = bottomCenter;
-
-    //right side 
-    vertices[vert++] = bottomCenter;
-    vertices[vert++] = topCenter;
-    vertices[vert++] = topRight;
-
-    vertices[vert++] = topRight;
-    vertices[vert++] = bottomRight;
-    vertices[vert++] = bottomCenter;
-
-    float currentAngle = -data.angle;
-    float deltaAngle = (data.angle * 2) / segments;
-
-    for (int i = 0; i < segments; i++)
+    private void Update()
     {
-
-        bottomLeft = Quaternion.Euler(0, currentAngle, 0) * Vector3.forward * data.distance;
-        bottomRight = Quaternion.Euler(0, currentAngle + deltaAngle, 0) * Vector3.forward * data.distance;
-
-        topRight = bottomRight + Vector3.up * data.height;
-        topLeft = bottomLeft + Vector3.up * data.height;
-
-        //far side 
-        vertices[vert++] = bottomLeft;
-        vertices[vert++] = bottomRight;
-        vertices[vert++] = topRight;
-
-        vertices[vert++] = topRight;
-        vertices[vert++] = topLeft;
-        vertices[vert++] = bottomLeft;
-
-
-        //top 
-        vertices[vert++] = topCenter;
-        vertices[vert++] = topLeft;
-        vertices[vert++] = topRight;
-
-
-        //bottom
-        vertices[vert++] = bottomCenter;
-        vertices[vert++] = bottomRight;
-        vertices[vert++] = bottomLeft;
-
-        currentAngle += deltaAngle;
+        TimeStepUpdate(Time.deltaTime);
     }
 
-    for (int i = 0; i < numVertices; i++)
+    private void OnDrawGizmos()
     {
-        triangles[i] = i;
+        _debug.DrawGizmos(_count);
     }
-
-    mesh.vertices = vertices;
-    mesh.triangles = triangles;
-    mesh.RecalculateNormals();
-
-    return mesh;
-}
-
-public void Validate()
-{
-    _mesh = CreateFieldOfViewWedgeMesh();
-}
-
-
-public void DrawGizmo()
-{
-    if (data == null)
-    {
-        Debug.LogError("ObjectDetection does not contain ObjectDetectionData " + _Tran.name);
-        return;
-    }
-
-    if (_mesh)
-    {
-        Gizmos.color = data.meshColor;
-        Gizmos.DrawMesh(_mesh, _Tran.position, _Tran.rotation);
-    }
-
-    Gizmos.color = Color.red;
-    Gizmos.DrawWireSphere(_Tran.position, data.distance);
-    for (int i = 0; i < _count; i++)
-    {
-        Gizmos.DrawSphere(_vieldOfViewColliders[i].transform.position, 0.2f);
-    }
-
-
-
-}
 
 #if UNITY_EDITOR
-        public void DrawAttackRanges()
-        {
-            Handles.color = Color.blue;
-            Handles.DrawWireDisc(_Tran.position, Vector3.up, data.closeRangeAttackDistance);
-
-            Handles.color = Color.green;
-            Handles.DrawWireDisc(_Tran.position, Vector3.up, data.midRangeAttackDistance);
-
-            Handles.color = Color.yellow;
-            Handles.DrawWireDisc(_Tran.position, Vector3.up, data.longRangeAttackDistance);
-
-            Gizmos.DrawLine(_Tran.position + Vector3.down * data.distance, _Tran.position + Vector3.up * data.distance);
-        }
+    private void OnDrawGizmosSelected()
+    {
+        _debug.DrawAttackRanges();
+    }
 #endif
-        #endregion
 
     public void TimeStepUpdate(float timestep)
     {
@@ -175,15 +61,13 @@ public void DrawGizmo()
 
         if (time - _scanTimer > timestep)
         {
-            detectedTargets = Scan(_Tran.forward, out var inVicinity);
+            detectedTargets = Scan(transform.forward, out var inVicinity); // Use transform
             vicinityTargets = inVicinity;
-
 
             var previousVisualState = hasTargetInSight;
             hasTargetInSight = detectedTargets.Count > 0;
             noVisualsOnTarget = detectedTargets.Count == 0;
 
- 
             if (!hasTargetInSight && previousVisualState)
             {
                 targetRecentlyLost = true;
@@ -192,7 +76,7 @@ public void DrawGizmo()
 
             if (hasTargetInSight)
             {
-                //make a priority target system in the future for this line of code 
+                // Make a priority target system in the future for this line of code 
                 target = detectedTargets[0].transform;
                 targetRecentlyLost = false;
                 lostTarget = false;
@@ -205,9 +89,7 @@ public void DrawGizmo()
             }
 
             _scanTimer = time;
-
         }
-
     }
 
     public void SetTarget(Transform target)
@@ -225,11 +107,10 @@ public void DrawGizmo()
         _scanTimer = Time.time;
     }
 
-
     public List<T> GetComponentsInArea<T>(float areaRadius) where T : Component
     {
         List<T> detectedObjects = new List<T>();
-        int count = Physics.OverlapSphereNonAlloc(_Tran.position, areaRadius, _targetColliders, data.targetLayers, QueryTriggerInteraction.Collide);
+        int count = Physics.OverlapSphereNonAlloc(transform.position, areaRadius, _targetColliders, data.targetLayers, QueryTriggerInteraction.Collide); // Use transform
 
         for (int i = 0; i < count; i++)
         {
@@ -240,7 +121,7 @@ public void DrawGizmo()
         return detectedObjects;
     }
 
-    public static List<T> GetComponentsInAreaNonAlocc<T>(Transform transform, float areaRadius, Collider[] colliders, LayerMask layer) where T : Component
+    public static List<T> GetComponentsInAreaNonAlloc<T>(Transform transform, float areaRadius, Collider[] colliders, LayerMask layer) where T : Component
     {
         List<T> detectedObjects = new List<T>();
         int count = Physics.OverlapSphereNonAlloc(transform.position, areaRadius, colliders, layer, QueryTriggerInteraction.Collide);
@@ -258,17 +139,16 @@ public void DrawGizmo()
     {
         if (target == null)
         {
-            return false;   
+            return false;
         }
 
-        if (Physics.Linecast(_Tran.position, target.position, data.occlusionLayers))
+        if (Physics.Linecast(transform.position, target.position, data.occlusionLayers)) // Use transform
         {
             // The target is occluded
             return true;
         }
         return false;
     }
-  
 
     public bool HasObjectInSight(GameObject target)
     {
@@ -280,28 +160,25 @@ public void DrawGizmo()
         gameObjects = new List<GameObject>();
         List<GameObject> detectedObjects = new List<GameObject>();
 
-
-        int vieldOfViewTargets = Physics.OverlapSphereNonAlloc(_Tran.position, data.distance, _vieldOfViewColliders, data.VieldOfViewLayers, QueryTriggerInteraction.Collide);
+        int vieldOfViewTargets = Physics.OverlapSphereNonAlloc(transform.position, data.distance, _vieldOfViewColliders, data.VieldOfViewLayers, QueryTriggerInteraction.Collide); // Use transform
         for (int i = 0; i < vieldOfViewTargets; i++)
         {
             GameObject obj = _vieldOfViewColliders[i].gameObject;
-            if (IsObjectInSight(data, _Tran.position, scanDirection, obj))
+            if (IsObjectInSight(data, transform.position, scanDirection, obj)) // Use transform
             {
                 detectedObjects.Add(obj);
             }
         }
 
-        int vicinityCount = Physics.OverlapSphereNonAlloc(_Tran.position, data.distance, _vicinityColliders, data.targetLayers, QueryTriggerInteraction.Collide);
+        int vicinityCount = Physics.OverlapSphereNonAlloc(transform.position, data.distance, _vicinityColliders, data.targetLayers, QueryTriggerInteraction.Collide); // Use transform
         for (int i = 0; i < vicinityCount; i++)
         {
             GameObject obj = _vicinityColliders[i].gameObject;
             gameObjects.Add(obj);
-
         }
 
         return detectedObjects;
     }
-
 
     static bool IsObjectInSight(ObjectDetectionData data, Vector3 origin, Vector3 lookDir, GameObject obj)
     {
@@ -328,6 +205,4 @@ public void DrawGizmo()
 
         return true;
     }
-
- 
 }

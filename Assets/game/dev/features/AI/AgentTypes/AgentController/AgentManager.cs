@@ -20,50 +20,51 @@ public class AgentManager : MonoBehaviour, IDependencyProvider
     [SerializeField] private float _BTUpdateStep = 0.5f;
     [Tooltip("The speed at which the object detection updates")]
     [SerializeField] private float _detectionUpdateStep = 0.5f;
+    [SerializeField] private GameObject _agentControllerPrefab;
+
+     public static GameObject agentControllerPrefab { get; private set; }
 
     //mutable
-    private AgentController[] _agentControllers = new AgentController[maxAgents];
+    private AgentControllerData[] _agentControllers = new AgentControllerData[maxAgents];
 
+    private void Awake()
+    {
+        agentControllerPrefab = _agentControllerPrefab; 
+    }
 
     private void Update()
     {
         for (int i = 0; i < _agentControllers.Length; i++)
         {
-            if(_agentControllers[i] != null)
+            if (_agentControllers[i].enabled)
             {
                 _agentControllers[i].Poll(_BTUpdateStep, _detectionUpdateStep);
             }
-
         } 
+    }
+    public static void Spawn(Transform spawnLocation, AgentType agentType)
+    {
+        Instantiate(agentControllerPrefab, spawnLocation.position, Quaternion.identity);   
+        
     }
 
     //this method usually gets called during compile time
-    public void Register(AgentController agentController)
+    public void Register(AgentControllerData agentController)
     {
         int index = SearchForUnallocatedSpot();
         if(index >= 0)
         {
-            agentController.Init();
             _agentControllers[index] = agentController;
         }
     }
 
-    public void Spawn(Transform spawnLocation, AgentType agentType)
-    {
-        int index = SearchForUnallocatedSpot();
-        if (index >= 0)
-        {
-
-        }
-        
-    }
 
     // Private Methods
     public int SearchForUnallocatedSpot()
     {
         for (int i = 0; i < _agentControllers.Length; i++)
         {
-            if (_agentControllers[i] == null)
+            if (_agentControllers[i].enabled == false)
             {
                 return i;
             }

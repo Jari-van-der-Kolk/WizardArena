@@ -9,13 +9,15 @@ namespace Saxon.BT.AI
 {
     public class NecroServant : Agent
     {
-        public NecroServant(AgentControllerData agentControllerData) : base(agentControllerData) { }
+        public override RootNode rootNode { get; protected set; }
+
+        public NecroServant(AgentControllerData agentData) : base(agentData) { rootNode = CreateTree(); }
 
         public override AgentType agentType { get { return AgentType.NecroServant; } protected set { } }
 
-        public override BehaviourTree CreateTree()
+        public override RootNode CreateTree()
         {
-
+            detection.Data.closeRangeAttackDistance = 5f;
             float findNewLocationRadius = 6f;
             float pickLocationRadius = 2f;
             OriginPatrolNode patrol = new OriginPatrolNode(this, findNewLocationRadius, pickLocationRadius);
@@ -27,7 +29,7 @@ namespace Saxon.BT.AI
 
             SequenceNode chaseTarget = new SequenceNode(new Node[]
             {
-                chaseCheck, ChaseTarget(detection.data.closeRangeAttackDistance)
+                chaseCheck, ChaseTarget(detection.Data.closeRangeAttackDistance)
             });
 
             FallbackNode selector = new FallbackNode(new Node[]
@@ -35,9 +37,7 @@ namespace Saxon.BT.AI
                 chaseTarget, patrol
             });
 
-            rootNode = new RootNode(selector);
-
-            return new BehaviourTree(rootNode);
+            return new RootNode(selector);
         }
     }
 }

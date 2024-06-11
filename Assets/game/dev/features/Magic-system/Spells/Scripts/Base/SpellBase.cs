@@ -8,7 +8,7 @@ using UnityEngineInternal;
 public abstract class SpellBase : ScriptableObject, ISpell
 {
     [SerializeField] private SpellID spellID;
-    public SpellID SpellID {  get { return spellID; } }
+    public SpellID SpellID { get { return spellID; } }
 
 
     public void OnEnable()

@@ -5,12 +5,16 @@ namespace Saxon.BT.AI
 {
     internal class CloseRangeWizard : Agent
     {
-        public CloseRangeWizard(AgentControllerData agentControllerData) : base(agentControllerData) { }
+        public CloseRangeWizard(AgentControllerData agentData) : base(agentData)
+        {
+            CreateTree();
+        }
 
         public override AgentType agentType { get { return AgentType.CloseRangeWizard; } protected set { } }
 
+        public override RootNode rootNode { get; protected set; }
 
-        public override BehaviourTree CreateTree()
+        public override RootNode CreateTree()
         {
 
             SetDestinationNode destinationNode = new SetDestinationNode(this, 3f,transform);
@@ -23,7 +27,7 @@ namespace Saxon.BT.AI
 
             RootNode rootNode = new RootNode(destinationNode);
 
-            return new BehaviourTree(rootNode);
+            return new RootNode(rootNode);
         }
     }
 }
