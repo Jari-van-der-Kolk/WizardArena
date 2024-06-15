@@ -37,6 +37,7 @@ namespace Saxon.BT
             }
             else
             {
+                HaltChildren();
                 return NodeState.Failure;
             }
 

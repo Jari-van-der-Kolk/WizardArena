@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1326919459893181252}
   - component: {fileID: 7499816649251190783}
-  - component: {fileID: 5625636358370427876}
   m_Layer: 0
   m_Name: Scene-Dependency
   m_TagString: Untagged
@@ -51,20 +50,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd4adc9d733c4d52a049ef4acb2a2614, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &5625636358370427876
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2117573581468912591}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51390e81435e93a43b5dc0d395ec182f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxAmountOfAgents: 500
-  maxAmountOfSpells: 1000
 --- !u!1 &2688287065140742718
 GameObject:
   m_ObjectHideFlags: 0
@@ -243,6 +228,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _BTUpdateStep: 0.5
   _detectionUpdateStep: 0.5
+  _agentControllerPrefab: {fileID: 5445588807857904294, guid: bf262e75f581bfc4dbbe47377696228c,
+    type: 3}
 --- !u!1 &6722666764248069981
 GameObject:
   m_ObjectHideFlags: 0
@@ -718,7 +705,7 @@ PrefabInstance:
     - target: {fileID: 8559561718147455924, guid: 33f19eaeac096724ab67bd2655cfa7dc,
         type: 3}
       propertyPath: menus.Array.data[0].activateEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ShowMousePointer
+      value: ToggleMousePointer
       objectReference: {fileID: 0}
     - target: {fileID: 8559561718147455924, guid: 33f19eaeac096724ab67bd2655cfa7dc,
         type: 3}
@@ -748,12 +735,17 @@ PrefabInstance:
     - target: {fileID: 8559561718147455924, guid: 33f19eaeac096724ab67bd2655cfa7dc,
         type: 3}
       propertyPath: menus.Array.data[0].deactivateEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: HideMousePointer
+      value: ToggleMousePointer
       objectReference: {fileID: 0}
     - target: {fileID: 8559561718147455924, guid: 33f19eaeac096724ab67bd2655cfa7dc,
         type: 3}
       propertyPath: menus.Array.data[0].deactivateEvent.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
       value: ChangeTimeScale
+      objectReference: {fileID: 0}
+    - target: {fileID: 8559561718147455924, guid: 33f19eaeac096724ab67bd2655cfa7dc,
+        type: 3}
+      propertyPath: menus.Array.data[0].deactivateEvent.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
+      value: SetSlider
       objectReference: {fileID: 0}
     - target: {fileID: 8559561718147455924, guid: 33f19eaeac096724ab67bd2655cfa7dc,
         type: 3}
@@ -805,6 +797,11 @@ PrefabInstance:
       propertyPath: menus.Array.data[0].deactivateEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 8559561718147455924, guid: 33f19eaeac096724ab67bd2655cfa7dc,
+        type: 3}
+      propertyPath: menus.Array.data[0].deactivateEvent.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 6326608865179958010}
     - target: {fileID: 8559561718147455924, guid: 33f19eaeac096724ab67bd2655cfa7dc,
         type: 3}
       propertyPath: menus.Array.data[0].activateEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName

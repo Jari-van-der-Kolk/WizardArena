@@ -1,0 +1,55 @@
+﻿using System.Collections.Generic;
+using UnityEngine;
+
+namespace Utilities {
+    public static class Extensions 
+    {
+        public static T GetOrAdd<T>(this GameObject gameObject) where T : Component {
+            T component = gameObject.GetComponent<T>();
+            return component != null ? component : gameObject.AddComponent<T>();
+        }
+
+        // Extension method for getting components in an area around a Transform
+        public static List<T> GetComponentsInArea<T>(this Transform transform, float areaRadius) where T : Component
+        {
+            List<T> detectedObjects = new List<T>();
+
+            // Use OverlapSphereNonAlloc to avoid garbage collection
+            Collider[] hits = Physics.OverlapSphere(transform.position, areaRadius);
+
+            for (int i = 0; i < hits.Length; i++)
+            {
+                T obj = hits[i].GetComponent<T>();
+                if (obj != null)
+                {
+                    detectedObjects.Add(obj);
+                }
+            }
+
+            return detectedObjects;
+        }
+        public static T Click<T>(this Transform origin, float checkDistance) where T : Component
+        {
+            Ray ray = new Ray(origin.position, origin.forward);
+            if (Physics.Raycast(ray, out var hitInfo, checkDistance))
+            {
+                if (hitInfo.collider.TryGetComponent<T>(out var component))
+                {
+                    // Do something with the component, or call a method on it
+                    // For example, let's just log its name here
+                    Debug.Log($"Component found: {component.name}");
+                    return component;
+                }
+            }
+            return null;
+        }
+
+        public static void DebugType<T>(this Transform origin, object obj) where T : Component
+        {
+            Debug.Log(obj.ToString());
+        }
+
+
+    }
+
+}

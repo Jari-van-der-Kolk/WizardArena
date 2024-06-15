@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngineInternal;
 
 
-public abstract class SpellBase : ScriptableObject, ISpell
+public abstract class SpellBase : ScriptableObject, IActionBehaviour
 {
     [SerializeField] private SpellID spellID;
     public SpellID SpellID { get { return spellID; } }

@@ -15,14 +15,12 @@ namespace Saxon.BT
         protected override void OnStart()
         {
             base.OnStart();
-            agent.agentData.navMesh.updateRotation = false;
 
         }
 
         internal override void OnStop()
         {
             base.OnStop();
-            agent.agentData.navMesh.updateRotation = true;
         }
 
         protected override NodeState OnUpdate()

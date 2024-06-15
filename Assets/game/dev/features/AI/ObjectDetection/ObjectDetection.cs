@@ -4,7 +4,15 @@ using UnityEngine;
 
 public class ObjectDetection : MonoBehaviour
 {
+    [Header("Config")]
     [SerializeField] private ObjectDetectionData data;
+
+    [Header("Debug")]
+    [Space]
+    [SerializeField] private bool showFieldOfView = false;
+    [SerializeField] private bool showRanges = false;
+
+
     private Collider[] _vieldOfViewColliders = new Collider[50];
     private Collider[] _vicinityColliders = new Collider[50];
     private Collider[] _targetColliders = new Collider[50];
@@ -37,20 +45,28 @@ public class ObjectDetection : MonoBehaviour
         _debug = new ObjectDetectionDebug(transform, data, _vieldOfViewColliders); // Use transform
     }
 
-
-    private void Update()
+    private void OnValidate()
     {
-        TimeStepUpdate(Time.deltaTime);
+        _debug = new ObjectDetectionDebug(transform, data, _vieldOfViewColliders); // Use transform
+
     }
 
     private void OnDrawGizmos()
     {
+        if(!showFieldOfView)
+        {
+            return;
+        }
         _debug.DrawGizmos(_count);
     }
 
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected()
     {
+        if(!showRanges)
+        {
+            return;
+        }
         _debug.DrawAttackRanges();
     }
 #endif

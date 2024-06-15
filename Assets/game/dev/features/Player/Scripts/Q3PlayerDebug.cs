@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using Saxon.BT.AI.Controller;
+using UnityEngine;
+using Utilities;
+
 
 namespace Movement
 {
@@ -22,6 +25,15 @@ namespace Movement
         private void Start()
         {
             m_Player = GetComponent<Q3PlayerController>();
+        }
+
+        private void Update()
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                var foo = Camera.main.transform.Click<AgentController>(5f);
+                Debug.Log(foo?.IsUpdatingRotation());
+            }
         }
 
         private void LateUpdate()

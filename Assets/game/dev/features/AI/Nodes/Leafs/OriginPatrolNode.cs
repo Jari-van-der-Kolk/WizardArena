@@ -9,7 +9,6 @@ namespace Saxon.BT
     public class OriginPatrolNode : LeafNode, INodeDebugger
     {
         Vector3[] directions = { Vector3.forward, Vector3.back, Vector3.left, Vector3.right };
-        Vector3 destination;
 
         float searchRadius;
         float searchStartLength;
@@ -35,19 +34,13 @@ namespace Saxon.BT
 
         protected override void OnStart()
         {
-            agent.agentData.navMesh.updateRotation = true;
             SetNewDestination();
             startTime = Time.time; // Record the start time
         }
 
         protected override NodeState OnUpdate()
         {
-            if(agent.agentData.destination != destination)
-            {
-                SetNewDestination();
-            }
-
-            if (agent.IsInDistance(agent.agentData.navMesh.transform.position, destination, 2.5f))
+            if (agent.IsInDistance(agent.transform.position, agent.navMesh.destination, 2.5f))
             {
                 // Check if the required delay has passed
                 if (Time.time - startTime >= successDelay)
@@ -69,8 +62,7 @@ namespace Saxon.BT
     
         private void SetNewDestination()
         {
-            destination = GetLocation();
-            agent.SetDestination(destination);
+            Vector3 destination = GetLocation();
             agent.agentData.navMesh.SetDestination(destination);
             if (!IsPathReachable(destination))
             {
@@ -100,7 +92,7 @@ namespace Saxon.BT
             Vector3 dir = directions[dirIndex];
             Vector3 pos = agent.origin.position + (dir * searchStartLength);
 
-            List<HashNode> result = agent.spatialHashGrid.GetItemsInRadius(pos, searchRadius);
+            List<HashNode> result = agent.spatialHashGrid.GetNodesInRadius(pos, searchRadius);
 
             Vector3 loc = Vector3.zero;
             if (result.Count > 0)

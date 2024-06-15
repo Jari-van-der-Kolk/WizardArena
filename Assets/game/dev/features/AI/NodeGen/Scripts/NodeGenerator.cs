@@ -138,7 +138,7 @@ namespace Saxon.NodePositioning
             navigationNodes = GenerateNavigationNodes();
             AddValues(navigationNodes);
 
-            keyNodes = GenerateKeyNodes();
+            keyNodes = GenerateNodeOrigin();
             AddValues(keyNodes);
 
         }
@@ -189,7 +189,7 @@ namespace Saxon.NodePositioning
             return nodePointList;
         }
 
-        public static bool IsGrounded(Vector3 origin, float distance, LayerMask mask)
+        private static bool IsGrounded(Vector3 origin, float distance, LayerMask mask)
         {
             // Cast a ray downward from the specified origin point
             Ray ray = new Ray(origin, Vector3.down);
@@ -205,20 +205,17 @@ namespace Saxon.NodePositioning
             return false;
         }
 
-        public List<OriginHashNode> GenerateKeyNodes()
+        private List<OriginHashNode> GenerateNodeOrigin()
         {
             var keyNodes = new List<OriginHashNode>();
             foreach (Vector3Int position in hashGrid.grid.Keys)
             {
-                var cellCenter = hashGrid.GetCellCenter(position, hashGridSize);
+                var cellCenter = hashGrid.GetCellCenter(position);
                 var node = InstantiateNode<OriginHashNode>(cellCenter, position, keyNodesHolder);  
                 keyNodes.Add(node);
             }
             return keyNodes;
         }
-
-       
-
 
         Bounds CalculateNavMeshBounds(Vector3[] vertices)
         {

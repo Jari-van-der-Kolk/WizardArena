@@ -11,13 +11,23 @@ using Utilities;
 public class ReviveSpell : SpellBase
 {
     [SerializeField] private FloatVariable _radius;
+    [SerializeField] private int reviveAmount;
 
     public override void CastSpell(Transform origin, TargetLayerData hitableLayers)
     {
         var agents = origin.GetComponentsInArea<AgentController>(_radius.Value);
         for (int i = 0; i < agents.Count; i++)
         {
-            agents[i].SetAgentActivity(true);
+            if(i > reviveAmount)
+            {
+                break;
+            }
+
+            var agent = agents[i];
+            if (!agent.IsAlive())
+            {
+                agent.SetAgentActivity(true);
+            }
         }
     }
 }

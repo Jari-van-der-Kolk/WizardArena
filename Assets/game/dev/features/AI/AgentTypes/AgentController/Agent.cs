@@ -3,27 +3,35 @@ using UnityEngine.AI;
 using Saxon.HashGrid;
 using Saxon.NodePositioning;
 using Saxon.BT.AI.Types;
-using Saxon.BT.AI.Controller;
 using System.Collections.Generic;
 
 namespace Saxon.BT
 {
     public abstract class Agent
     {
-        public abstract RootNode CreateTree();
-        public abstract AgentType agentType { get; protected set; }
         public Agent(AgentControllerData agentData)
         {
+            origin = agentData.transform;
             this.agentData = agentData;
             startTime = Time.time;
         }
-
         public AgentControllerData agentData;
+        public abstract RootNode CreateTree();
+        public abstract AgentType agentType { get; protected set; }
         public abstract RootNode rootNode { get; protected set; }
-
+        
         private float startTime;
+        public SpatialHashGrid<HashNode> spatialHashGrid => NodeGenerator.Instance.hashGrid;
 
+        public Transform origin;
 
+        //Object Detection ShortCuts
+        public ObjectDetection detection => agentData.objectDetection;
+        public Transform target => detection.target;
+        //AgentData ShortCuts
+        public NavMeshAgent navMesh => agentData.navMesh;   
+        public Transform transform => agentData.transform;
+        public Vector3 position => agentData.transform.position;
 
         public void TimeStepUpdate(float timestep)
         {
@@ -35,59 +43,40 @@ namespace Saxon.BT
                 startTime = time;
             }
         }
-        public BehaviourTreeFactory agentFactory { get; protected set; }
 
 
-
-        //Object Detection ShortCuts
-        public ObjectDetection detection => agentData.objectDetection;
-        public Transform target => detection.target;
-        //AgentData ShortCuts
-        public Transform origin => agentData.origin;
-        public Transform transform => agentData.transform;
-        public Vector3 position => agentData.transform.position;
-        
         //Method ShortCuts
         public void SetDestination(Vector3 destination) => agentData.navMesh.SetDestination(destination);
         public bool IsInDistance(Vector3 origin, Vector3 target, float inDistanceLength)
         {
             return Vector3.Distance(origin, target) < inDistanceLength;
         }
-       
-
-        public List<T> SearchComponentsInArea<T>(List<T> targetList,float radius) where T : Component
+        public bool CheckServantsDetection(List<AgentControllerData> agents)
         {
-            List<T> result = new List<T>();
-            for (int i = 0; i < targetList.Count; i++)
+            if (agents.Count > 0)
             {
-                targetList[i].TryGetComponent(out T component);
-                if (component != null)
+                for (int i = 0; i < agents.Count; i++)
                 {
-                    result.Add(component);
+                    if (agents[i].objectDetection.hasTargetInSight)
+                    {
+                        var target = agents[i].objectDetection.target;
+                        detection.SetTarget(target);
+
+                        for (int c = 0; c < agents.Count; c++)
+                        {
+                            agents[c].objectDetection.ToggleTargetRecentlyLost(true);
+                            agents[c].objectDetection.ResetRecentlyLostTimer();
+                            agents[c].objectDetection.SetTarget(target);
+                        }
+
+                        return true;
+                    }
+
                 }
             }
-
-            return result;
+            return false;
         }
-        public void Print(object message)
-        {
-            Debug.Log(message);
-        }
-
-        public void TestFoo()
-        {
-            detection.Data.longRangeAttackDistance = 5f;
-        }
-
-        public float reachedLocationDistance = 3f;
-        private AgentControllerData agentControllerData;
-
-        public SpatialHashGrid<HashNode> spatialHashGrid => NodeGenerator.Instance.hashGrid;
-
-
-
-
-
+       
 
         #region Nodes
 

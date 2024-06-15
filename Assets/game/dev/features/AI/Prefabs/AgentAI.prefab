@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7209820538663204941}
   - component: {fileID: 7835156541086727127}
-  - component: {fileID: 5888146079623376894}
-  - component: {fileID: 8977679635264283463}
+  - component: {fileID: 5789363040716675246}
+  - component: {fileID: 2481520563944529208}
   - component: {fileID: 6265072155313061308}
   - component: {fileID: 9203849453139977951}
   - component: {fileID: 8856690453719486299}
@@ -60,7 +60,7 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &5888146079623376894
+--- !u!114 &5789363040716675246
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -69,24 +69,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 5445588807857904294}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8edcd894d4217a4298e0a0f7bfee11f, type: 3}
+  m_Script: {fileID: 11500000, guid: 4360aa86aa1b0a34ca32a29946e291b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agentData:
-    agentType: 0
-    detectionData: {fileID: 11400000, guid: 0d35cb23d552b2546a9c60f37749cc6b, type: 2}
-    alive: 1
-    active: 0
-  debug:
-    debugcontroller: 0
-    debugDecisionRanges: 0
-    hasTargetInSight: 0
-    isTargetRecentlyLost: 0
-    lostTarget: 0
-    occlusion: 0
-    navmeshRotate: 0
-    target: {fileID: 0}
---- !u!114 &8977679635264283463
+  _agentControllerData:
+    agentType: 3
+    actionRegister: {fileID: 11400000, guid: bc4d54a024b3b384d8f5928515b58d5c, type: 2}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 100
+      Variable: {fileID: 0}
+    enabled: 0
+    alive: 0
+    origin: {fileID: 0}
+    _health: 0
+--- !u!114 &2481520563944529208
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -95,10 +92,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 5445588807857904294}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6e8f31a70fb1bf468cc238447049de5, type: 3}
+  m_Script: {fileID: 11500000, guid: e4976386e60b4f54eb0e81c10b97f24e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  availableSpells: []
+  data: {fileID: 11400000, guid: 0d35cb23d552b2546a9c60f37749cc6b, type: 2}
+  showFieldOfView: 0
+  showRanges: 0
 --- !u!136 &6265072155313061308
 CapsuleCollider:
   m_ObjectHideFlags: 0

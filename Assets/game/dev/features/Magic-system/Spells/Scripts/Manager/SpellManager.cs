@@ -5,13 +5,13 @@ using UnityEngine;
 
 public class SpellManager : MonoBehaviour
 {
-    private static List<ISpell> spells;
+    private static List<IActionBehaviour> spells;
 
     public static void Subscribe(SpellBase spell)
     {
         if (spells == null)
         {
-            spells = new List<ISpell>();
+            spells = new List<IActionBehaviour>();
         }
 
         spells.Add(spell);
@@ -23,7 +23,7 @@ public class SpellManager : MonoBehaviour
         GetSpellByString(SpellName)?.CastSpell(origin, hitableTargets);
     }
 
-    public static void CastSpellByReference(ISpell spell, Transform origin, TargetLayerData hitableTargets)
+    public static void CastSpellByReference(IActionBehaviour spell, Transform origin, TargetLayerData hitableTargets)
     {
         spell.CastSpell(origin, hitableTargets);
     }
@@ -33,7 +33,7 @@ public class SpellManager : MonoBehaviour
         GetSpellByKeyCombonation(keyCombination)?.CastSpell(origin, hitableTargets); 
     }
 
-    public static ISpell GetSpellByString(string spellName)
+    public static IActionBehaviour GetSpellByString(string spellName)
     {
         spellName.ToLower();
         foreach (var key in spells)
@@ -49,7 +49,7 @@ public class SpellManager : MonoBehaviour
         return null;    
     }
 
-    private static ISpell GetSpellByKeyCombonation(List<KeyCode> keyCombination) 
+    private static IActionBehaviour GetSpellByKeyCombonation(List<KeyCode> keyCombination) 
     {
         for (int i = 0; i < spells.Count; i++)
         {

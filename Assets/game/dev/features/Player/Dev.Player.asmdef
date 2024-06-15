@@ -1,3 +1,17 @@
 {
-	"name": "Dev.Player"
+    "name": "Dev.Player",
+    "rootNamespace": "",
+    "references": [
+        "GUID:a3d29676cf073774ab9eb23f5b14431c",
+        "GUID:ff99f8ffe59a06147ac6a1e451ccd317"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

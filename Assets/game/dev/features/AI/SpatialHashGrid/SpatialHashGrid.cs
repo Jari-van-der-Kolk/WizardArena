@@ -21,7 +21,7 @@ namespace Saxon.HashGrid
 
             foreach (var key in grid.Keys)
             {
-                Vector3 cellCenter = GetCellCenter(key, cellSize);
+                Vector3 cellCenter = GetCellCenter(key);
 
                 Vector3 size = new Vector3(cellSize, cellSize, cellSize);
 
@@ -35,13 +35,6 @@ namespace Saxon.HashGrid
             }
         }
 
-        public Vector3 GetCellCenter(Vector3 key,float cellSize) => new Vector3
-        (
-            key.x * cellSize + cellSize / 2f,
-            key.y * cellSize + cellSize / 2f,
-            key.z * cellSize + cellSize / 2f
-        );
-
         #endregion
 
 
@@ -49,15 +42,6 @@ namespace Saxon.HashGrid
         {
             this.cellSize = cellSize;
             grid = new Dictionary<Vector3Int, List<T>>();
-            
-        }
-
-        public void AddValues(List<T> values)
-        {
-            for (int i = 0; i < values.Count; i++)
-            {
-                Add(values[i], values[i].transform.position);
-            }
         }
 
         public Vector3Int GetGridKey(Vector3 position)
@@ -82,9 +66,32 @@ namespace Saxon.HashGrid
             items.Add(item);
         }
 
-        public List<T> GetItems(Vector3 position)
+        public void Remove(T item, Vector3Int id)
         {
-            Vector3Int key = GetGridKey(position);
+            if (grid.TryGetValue(id, out List<T> items))
+            {
+                items.Remove(item);
+                if (items.Count == 0)
+                {
+                    grid.Remove(id);
+                }
+            }
+        }
+        public void Clear()
+        {
+            grid.Clear();
+        }
+
+        public Vector3 GetCellCenter(Vector3 key) => new Vector3
+       (
+           key.x * cellSize + cellSize / 2f,
+           key.y * cellSize + cellSize / 2f,
+           key.z * cellSize + cellSize / 2f
+       );
+
+        public List<T> GetNodesFromOrigin(Vector3Int origin)
+        {
+            Vector3Int key = GetGridKey(origin);
 
             if (grid.TryGetValue(key, out List<T> items))
             {
@@ -94,7 +101,7 @@ namespace Saxon.HashGrid
             return null;
         }
 
-        public List<T> GetItemsInRadius(Vector3 position, float radius)
+        public List<T> GetNodesInRadius(Vector3 position, float radius)
         {
             List<T> result = new List<T>();
 
@@ -120,7 +127,7 @@ namespace Saxon.HashGrid
             return result;
         }
 
-        public List<Vector3Int> GetKeysInRadius(Vector3 position, float radius)
+        public List<Vector3Int> GetOriginNodesInRadius(Vector3 position, float radius)
         {
             List<Vector3Int> keys = new List<Vector3Int>();
 
@@ -142,23 +149,18 @@ namespace Saxon.HashGrid
             return keys;
         }
 
-        public void Remove(T item, Vector3Int id)
-        {
-            Vector3Int key = id;
 
-            if (grid.TryGetValue(key, out List<T> items))
-            {
-                items.Remove(item);
-                if (items.Count == 0)
-                {
-                    grid.Remove(key);
-                }
-            }
-        }
 
-        public void Clear()
-        {
-            grid.Clear();
-        }
+       
     }
 }
+
+
+
+/*public void AddValues(List<T> values)
+{
+    for (int i = 0; i < values.Count; i++)
+    {
+        Add(values[i], values[i].transform.position);
+    }
+}*/

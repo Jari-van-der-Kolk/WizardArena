@@ -116,7 +116,7 @@ public class ObjectDetectionDebug
         }
 
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(_transform.position, _data.distance);
+        //Gizmos.DrawWireSphere(_transform.position, _data.distance);
         for (int i = 0; i < count; i++)
         {
             Gizmos.DrawSphere(_vieldOfViewColliders[i].transform.position, 0.2f);
