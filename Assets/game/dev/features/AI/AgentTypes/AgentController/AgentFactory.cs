@@ -26,7 +26,7 @@ namespace Saxon.BT.AI.Types
             return this;
         }
 
-        public static Agent CreateAgent(AgentControllerData owner)
+        public static Agent CreateAgent(AgentBehaviourData owner)
         {
             Agent agent = null;
 

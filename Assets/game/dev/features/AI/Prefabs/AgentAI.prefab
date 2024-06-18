@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7835156541086727127}
   - component: {fileID: 5789363040716675246}
   - component: {fileID: 2481520563944529208}
+  - component: {fileID: 7514277335078558503}
   - component: {fileID: 6265072155313061308}
   - component: {fileID: 9203849453139977951}
   - component: {fileID: 8856690453719486299}
@@ -72,17 +73,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4360aa86aa1b0a34ca32a29946e291b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _agentControllerData:
-    agentType: 3
+  agentData:
+    agentType: 0
     actionRegister: {fileID: 11400000, guid: bc4d54a024b3b384d8f5928515b58d5c, type: 2}
     maxHealth:
       UseConstant: 1
       ConstantValue: 100
       Variable: {fileID: 0}
+    targetTag: Player
     enabled: 0
     alive: 0
-    origin: {fileID: 0}
-    _health: 0
+  agentIndex: 0
 --- !u!114 &2481520563944529208
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98,6 +99,18 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 0d35cb23d552b2546a9c60f37749cc6b, type: 2}
   showFieldOfView: 0
   showRanges: 0
+--- !u!114 &7514277335078558503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5445588807857904294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01ac1e45eef7dab439d29d24d8af6497, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!136 &6265072155313061308
 CapsuleCollider:
   m_ObjectHideFlags: 0

@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: TestingReviveSpell
   m_EditorClassIdentifier: 
   spellID:
-    EffectName: placeholder
+    EffectName: testingrevivespell
     playerKeyCombination: 
+    actionType: 2
   _radius: {fileID: 11400000, guid: faa419b4e4247b342a3a64864880e3da, type: 2}
+  reviveAmount: 5

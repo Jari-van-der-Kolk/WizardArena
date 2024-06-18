@@ -29,11 +29,7 @@ namespace Movement
 
         private void Update()
         {
-            if (Input.GetMouseButtonDown(0))
-            {
-                var foo = Camera.main.transform.Click<AgentController>(5f);
-                Debug.Log(foo?.IsUpdatingRotation());
-            }
+            
         }
 
         private void LateUpdate()

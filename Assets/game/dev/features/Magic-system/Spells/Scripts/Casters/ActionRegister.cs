@@ -1,4 +1,5 @@
 using AYellowpaper;
+using Codice.Client.BaseCommands;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -32,14 +33,38 @@ public class ActionRegister : ScriptableObject
 {
     [SerializeField] private ActionReference[] availableActions;
 
-    private void CastRandomAction()
+    public IActionBehaviour GetActionBehaviourByString(string name)
     {
-        // Example usage of casting a random spell at the start
-        IActionBehaviour randomSpell = GetRandomAction();
-        if (randomSpell != null)
+                    
+    }
+
+    public IActionBehaviour GetRandomActionFromRegister(ActionType type)
+    {
+        for (int i = 0; i < availableActions.Length; i++)
         {
-            //SpellManager.CastSpellByReference(randomSpell, transform, _castableTargetLayerData);
+            if (availableActions[i].actionType == type)
+            {
+                return availableActions[i].action.Value;    
+            }
         }
+
+        Debug.LogWarning($"Could not find action of type: {type}");
+        return null;    
+    }
+
+    private IActionBehaviour GetRandomActionTypeValue(ActionType type)
+    {
+        List<IActionBehaviour> qualifiedActions = new List<IActionBehaviour> ();
+        for (int i = 0; i < availableActions.Length; i++)
+        {
+            if (availableActions[i].actionType == type)
+            {
+                qualifiedActions.Add(availableActions[i].action.Value);
+            }
+        }
+
+        int randomValue = Random.Range(0, qualifiedActions.Count);
+        return qualifiedActions[randomValue];
     }
 
 

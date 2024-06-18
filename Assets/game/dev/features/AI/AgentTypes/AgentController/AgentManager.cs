@@ -8,7 +8,7 @@ using UnityEngine;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
-
+using System;
 
 public class AgentManager : MonoBehaviour, IDependencyProvider
 {
@@ -18,21 +18,18 @@ public class AgentManager : MonoBehaviour, IDependencyProvider
         return this;
     }
     //config
-    const int maxAgents = 10000;
+    const int maxAgents = 100;
 
     [Header("Agent update rate")]
-    [Tooltip("The speed at which the behaviour tree updates")]
-    [SerializeField] private float _BTUpdateStep = 0.5f;
-    [Tooltip("The speed at which the object detection updates")]
     [SerializeField] private float _detectionUpdateStep = 0.5f;
-    [SerializeField] private AgentController _agentControllerPrefab;
+    [SerializeField] private AgentBehaviour _agentControllerPrefab;
 
-    public static AgentController agentControllerPrefab { get; private set; }
+    public static AgentBehaviour agentControllerPrefab { get; private set; }
 
     //mutable
-    private AgentControllerData[] _agentControllers = new AgentControllerData[maxAgents];
-
+    [SerializeField] private AgentBehaviourData[] _agentControllers = new AgentBehaviourData[maxAgents];
     [SerializeField] private int activeAgents;
+
 
     private void Awake()
     {
@@ -43,30 +40,84 @@ public class AgentManager : MonoBehaviour, IDependencyProvider
     {
         for (int i = 0; i < activeAgents; i++)
         {
-            _agentControllers[i].Poll(_BTUpdateStep, _detectionUpdateStep);
+            _agentControllers[i].Poll();
         }
     }
 
-    public static void Spawn(Transform spawnLocation, AgentType agentType)
+    public void Spawn(Transform spawnLocation, AgentType agentType)
     {
-        Instantiate(agentControllerPrefab, spawnLocation.position, Quaternion.identity);
+        int index = SearchForUnallocatedSpot();
+        if (index == -1)
+        {
+            Debug.LogWarning("No unallocated spot available for spawning new agent.");
+            return;
+        }
+
+        // Instantiate the agent controller and set its index
+        AgentBehaviour agentController = Instantiate(agentControllerPrefab, spawnLocation.position, Quaternion.identity);
+
+        // Initialize the AgentControllerData
+        AgentBehaviourData agentControllerData = new AgentBehaviourData();
+        _agentControllers[index] = agentControllerData;
     }
 
     //this method usually gets called during compile time
-    public void Register(ref AgentControllerData agentController)
+    public int Register(ref AgentBehaviourData data, ref int index)
     {
-        int index = SearchForUnallocatedSpot();
-        Agent agent = AgentFactory.CreateAgent(agentController);
-        agentController.Init(agent);
-        agentController.SetAgentActivity(agentController.alive);
+        index = SearchForUnallocatedSpot();
+        if(index > maxAgents)
+        {
+            Debug.LogWarning("You have not allocated enough memory to initialize more agents");
+            return -1;
+        }
+
+
+        Agent agent = AgentFactory.CreateAgent(data);
+        data.SetAgent(agent);
+        data.SetAgentActivity(data.alive);
 
         if (index >= 0)
         {
-            _agentControllers[index] = agentController;
+            _agentControllers[index] = data;
         }
 
         activeAgents++;
+        return index;
     }
+
+
+
+    public void ChangeAgentType(AgentBehaviourData data)
+    {
+        data.SetAgent(AgentFactory.CreateAgent(data));
+    }
+
+    // Method returning by reference
+    public ref AgentBehaviourData GetAgentControllerDataByRef(int index)
+    {
+        return ref _agentControllers[index];
+    }
+
+    // Method returning by value
+    public AgentBehaviourData GetAgentControllerData(int index)
+    {
+        if (index >= 0 && index < maxAgents)
+        {
+            return _agentControllers[index];
+        }
+        else
+        {
+            throw new ArgumentOutOfRangeException(nameof(index), "Index out of range.");
+        }
+    }
+
+    /* public void ReviveAgent(int index)
+     {
+         _agentControllers[index].alive = true;
+         _agentControllers[index].col.isTrigger = true;
+         _agentControllers[index].navMesh.enabled = true;
+         _agentControllers[index].rb.useGravity = false;
+     }*/
 
     // Private Methods
     public int SearchForUnallocatedSpot()
@@ -82,4 +133,21 @@ public class AgentManager : MonoBehaviour, IDependencyProvider
         Debug.LogWarning("No unallocated spot available for spawning new agent.");
         return -1; // Indicate no spot available
     }
+    private void LeftShiftArray()
+    {
+        if (activeAgents <= 0)
+            return; // No need to shift if there are no active agents
+
+        // Shift elements
+        for (int i = 0; i < activeAgents - 1; i++)
+        {
+            _agentControllers[i] = _agentControllers[i + 1];
+        }
+
+        // Set the last element to default value of AgentControllerData
+        _agentControllers[activeAgents - 1] = default(AgentBehaviourData);
+
+        activeAgents--; // Decrement activeAgents count
+    }
+
 }

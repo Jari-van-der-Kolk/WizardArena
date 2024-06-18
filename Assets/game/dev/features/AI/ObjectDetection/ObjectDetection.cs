@@ -18,7 +18,6 @@ public class ObjectDetection : MonoBehaviour
     private Collider[] _targetColliders = new Collider[50];
     private ObjectDetectionDebug _debug;
     private int _count;
-    private float _scanTimer;
     private float _lostTimer;
 
     public ObjectDetectionData Data
@@ -51,6 +50,11 @@ public class ObjectDetection : MonoBehaviour
 
     }
 
+    private void Start()
+    {
+        target = transform; 
+    }
+
     private void OnDrawGizmos()
     {
         if(!showFieldOfView)
@@ -71,41 +75,37 @@ public class ObjectDetection : MonoBehaviour
     }
 #endif
 
-    public void TimeStepUpdate(float timestep)
+    public void UpdataOD()
     {
         float time = Time.time;
 
-        if (time - _scanTimer > timestep)
+        detectedTargets = Scan(transform.forward, out var inVicinity); // Use transform
+        vicinityTargets = inVicinity;
+
+        var previousVisualState = hasTargetInSight;
+        hasTargetInSight = detectedTargets.Count > 0;
+        noVisualsOnTarget = detectedTargets.Count == 0;
+
+        if (!hasTargetInSight && previousVisualState)
         {
-            detectedTargets = Scan(transform.forward, out var inVicinity); // Use transform
-            vicinityTargets = inVicinity;
-
-            var previousVisualState = hasTargetInSight;
-            hasTargetInSight = detectedTargets.Count > 0;
-            noVisualsOnTarget = detectedTargets.Count == 0;
-
-            if (!hasTargetInSight && previousVisualState)
-            {
-                targetRecentlyLost = true;
-                lostTarget = true;
-            }
-
-            if (hasTargetInSight)
-            {
-                // Make a priority target system in the future for this line of code 
-                target = detectedTargets[0].transform;
-                targetRecentlyLost = false;
-                lostTarget = false;
-                _lostTimer = time;
-            }
-
-            if (targetRecentlyLost && time - _lostTimer > data.lostPlayerDuration)
-            {
-                targetRecentlyLost = false;
-            }
-
-            _scanTimer = time;
+            targetRecentlyLost = true;
+            lostTarget = true;
         }
+
+        if (hasTargetInSight)
+        {
+            // Make a priority target system in the future for this line of code 
+            target = detectedTargets[0].transform;
+            targetRecentlyLost = false;
+            lostTarget = false;
+            _lostTimer = time;
+        }
+
+        if (targetRecentlyLost && time - _lostTimer > data.lostPlayerDuration)
+        {
+            targetRecentlyLost = false;
+        }
+
     }
 
     public void SetTarget(Transform target)
@@ -118,11 +118,7 @@ public class ObjectDetection : MonoBehaviour
         targetRecentlyLost = onOff;
     }
 
-    public void ResetRecentlyLostTimer()
-    {
-        _scanTimer = Time.time;
-    }
-
+  
     public List<T> GetComponentsInArea<T>(float areaRadius) where T : Component
     {
         List<T> detectedObjects = new List<T>();

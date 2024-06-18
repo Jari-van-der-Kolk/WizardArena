@@ -11,11 +11,11 @@ using Unity.Collections;
 using Unity.Jobs;
 using NaughtyAttributes;
 using Saxon.BT.AI.Controller;
+using PlasticGui.WorkspaceWindow.PendingChanges;
 
 #region UnusedCode
 //var foo = FindObjectsOfType<GameObject>().Where(obj => obj.gameObject.layer == objectDetection.data.VieldOfViewLayers).ToList();
 /* objectDetection = new ObjectDetection(transform, _detectionData);
-        SetAgentActivity(alive);
 
         //dont change the order of currentAgent and behaviourTree otherwise the debugger will start bitching 
         SetAgentType(_agentType);
@@ -66,107 +66,109 @@ using Saxon.BT.AI.Controller;
 
 namespace Saxon.BT.AI.Controller
 {
-
-
-
-
     [RequireComponent(typeof(NavMeshAgent))]
-    public class AgentController : MonoBehaviour
+    public class AgentBehaviour : MonoBehaviour, IOwner, IFollower
     {
-        [SerializeField] private AgentControllerData agentControllerData;
-
-
+        [SerializeField] private AgentBehaviourData agentData;
+        public int agentIndex;
 
         [Inject]
         private AgentManager _agentManager;
 
         private void Start()
         {
-            agentControllerData.InitComponents(this);
-            _agentManager.Register(ref agentControllerData);
+            agentData.Init(this);
+            _agentManager.Register(ref agentData, ref agentIndex);
         }
-        public void SetAgentActivity(bool activity)
+
+        public ref AgentBehaviourData data => ref _agentManager.GetAgentControllerDataByRef(agentIndex);
+
+
+        public bool GetDetection()
         {
-            agentControllerData.SetAgentActivity(activity);
+            return agentData.objectDetection.hasTargetInSight;
         }
 
-        public bool IsAlive()
+        [Button(enabledMode: EButtonEnableMode.Always)]
+        public void UpdateData()
         {
-            return agentControllerData.alive;
-        }
-
-        public bool IsUpdatingRotation()
+            agentData = _agentManager.GetAgentControllerData(agentIndex);
+        }        
+        [Button(enabledMode: EButtonEnableMode.Playmode)]
+        public void UpdateAlive()
         {
-            return agentControllerData.navMesh.updateRotation;
+            data.Revive();
+            UpdateData();
         }
 
-        public void AddFollower(AgentControllerData follower)
-        {
-            if(agentControllerData.controllingAgents == null)
-            {
-                agentControllerData.controllingAgents = new List<AgentControllerData>();
-            }
-
-            agentControllerData.controllingAgents.Add(follower);
-        }
-
-        public AgentControllerData GetData() => agentControllerData;
-
+       
     }
+
+
 
 }
 
 [System.Serializable]
-public struct AgentControllerData
+public struct AgentBehaviourData
 {
     [Header("Config")]
-    
-    [OnValueChanged("OnValueChangedMethod1")]
-    public AgentType agentType;
     private Agent agent;
-
+    public AgentType agentType;
     public ActionRegister actionRegister;
     public FloatReference maxHealth;
+    [Tag] public string targetTag;
 
+    public MonoBehaviour monoBehaviour { get; private set; }
     public ObjectDetection objectDetection { get; private set; }
     public Transform transform { get; private set; }
-    public NavMeshAgent navMesh;
-
+    public FollowersHolder followersHolder { get; private set; }
+    public NavMeshAgent navMesh { get; private set; }
     public Rigidbody rb { get; private set; }
     public Collider col { get; private set; }
 
-    public void Init(Agent agent)
+
+    public void SetAgent(Agent agent)
     {
         this.agent = agent;
-        enabled = true;
     }
 
-    public void InitComponents(MonoBehaviour monoBehaviour)
+    public void Init(MonoBehaviour monoBehaviour)
     {
+        this.monoBehaviour = monoBehaviour;
         transform = monoBehaviour.transform;
         objectDetection = monoBehaviour.GetComponent<ObjectDetection>();
+        followersHolder = monoBehaviour.GetComponent<FollowersHolder>();
         navMesh = monoBehaviour.GetComponent<NavMeshAgent>();
         rb = monoBehaviour.GetComponent<Rigidbody>();
         col = monoBehaviour.GetComponent<Collider>();
 
-        navMesh.updateRotation = false;
+        enabled = true;
     }
 
     [Header("Mutable")]
-    public bool enabled;
+    [SerializeField]public bool enabled;
     public bool alive;
-    public Transform origin => agent.origin;
-    [SerializeField] private int _health;
+    public int _health {  get; private set; }
 
-    public List<AgentControllerData> controllingAgents;
-
-    public void Poll(float BTUpdateStep, float ODUpdateStep)
+    
+    public void Poll()
     {
         if (alive)
         {
-            objectDetection.TimeStepUpdate(ODUpdateStep);
-            agent.TimeStepUpdate(BTUpdateStep);
+            objectDetection.UpdataOD();
+            agent.TimeStepUpdate();
         }
+    }
+
+    public void ChangeAgentType(AgentType agentType)
+    {
+        SetAgentType(agentType);
+        SetAgent(AgentFactory.CreateAgent(this));
+    }
+
+    public void SetAgentType(AgentType agentType)
+    {
+        this.agentType = agentType;
     }
 
     public void SetOrigin(Transform origin)
@@ -179,6 +181,16 @@ public struct AgentControllerData
         alive = agentStatus;
         col.isTrigger = agentStatus;
         navMesh.enabled = agentStatus;
+
+        if (!agentStatus)
+        {
+            rb.velocity = navMesh.velocity;
+        }
+        else
+        {
+            rb.velocity = Vector3.zero;
+        }
+
         rb.useGravity = !agentStatus;
 
         return agentStatus;
@@ -186,17 +198,16 @@ public struct AgentControllerData
 
     public void Revive()
     {
+
+
         alive = true;
-        rb.useGravity = false;
         col.isTrigger = true;
+        navMesh.enabled = true;
+        rb.useGravity = false;
+
     }
 
-    public bool IsAlive()
-    {
-        return alive;
-    }
 
-    
 }
 
 //_agentControllerData.SetAgentData(agent).SetObjectDetectionData(objectDetection);

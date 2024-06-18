@@ -11,7 +11,7 @@ namespace Saxon.BT.AI
     {
         public override RootNode rootNode { get; protected set; }
 
-        public NecroServant(AgentControllerData agentData) : base(agentData) { rootNode = CreateTree(); }
+        public NecroServant(AgentBehaviourData agentData) : base(agentData) { rootNode = CreateTree(); }
 
         public override AgentType agentType { get { return AgentType.NecroServant; } protected set { } }
 

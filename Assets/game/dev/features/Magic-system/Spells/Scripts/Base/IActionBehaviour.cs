@@ -3,7 +3,7 @@
 public interface IActionBehaviour
 {
     SpellID SpellID { get; }
-    public void CastSpell(Transform origin, TargetLayerData hitableLayers);
+    public void CastSpell(MonoBehaviour caller, string tag);
 
 }
 

@@ -9,18 +9,16 @@ namespace Saxon.BT
 {
     public abstract class Agent
     {
-        public Agent(AgentControllerData agentData)
+        public Agent(AgentBehaviourData agentData)
         {
             origin = agentData.transform;
             this.agentData = agentData;
-            startTime = Time.time;
         }
-        public AgentControllerData agentData;
+        public AgentBehaviourData agentData;
         public abstract RootNode CreateTree();
         public abstract AgentType agentType { get; protected set; }
         public abstract RootNode rootNode { get; protected set; }
         
-        private float startTime;
         public SpatialHashGrid<HashNode> spatialHashGrid => NodeGenerator.Instance.hashGrid;
 
         public Transform origin;
@@ -33,15 +31,10 @@ namespace Saxon.BT
         public Transform transform => agentData.transform;
         public Vector3 position => agentData.transform.position;
 
-        public void TimeStepUpdate(float timestep)
+        public void TimeStepUpdate()
         {
-            float time = Time.time;
-            if (time - startTime > timestep)
-            {
-                rootNode.SetDeltaTime(time - startTime);
-                rootNode.Update();
-                startTime = time;
-            }
+            rootNode.SetDeltaTime(Time.deltaTime);
+            rootNode.Update();
         }
 
 
@@ -51,7 +44,7 @@ namespace Saxon.BT
         {
             return Vector3.Distance(origin, target) < inDistanceLength;
         }
-        public bool CheckServantsDetection(List<AgentControllerData> agents)
+        public bool CheckServantsDetection(List<AgentBehaviourData> agents)
         {
             if (agents.Count > 0)
             {
@@ -65,7 +58,6 @@ namespace Saxon.BT
                         for (int c = 0; c < agents.Count; c++)
                         {
                             agents[c].objectDetection.ToggleTargetRecentlyLost(true);
-                            agents[c].objectDetection.ResetRecentlyLostTimer();
                             agents[c].objectDetection.SetTarget(target);
                         }
 

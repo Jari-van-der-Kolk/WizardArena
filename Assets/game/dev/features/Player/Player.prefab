@@ -233,7 +233,9 @@ GameObject:
   - component: {fileID: 5574876959144462838}
   - component: {fileID: 2304299471615540725}
   - component: {fileID: 3085462048512209823}
+  - component: {fileID: 1303730102374355074}
   - component: {fileID: 5824213613460525272}
+  - component: {fileID: 7742571054980073292}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -358,8 +360,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _useSpellKey: 323
   _cancelSpellKey: 122
-  _castableTargetLayerData: {fileID: 11400000, guid: 1b4bf6092bf77024586de25156b55afa,
-    type: 2}
+  targetTag: Agent
   _pressedKeys: 
 --- !u!114 &3085462048512209823
 MonoBehaviour:
@@ -371,6 +372,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31d2e681bd9f9c74cbc8f5c0e26cae2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1303730102374355074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2909108990694138080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01ac1e45eef7dab439d29d24d8af6497, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &5824213613460525272
@@ -392,6 +405,22 @@ MonoBehaviour:
   m_IgnoreFromBuild: 1
   m_ApplyToChildren: 1
   m_AffectedAgents: ffffffff
+--- !u!208 &7742571054980073292
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2909108990694138080}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &6747414843106189111
 GameObject:
   m_ObjectHideFlags: 0

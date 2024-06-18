@@ -15,13 +15,13 @@ public class ProjectileSpell : SpellBase
     [SerializeField] private float _speed = 10f;
     [SerializeField] private bool _deleteSpellOnContact = true;
 
-    public override void CastSpell(Transform origin, TargetLayerData hitableLayers)
+    public override void CastSpell(MonoBehaviour caller, string tag)
     {
-        var projectile = Instantiate(_prefab, origin.position.Add(y: .25f).Add(z: 1.25f), Quaternion.identity);
+        var projectile = Instantiate(_prefab, caller.transform.position.Add(y: .25f).Add(z: 1.25f), Quaternion.identity);
 
         var painfield = projectile.GetComponent<PainField>();
 
-        Vector3 targetPosition = origin.position + origin.forward * _speed * _duration;
+        Vector3 targetPosition = caller.transform.position + caller.transform.forward * _speed * _duration;
         projectile.transform.LeanMove(targetPosition, _duration).setLoopType(LeanTweenType.linear);
 
         Destroy(projectile, _duration);

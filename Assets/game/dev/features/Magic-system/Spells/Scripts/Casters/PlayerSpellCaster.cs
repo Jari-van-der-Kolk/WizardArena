@@ -3,13 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Utilities;
+using NaughtyAttributes;
 
 public class PlayerSpellCaster : MonoBehaviour
 {
     //config
     [SerializeField] private KeyCode _useSpellKey = KeyCode.Mouse0;
     [SerializeField] private KeyCode _cancelSpellKey = KeyCode.None;
-    [SerializeField] private TargetLayerData _castableTargetLayerData;
+    [Tag] public string targetTag;
 
     private KeyCode[] ignoreKeys = 
     {
@@ -40,7 +41,7 @@ public class PlayerSpellCaster : MonoBehaviour
 
         if (Input.GetKeyDown(_useSpellKey) && _pressedKeys.Count > 0)
         {
-            SpellManager.CastSpellByKeyID(_pressedKeys, transform, _castableTargetLayerData);  
+            ActionManager.CastSpellByKeyID(this, _pressedKeys, targetTag);  
             _pressedKeys.Clear();
 
         }

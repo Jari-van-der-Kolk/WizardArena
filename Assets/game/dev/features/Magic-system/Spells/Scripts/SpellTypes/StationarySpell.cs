@@ -17,9 +17,9 @@ public class StationarySpell : SpellBase
         
     }
 
-    public override void CastSpell(Transform origin, TargetLayerData hitableLayers)
+    public override void CastSpell(MonoBehaviour caller, string tag)
     {
-        var shield = Instantiate(_prefab, origin.position.With(y: 1f), Quaternion.identity);
+        var shield = Instantiate(_prefab, caller.transform.position.With(y: 1f), Quaternion.identity);
         
         Destroy(shield, _duration);
     }

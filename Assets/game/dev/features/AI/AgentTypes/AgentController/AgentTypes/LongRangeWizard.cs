@@ -8,7 +8,7 @@ namespace Saxon.BT.AI
     public class LongRangeWizard : Agent
     {
         public override RootNode rootNode { get; protected set; }
-        public LongRangeWizard(AgentControllerData agentData) : base(agentData)
+        public LongRangeWizard(AgentBehaviourData agentData) : base(agentData)
         {
             rootNode = CreateTree();
         }

@@ -5,7 +5,7 @@ namespace Saxon.BT.AI
 {
     internal class CloseRangeWizard : Agent
     {
-        public CloseRangeWizard(AgentControllerData agentData) : base(agentData)
+        public CloseRangeWizard(AgentBehaviourData agentData) : base(agentData)
         {
             CreateTree();
         }

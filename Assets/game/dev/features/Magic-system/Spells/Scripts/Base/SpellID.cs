@@ -7,6 +7,7 @@ public class SpellID
 {
     public string EffectName = "placeholder";
     public KeyCode[] playerKeyCombination;
+    public ActionType actionType = ActionType.None; 
 
     
     public void SetEffectName(string stringID) => this.EffectName = stringID.ToLower();

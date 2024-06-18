@@ -9,7 +9,7 @@ namespace Saxon.BT.AI
     {
         public override RootNode rootNode { get; protected set; }
 
-        public Spider(AgentControllerData agentControllerData) : base(agentControllerData) { rootNode = CreateTree(); }
+        public Spider(AgentBehaviourData agentControllerData) : base(agentControllerData) { rootNode = CreateTree(); }
 
         public override AgentType agentType { get { return AgentType.CloseRangeWizard; } protected set { } }
 

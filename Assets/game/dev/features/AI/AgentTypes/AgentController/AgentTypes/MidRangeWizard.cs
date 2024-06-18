@@ -9,7 +9,7 @@ namespace Saxon.BT.AI
     public class MidRangeWizard : Agent
     {
         public override RootNode rootNode { get; protected set; }
-        public MidRangeWizard(AgentControllerData agentData) : base(agentData)
+        public MidRangeWizard(AgentBehaviourData agentData) : base(agentData)
         {
             rootNode = CreateTree();
         }

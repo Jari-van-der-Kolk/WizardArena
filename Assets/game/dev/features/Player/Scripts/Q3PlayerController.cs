@@ -7,7 +7,7 @@ namespace Movement
     /// This script handles Quake III CPM(A) mod style player movement logic.
     /// </summary>
     [RequireComponent(typeof(CharacterController))]
-    public class Q3PlayerController : MonoBehaviour
+    public class Q3PlayerController : MonoBehaviour, IOwner
     {
         [System.Serializable]
         public class MovementSettings

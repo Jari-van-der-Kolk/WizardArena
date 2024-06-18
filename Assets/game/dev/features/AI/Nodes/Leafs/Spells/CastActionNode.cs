@@ -9,17 +9,18 @@ namespace Saxon.BT
 {
     public class CastActionNode : LeafNode, INodeDebugger
     {
-        new readonly AgentControllerData agent;
+        readonly AgentBehaviourData data;
+        ActionType actionType;
 
-
-        public CastActionNode(AgentControllerData agent, ActionType action)
+        public CastActionNode(AgentBehaviourData agent, ActionType action)
         {
-            this.agent = agent;
+            data = agent;
+            actionType = action;
         }
 
         protected override void OnStart()
         {
-        
+            ActionManager.CastSpellByReference(data.monoBehaviour, data.actionRegister.GetRandomActionFromRegister(actionType), data.targetTag);       
         }
 
         protected override NodeState OnUpdate()

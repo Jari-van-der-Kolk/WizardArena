@@ -9,7 +9,7 @@ namespace Saxon.BT.AI
     {
         public override RootNode rootNode { get; protected set; }
 
-        public Necromancer(AgentControllerData agentData) : base(agentData) { rootNode = CreateTree(); }
+        public Necromancer(AgentBehaviourData agentData) : base(agentData) { rootNode = CreateTree(); }
 
         public override AgentType agentType { get { return AgentType.Necromancer; } protected set { } }
 
@@ -32,7 +32,8 @@ namespace Saxon.BT.AI
             float pickLocationRadius = 3f;
             OriginPatrolNode patrol = new OriginPatrolNode(this, findNewLocationRadius, pickLocationRadius);
 
-            ConditionNode servantsDetection = new ConditionNode(() => CheckServantsDetection(agentData.controllingAgents));
+            ConditionNode servantsDetection = new ConditionNode(() => agentData.followersHolder.HaveFollowersDetectedTarget());
+            
             SequenceNode servantsHaveSeenTarget = new SequenceNode("s see",new Node[]
             {
                 servantsDetection, ChaseTarget(detection.Data.longRangeAttackDistance)
@@ -62,13 +63,13 @@ namespace Saxon.BT.AI
         public int CountDeadAgentsInVicinity(float searchRadius)
         {
             int count = 0;
-            var agentsInVicinity = detection.GetComponentsInArea<AgentController>(searchRadius);                  
+            var agentsInVicinity = detection.GetComponentsInArea<AgentBehaviour>(searchRadius);                  
                  
             if( agentsInVicinity != null )
             {
                 for (int i = 0; i < agentsInVicinity.Count; i++)
                 {
-                    if (!agentsInVicinity[i].IsAlive() && agentsInVicinity[i].transform != agentData.transform)
+                    if (!agentsInVicinity[i].data.alive && agentsInVicinity[i].transform != agentData.transform)
                     {
                         count++;
                     }
@@ -83,14 +84,14 @@ namespace Saxon.BT.AI
 
             return count;
         }
-        public int CountDeadAgentsInVicinity(float searchRadius, out List<AgentController> agents)
+        public int CountDeadAgentsInVicinity(float searchRadius, out List<AgentBehaviour> agents)
         {
             int count = 0;
-            agents = new List<AgentController>();
-            var agentsInVicinity = detection.GetComponentsInArea<AgentController>(searchRadius);
+            agents = new List<AgentBehaviour>();
+            var agentsInVicinity = detection.GetComponentsInArea<AgentBehaviour>(searchRadius);
             for (int i = 0; i < agentsInVicinity.Count; i++)
             {
-                if (agentsInVicinity[i].IsAlive() == false && agentsInVicinity[i].transform != agentData.transform)
+                if (agentsInVicinity[i].data.alive == false && agentsInVicinity[i].transform != agentData.transform)
                 {
                     agents.Add(agentsInVicinity[i]);
                     count++;

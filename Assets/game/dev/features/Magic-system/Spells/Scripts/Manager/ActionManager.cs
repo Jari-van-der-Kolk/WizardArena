@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.ShortcutManagement;
 using UnityEngine;
 
-public class SpellManager : MonoBehaviour
+public class ActionManager : MonoBehaviour
 {
     private static List<IActionBehaviour> spells;
 
@@ -17,20 +18,20 @@ public class SpellManager : MonoBehaviour
         spells.Add(spell);
     }
 
-    public static void CastSpellByString(string SpellName, Transform origin, TargetLayerData hitableTargets)
+    public static void CastSpellByString(MonoBehaviour origin, string SpellName, string tag)
     {
         SpellName.ToLower();
-        GetSpellByString(SpellName)?.CastSpell(origin, hitableTargets);
+        GetSpellByString(SpellName)?.CastSpell(origin, tag);
     }
 
-    public static void CastSpellByReference(IActionBehaviour spell, Transform origin, TargetLayerData hitableTargets)
+    public static void CastSpellByReference(MonoBehaviour origin, IActionBehaviour action, string tag)
     {
-        spell.CastSpell(origin, hitableTargets);
+        action.CastSpell(origin, tag);
     }
 
-    public static void CastSpellByKeyID(List<KeyCode> keyCombination, Transform origin, TargetLayerData hitableTargets)
+    public static void CastSpellByKeyID(MonoBehaviour origin, List<KeyCode> keyCombination, string tag)
     {
-        GetSpellByKeyCombonation(keyCombination)?.CastSpell(origin, hitableTargets); 
+        GetSpellByKeyCombonation(keyCombination)?.CastSpell(origin, tag); 
     }
 
     public static IActionBehaviour GetSpellByString(string spellName)

@@ -228,8 +228,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _BTUpdateStep: 0.5
   _detectionUpdateStep: 0.5
-  _agentControllerPrefab: {fileID: 5445588807857904294, guid: bf262e75f581bfc4dbbe47377696228c,
+  _agentControllerPrefab: {fileID: 5789363040716675246, guid: bf262e75f581bfc4dbbe47377696228c,
     type: 3}
+  activeAgents: 0
 --- !u!1 &6722666764248069981
 GameObject:
   m_ObjectHideFlags: 0

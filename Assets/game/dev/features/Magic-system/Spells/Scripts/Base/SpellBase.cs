@@ -22,9 +22,9 @@ public abstract class SpellBase : ScriptableObject, IActionBehaviour
         {
             spellID.SetEffectName(name);
         }
-        SpellManager.Subscribe(this);
+        ActionManager.Subscribe(this);
     }
-    public abstract void CastSpell(Transform origin, TargetLayerData hitableLayers);
+    public abstract void CastSpell(MonoBehaviour caller, string tag);
 
 }
 
