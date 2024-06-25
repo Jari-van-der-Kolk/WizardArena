@@ -226,10 +226,910 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d49794f643134d54798d834d15ecba8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _BTUpdateStep: 0.5
   _detectionUpdateStep: 0.5
   _agentControllerPrefab: {fileID: 5789363040716675246, guid: bf262e75f581bfc4dbbe47377696228c,
     type: 3}
+  _agentControllers:
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
+  - agentType: 0
+    actionRegister: {fileID: 0}
+    maxHealth:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    targetTag: 
+    enabled: 0
+    alive: 0
   activeAgents: 0
 --- !u!1 &6722666764248069981
 GameObject:
@@ -240,9 +1140,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8650545322235298170}
-  - component: {fileID: 8744122559500127218}
+  - component: {fileID: 7453478504508176075}
   m_Layer: 0
-  m_Name: SpellManager
+  m_Name: ActionManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -263,7 +1163,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1326919459893181252}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8744122559500127218
+--- !u!114 &7453478504508176075
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -272,7 +1172,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6722666764248069981}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62e4cf3fe4c30e54994a53c4dd5a6d60, type: 3}
+  m_Script: {fileID: 11500000, guid: 5630780a1f6220249a3d844f4de23e30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &1863303496330143038

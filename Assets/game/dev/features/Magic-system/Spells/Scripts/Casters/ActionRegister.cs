@@ -35,7 +35,15 @@ public class ActionRegister : ScriptableObject
 
     public IActionBehaviour GetActionBehaviourByString(string name)
     {
-                    
+        for (int i = 0; i < availableActions.Length; i++)
+        {
+            if(availableActions[i].action.ToString() == name)
+            {
+                return availableActions[i].action.Value;
+            }
+        }
+
+        return null;
     }
 
     public IActionBehaviour GetRandomActionFromRegister(ActionType type)

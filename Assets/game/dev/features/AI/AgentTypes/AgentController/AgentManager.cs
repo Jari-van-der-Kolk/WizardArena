@@ -54,11 +54,14 @@ public class AgentManager : MonoBehaviour, IDependencyProvider
         }
 
         // Instantiate the agent controller and set its index
+        AgentBehaviourData agentControllerData = new AgentBehaviourData();
+        agentControllerData.agentType = agentType;  
+        _agentControllers[index] = agentControllerData;
+
         AgentBehaviour agentController = Instantiate(agentControllerPrefab, spawnLocation.position, Quaternion.identity);
+        agentController.data = _agentControllers[index];
 
         // Initialize the AgentControllerData
-        AgentBehaviourData agentControllerData = new AgentBehaviourData();
-        _agentControllers[index] = agentControllerData;
     }
 
     //this method usually gets called during compile time

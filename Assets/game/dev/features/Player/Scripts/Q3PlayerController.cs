@@ -95,7 +95,6 @@ namespace Movement
 
                 if(OnSlopeCheck(m_Character.slopeLimit, slopeResult))
                 {
-                    print("t");
                     m_PlayerVelocity.y = -m_Gravity;
                     m_JumpQueued = false;
                 }
