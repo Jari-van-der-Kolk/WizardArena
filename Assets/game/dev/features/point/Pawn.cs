@@ -16,9 +16,10 @@ public class Pawn : MonoBehaviour
     [Tag] [SerializeField] private string interactionTag;
     [SerializeField] private PawnType type;
 
-    [SerializeField] private bool canMoveHorizontal;
-    [SerializeField] private bool canMoveVertical;
-    [SerializeField] private bool canMoveOverFriendlys;
+   
+
+    [CurveRange(-1, -1, 1, 1, EColor.Red)]
+    public AnimationCurve curve;
 
     public static Pawn selectedInstance {  get; private set; }
 
@@ -59,14 +60,7 @@ public class Pawn : MonoBehaviour
 
     private void OnMouseDown()
     {
-        var previousInstance = selectedInstance;
         selectedInstance = this;        
-        /*if(selectedInstance.type == turn)
-        {
-            selectedInstance = previousInstance;
-        }*/
-
-        Debug.Log(selectedInstance.transform.name);
     }
 
     public void CheckWinCondition()
@@ -87,27 +81,52 @@ public class Pawn : MonoBehaviour
 
     public static void Move(Pawn origin, Vector3 dest, float height, float duration)
     {
-        // Define the spline path
-        Vector3[] splinePositions = {
-        origin.transform.position, // Start at the pawn's current position
-        new Vector3((origin.transform.position.x + dest.x) * 0.25f,origin.transform.position.y + height, (origin.transform.position.z + dest.z) * 0.25f), // Control point, adjust the height or position as needed
-        new Vector3((origin.transform.position.x + dest.x) * 0.75f, origin.transform.position.y + height, (origin.transform.position.z + dest.z) * 0.75f), // Control point, adjust the height or position as needed
-        dest // End at the destination
-    };
+        Vector3 startPosition = origin.transform.position;
+        Vector3 endPosition = dest;
+        Vector3 controlPoint = new Vector3((startPosition.x + endPosition.x) * 0.5f, height, (startPosition.z + endPosition.z) * 0.5f);
 
-        // Use LeanTween to move the pawn along the spline
-        LeanTween.moveSpline(origin.gameObject, splinePositions, duration).setLoopOnce();
-
-        SwitchTurn();
+        LeanTween.value(origin.gameObject, 0, 1, duration)
+            .setOnUpdate((float t) => 
+            {
+                Vector3 newPosition = CalculateQuadraticBezierPoint(t, startPosition, controlPoint, endPosition);
+                origin.transform.position = newPosition;
+            })
+            .setOnComplete(() =>
+            {
+                // Call SwitchTurn() or any other logic after movement completes
+                SwitchTurn();
+            });
     }
 
+    public static Vector3 CalculateQuadraticBezierPoint(float t, Vector3 p0, Vector3 p1, Vector3 p2)
+    {
+        float u = 1 - t;
+        float tt = t * t;
+        float uu = u * u;
 
+        Vector3 point = uu * p0; // (1-t)^2 * p0
+        point += 2 * u * t * p1; // 2(1-t)t * p1
+        point += tt * p2;        // t^2 * p2
 
+        return point;
+    }
 
-    //selectedInstance.transform.position = pos;
-    //Vector3 y0 = ((pos + dest) * .5f) + new Vector3(0f,height, 0f);
-    /* {pos, y0 , dest}*/
+    public static Vector3 CalculateCubicBezierPoint(float t, Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3)
+    {
+        float u = 1 - t;
+        float tt = t * t;
+        float uu = u * u;
+        float uuu = uu * u;
+        float ttt = tt * t;
 
+        Vector3 point = uuu * p0; // (1-t)^3 * p0
+        point += 3 * uu * t * p1; // 3(1-t)^2 t * p1
+        point += 3 * u * tt * p2; // 3(1-t) t^2 * p2
+        point += ttt * p3;        // t^3 * p3
+
+        return point;
+    }
+  
     private static void SwitchTurn()
     {
         switch (turn)
