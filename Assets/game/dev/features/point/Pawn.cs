@@ -1,3 +1,4 @@
+using Codice.CM.Common;
 using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,62 +15,55 @@ public enum PawnType
 public class Pawn : MonoBehaviour
 {
     [Tag] [SerializeField] private string interactionTag;
-    [SerializeField] private PawnType type;
-
-   
+    public PawnType type;
 
     [CurveRange(-1, -1, 1, 1, EColor.Red)]
     public AnimationCurve curve;
 
     public static Pawn selectedInstance {  get; private set; }
-
-
     public static PawnType turn;    
-    static int _teamOneAmount;
-    static int _teamTwoAmount;
+
+    public static int teamOneAmount;
+    public static int teamTwoAmount;
+    
     static int _total;
+
+    
 
     public static float startTimer;
 
+    public Pawn SetType(PawnType pawnType)
+    {
+        type = pawnType;
+        return this;
+    }
+
+    public Pawn SetTag(string tag)
+    {
+        interactionTag = tag;
+        return this;
+    }
+
+
     private void Start()
     {
-        switch(type)
-        {
-            case PawnType.TeamOne:
-                _teamOneAmount++;
-                break;
-            case PawnType.TeamTwo: 
-                _teamTwoAmount++; 
-          
-                break;
-        }
-
-
         _total++; 
     }
-
-    private void OnTriggerEnter(Collider other)      
-    {
-        if(other.CompareTag(interactionTag))
-        {
-            other.gameObject.SetActive(false);
-            _total--;
-        }
-
-    }
+   
 
     private void OnMouseDown()
     {
-        selectedInstance = this;        
+        selectedInstance = this;
+        print("foo");
     }
 
     public void CheckWinCondition()
     {
-        if (_teamOneAmount == 0)
+        if (teamOneAmount == 0)
         {
             Debug.Log("Team Two wins!");
         }
-        else if (_teamTwoAmount == 0)
+        else if (teamTwoAmount == 0)
         {
             Debug.Log("Team One wins!");
         }
@@ -85,17 +79,46 @@ public class Pawn : MonoBehaviour
         Vector3 endPosition = dest;
         Vector3 controlPoint = new Vector3((startPosition.x + endPosition.x) * 0.5f, height, (startPosition.z + endPosition.z) * 0.5f);
 
-        LeanTween.value(origin.gameObject, 0, 1, duration)
-            .setOnUpdate((float t) => 
+       /* if(CheckLaneForPawns(origin, dest, out var detectedPawn))
+        {
+            switch (detectedPawn.type)
             {
-                Vector3 newPosition = CalculateQuadraticBezierPoint(t, startPosition, controlPoint, endPosition);
-                origin.transform.position = newPosition;
-            })
-            .setOnComplete(() =>
-            {
-                // Call SwitchTurn() or any other logic after movement completes
-                SwitchTurn();
-            });
+                case PawnType.TeamOne:
+                    teamOneAmount--;
+                    break; 
+                case PawnType.TeamTwo:
+                    teamTwoAmount--;
+                    break;
+            }
+*/
+            //detectedPawn.gameObject.SetActive(false);
+
+            LeanTween.value(origin.gameObject, 0, 1, duration)
+                .setOnUpdate((float t) => 
+                {
+                    Vector3 newPosition = CalculateQuadraticBezierPoint(t, startPosition, controlPoint, endPosition);
+                    origin.transform.position = newPosition;
+                })
+                .setOnComplete(() =>
+                {
+                    // Call SwitchTurn() or any other logic after movement completes
+                    SwitchTurn();
+                });
+        //}
+    }
+
+    public static bool CheckLaneForPawns(Pawn origin, Vector3 rhs, out Pawn detectedPawn)
+    {
+        Physics.Linecast(origin.transform.position, rhs, out var hit);
+        detectedPawn = hit.collider.GetComponent<Pawn>();
+
+        if (detectedPawn != null && detectedPawn.type != origin.type)
+        {
+            return true;
+        }
+
+        return false;
+
     }
 
     public static Vector3 CalculateQuadraticBezierPoint(float t, Vector3 p0, Vector3 p1, Vector3 p2)

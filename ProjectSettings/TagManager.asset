@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Agent
   - Pawn
+  - Slot
   layers:
   - Default
   - TransparentFX

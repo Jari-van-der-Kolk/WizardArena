@@ -18,59 +18,33 @@ public class GridSlot : MonoBehaviour
     [SerializeField] private bool canMoveHorizontal;
     [SerializeField] private bool canMoveVertical;
     [SerializeField] private bool canMoveOverFriendlys;
+
+    public Pawn occupiedPawn = null;
+
+    public static List<GridSlot> gridSlots = new List<GridSlot>();
+
     private void OnMouseDown()
     {
+        var previouseInstance = selectedInstance;
         selectedInstance = this;
 
-        var instance = Pawn.selectedInstance;
-        if(transform.CheckIncrementalAngle(instance.transform))
+        Pawn instance = Pawn.selectedInstance;
+        if(selectedInstance.transform.CheckIncrementalAngle(instance.transform))
+        {
+            if(previouseInstance != null) previouseInstance.occupiedPawn = null;
+            occupiedPawn = instance;
             Pawn.Move(instance, transform.position, height, duration);
-
-
-    }
-
-   /* private void Update()
-    {
-        CheckLanes();
-    }
-*/
-    public bool CheckMove()
-    {
-        bool returnValue = false;
-
-        if(Pawn.selectedInstance == null)
-            return false;
-
-
-        if(canMoveHorizontal)
-        {
-
         }
 
-        if (canMoveVertical)
-        {
 
-        }
-
-        //check wether the pawn can move over friendlies 
-
-
-        return returnValue;
     }
 
-    private bool CheckForHorizontal()
-    {
-        
-        return false;
-    }
+ 
 
-    private bool CheckForVertical()
-    {
+    
+}
 
-        return false;
-    }
-
-    private List<GridSlot> CheckLanes()
+/*    private List<GridSlot> CheckncrementalLanes()
     {
         List<GridSlot > gridslots = new List<GridSlot>();
         Ray ray;
@@ -96,8 +70,7 @@ public class GridSlot : MonoBehaviour
             
             ray = new Ray(selectedInstance.transform.position, dir);
 
-            // Set the rotation of the object to the direction
-            transform.rotation = Quaternion.AngleAxis(currentAngle, Vector3.up);
+            
 
             // Draw a debug ray in the direction
             Debug.DrawRay(transform.position, transform.right * 5f, Color.red);
@@ -108,40 +81,7 @@ public class GridSlot : MonoBehaviour
 
 
         return gridslots;
-    }
-
-    private float GetAngle(Vector3 dir)
-    {
-        // Ensure the direction vector is not zero
-        if (dir == Vector3.zero)
-        {
-            Debug.LogError("Direction vector is zero, angle cannot be determined.");
-            return 0f;
-        }
-
-        // Project the direction onto the horizontal plane
-        Vector3 flatDir = new Vector3(dir.x, 0, dir.z).normalized;
-
-        // Calculate the angle in degrees between the forward vector and the direction vector
-        float angle = Vector3.SignedAngle(Vector3.forward, flatDir, Vector3.up);
-
-        // Return the angle
-        return angle;
-    }
-
-  /*  private void RotateToAngle()
-    {
-        float angleAmount = 360 / 8;
-        Vector3 dir = _faceMousePos.angle / angleAmount;
-        dir = Mathf.RoundToInt(dir);
-        dir *= angleAmount;
-        transform.rotation = Quaternion.AngleAxis(dir, Vector3.forward);
-        Debug.DrawRay(transform.position, transform.right * mineDistance, Color.red);
-
     }*/
-
-}
-
 
 /*  // Convert the angle to radians
   float angleInRadians = Mathf.Deg2Rad * (i * angleIncrement);
@@ -167,3 +107,31 @@ public class GridSlot : MonoBehaviour
           Debug.LogError($"raycast could find a gridslot on:{slot} ");
       }
   }*/
+  /*  private void RotateToAngle()
+    {
+        float angleAmount = 360 / 8;
+        Vector3 dir = _faceMousePos.angle / angleAmount;
+        dir = Mathf.RoundToInt(dir);
+        dir *= angleAmount;
+        transform.rotation = Quaternion.AngleAxis(dir, Vector3.forward);
+        Debug.DrawRay(transform.position, transform.right * mineDistance, Color.red);
+
+    }*/
+    /*private float GetAngle(Vector3 dir)
+    {
+        // Ensure the direction vector is not zero
+        if (dir == Vector3.zero)
+        {
+            Debug.LogError("Direction vector is zero, angle cannot be determined.");
+            return 0f;
+        }
+
+        // Project the direction onto the horizontal plane
+        Vector3 flatDir = new Vector3(dir.x, 0, dir.z).normalized;
+
+        // Calculate the angle in degrees between the forward vector and the direction vector
+        float angle = Vector3.SignedAngle(Vector3.forward, flatDir, Vector3.up);
+
+        // Return the angle
+        return angle;
+    }*/
