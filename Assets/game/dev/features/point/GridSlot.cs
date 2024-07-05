@@ -25,18 +25,61 @@ public class GridSlot : MonoBehaviour
 
     private void OnMouseDown()
     {
+        if (Pawn.selectedInstance.type != Pawn.turn)
+            return;
+
         var previouseInstance = selectedInstance;
         selectedInstance = this;
 
         Pawn instance = Pawn.selectedInstance;
-        if(selectedInstance.transform.CheckIncrementalAngle(instance.transform))
+        if(selectedInstance.transform.CheckIncrementalAngle(instance.transform, out var hits))
         {
+            for (int i = 0; i < hits.Length; i++)
+            {
+                print(hits[i].transform.name);
+            }
+
+            var opponents = CheckLaneForOpponents(hits);
+            if (opponents.Count >= 2) return;
+
+            if(opponents.Count > 0)
+            { 
+                opponents[0].gameObject.SetActive(false);
+            }
+            
             if(previouseInstance != null) previouseInstance.occupiedPawn = null;
+          
             occupiedPawn = instance;
-            Pawn.Move(instance, transform.position, height, duration);
+
+            Move();
+
         }
 
+        
 
+
+    }
+
+    private List<Pawn> CheckLaneForOpponents(RaycastHit[] hits)
+    {
+        List<Pawn> pawnsAcrossLane = new List<Pawn>();
+        for (int i = 0; i < hits.Length; i++)
+        {
+            if (hits[i].transform.gameObject.TryGetComponent<Pawn>(out var pawn))
+            {
+                if (pawn.transform == Pawn.selectedInstance.transform)
+                    continue;
+                    
+                pawnsAcrossLane.Add(pawn);
+            }
+        }
+
+        return pawnsAcrossLane;
+    }
+
+    private void Move()
+    {
+        Pawn.Move(Pawn.selectedInstance, transform.position, height, duration);
     }
 
  

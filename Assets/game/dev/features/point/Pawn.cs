@@ -79,33 +79,20 @@ public class Pawn : MonoBehaviour
         Vector3 endPosition = dest;
         Vector3 controlPoint = new Vector3((startPosition.x + endPosition.x) * 0.5f, height, (startPosition.z + endPosition.z) * 0.5f);
 
-       /* if(CheckLaneForPawns(origin, dest, out var detectedPawn))
-        {
-            switch (detectedPawn.type)
-            {
-                case PawnType.TeamOne:
-                    teamOneAmount--;
-                    break; 
-                case PawnType.TeamTwo:
-                    teamTwoAmount--;
-                    break;
-            }
-*/
-            //detectedPawn.gameObject.SetActive(false);
 
-            LeanTween.value(origin.gameObject, 0, 1, duration)
-                .setOnUpdate((float t) => 
-                {
-                    Vector3 newPosition = CalculateQuadraticBezierPoint(t, startPosition, controlPoint, endPosition);
-                    origin.transform.position = newPosition;
-                })
-                .setOnComplete(() =>
-                {
-                    // Call SwitchTurn() or any other logic after movement completes
-                    SwitchTurn();
-                });
-        //}
+        LeanTween.value(origin.gameObject, 0, 1, duration)
+            .setOnUpdate((float t) => 
+            {
+                Vector3 newPosition = CalculateQuadraticBezierPoint(t, startPosition, controlPoint, endPosition);
+                origin.transform.position = newPosition;
+            })
+            .setOnComplete(() =>
+            {
+                // Call SwitchTurn() or any other logic after movement completes
+                SwitchTurn();
+            });
     }
+      
 
     public static bool CheckLaneForPawns(Pawn origin, Vector3 rhs, out Pawn detectedPawn)
     {

@@ -49,7 +49,7 @@ namespace Utilities {
             Debug.Log(obj.ToString());
         }
 
-        public static bool CheckIncrementalAngle(this Transform transform, Transform target, int numSegments = 8)
+        public static bool CheckIncrementalAngle(this Transform transform, Transform target, out RaycastHit[] hits, int numSegments = 8)
         {
 
             Ray ray;
@@ -75,7 +75,7 @@ namespace Utilities {
 
                 ray = new Ray(transform.position, dir);
 
-                var hits = Physics.RaycastAll(ray, distance);
+                hits = Physics.RaycastAll(ray, distance);
                 for (int r = 0; r < hits.Length; r++)
                 {
                     if (target == hits[r].transform)
@@ -86,6 +86,9 @@ namespace Utilities {
                
 
             }
+
+            hits = new RaycastHit[0];
+
             return false; 
 
         }

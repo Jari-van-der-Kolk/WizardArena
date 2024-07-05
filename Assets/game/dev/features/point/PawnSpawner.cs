@@ -8,6 +8,7 @@ public class PawnSpawner : MonoBehaviour
     [SerializeField] private PawnType spawnType = PawnType.TeamOne;
     [Tag][SerializeField] private string gridslotTag;
     [SerializeField] private GameObject appearance;
+    [SerializeField] private Material teamMaterial;
 
     [SerializeField] private List<GridSlot> gridSlots = new List<GridSlot>();
 
@@ -42,6 +43,7 @@ public class PawnSpawner : MonoBehaviour
             if (hit.collider.CompareTag(gridslotTag))
             {
                 var pawn = Instantiate(appearance, hit.transform.position, Quaternion.identity);
+                pawn.GetComponent<MeshRenderer>().material = teamMaterial;
                 pawn.GetComponent<Pawn>().SetType(spawnType).SetType(spawnType);
                 switch (spawnType)
                 {
@@ -53,7 +55,6 @@ public class PawnSpawner : MonoBehaviour
                         break;
                 }
 
-                Debug.Log("Found object with tag: " + hit.transform.position);
             }
         }
     }
