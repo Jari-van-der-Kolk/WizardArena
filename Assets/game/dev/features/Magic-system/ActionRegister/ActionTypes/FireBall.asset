@@ -15,9 +15,8 @@ MonoBehaviour:
   spellID:
     EffectName: fireball
     playerKeyCombination: 78000000
-  _prefab: {fileID: 7719381396193258354, guid: e386f1ebd41646444bdf5083bd5f822d, type: 3}
-  _statusEffect:
-    _underlyingValue: {fileID: 11400000, guid: 6673501daf085134289c445cff8c5413, type: 2}
+    actionType: 0
+  _prefab: {fileID: 8562933092864989337, guid: fe2e5dfa2d8b51841a11ca63629183e6, type: 3}
   _duration: 20
   _speed: 10
   _deleteSpellOnContact: 1

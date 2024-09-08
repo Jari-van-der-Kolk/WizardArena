@@ -1,3 +1,4 @@
+using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,62 +8,68 @@ using UnityEngine;
 public class PainField : MonoBehaviour
 {
     //[SerializeField] private InterfaceReference<IHealthModifier, StatusEffectBase> _appliedEffect;
-    [SerializeField] private TargetLayerData _targetLayerData;
+    
+
+
+    //mutable
+    [Tag][SerializeField] private string targetTag;
+    [Tag][SerializeField] private string friendlyTag;
     [SerializeField] private bool _deleteOnContact = true;
     [SerializeField] private int duration = 1;
 
-    private Transform _owner;
- 
+
+    public PainField SetTag(string tag)
+    {
+        targetTag = tag;
+        return this;
+    } 
+
+    public PainField SetDeleteOnContact(bool deleteOnContact = true)
+    {
+        _deleteOnContact = deleteOnContact;
+        return this;
+    }
+
+    public PainField SetDuration(GameObject gameObject, int duration)
+    {
+        Destroy(gameObject, duration);
+        return this;
+    }
+
+    public PainField SetFriendlyTag(string tag)
+    {
+        friendlyTag = tag;
+        return this;
+
+    }
   
     private void OnTriggerEnter(Collider other)
     {
+        if (other.CompareTag(targetTag))
+        {
 
-      /*  bool friendlyPainfieldCheck = other.GetComponent<PainField>()._targetLayerData == _targetLayerData; 
-        if (_owner == other.transform || friendlyPainfieldCheck)
-            return;
+        }
+      
+    }
 
-        other.GetComponent<Health>()?.ApplyStatusEffect(_appliedEffect.Value, duration, _targetLayerData.targetedLayers);
-       
-        if (_deleteOnContact)
-            Destroy(gameObject);*/
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag(targetTag))
+        {
+
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-       /* if (_owner == other.transform)
-            return;
-
-        HealthComponent health = other.GetComponent<HealthComponent>();
-        if(health != null)
+        if (other.CompareTag(targetTag))
         {
-            health.GetStatusEffect(_appliedEffect.Value).ReleaseHold();
-        }*/
+
+        }
     }
 
-  /*  public PainField SetTargetLayer(TargetLayerData targetLayer)
-    {
-        this._targetLayerData = targetLayer;
-        return this;
-    }
 
-    public PainField SetStatusEffect(IHealthModifier statusEffect)
-    {
-        _appliedEffect.Value = statusEffect;
-        return this;
-    }
 
-    public PainField SetDeleteOnContect(bool deleteOnContact)
-    {
-        this._deleteOnContact = deleteOnContact;
-        return this;
-    }
-    
-    public PainField SetOwner(Transform owner)
-    {
-        this._owner = owner;    
-        return this;
-    }
-*/
 
 
 

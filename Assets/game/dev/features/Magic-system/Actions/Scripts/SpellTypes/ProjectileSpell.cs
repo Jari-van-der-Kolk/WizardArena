@@ -10,18 +10,16 @@ public class ProjectileSpell : SpellBase
 {
 
     //[SerializeField] InterfaceReference<IHealthModifier, StatusEffectBase> _statusEffect;
-    [SerializeField] private PainField _prefab;
+    [SerializeField] private GameObject _prefab;
     [SerializeField] private float _duration = 20f;
     [SerializeField] private float _speed = 10f;
     [SerializeField] private bool _deleteSpellOnContact = true;
 
     public override void CastSpell(MonoBehaviour caller, string tag)
     {
-        var projectile = Instantiate(_prefab, caller.transform.position.Add(y: .25f).Add(z: 1.25f), Quaternion.identity);
+        var projectile = Instantiate(_prefab, caller.transform.position + caller.transform.forward.normalized * 1.25f, caller.transform.rotation);
 
-        var painfield = projectile.GetComponent<PainField>();
-
-        Vector3 targetPosition = caller.transform.position + caller.transform.forward * _speed * _duration;
+        Vector3 targetPosition = caller.transform.position + Camera.main.transform.forward * _speed * _duration;
         projectile.transform.LeanMove(targetPosition, _duration).setLoopType(LeanTweenType.linear);
 
         Destroy(projectile, _duration);

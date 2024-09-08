@@ -31,8 +31,8 @@ public class GridSlot : MonoBehaviour
         var previouseInstance = selectedInstance;
         selectedInstance = this;
 
-        Pawn instance = Pawn.selectedInstance;
-        if(selectedInstance.transform.CheckIncrementalAngle(instance.transform, out var hits))
+        Pawn pawnInstance = Pawn.selectedInstance;
+        if(selectedInstance.transform.CheckIncrementalAngle(pawnInstance.transform, out var hits))
         {
             for (int i = 0; i < hits.Length; i++)
             {
@@ -49,14 +49,11 @@ public class GridSlot : MonoBehaviour
             
             if(previouseInstance != null) previouseInstance.occupiedPawn = null;
           
-            occupiedPawn = instance;
+            occupiedPawn = pawnInstance;
 
             Move();
 
         }
-
-        
-
 
     }
 
